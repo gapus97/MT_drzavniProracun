@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+//import 'leaflet/dist/leaflet.css';
 import States from './components/States';
 import BarChart from './components/charts/BarChart';
 import Main from './sites/Main';
@@ -16,6 +17,11 @@ function App() {
 
       <Main />
 
+      <footer className="footer">
+        <div>
+          <p>This app uses data from <a href="https://www.e-prostor.gov.si/">e-prostor gov </a></p>
+        </div>
+      </footer>
     </div>
   );
 }
