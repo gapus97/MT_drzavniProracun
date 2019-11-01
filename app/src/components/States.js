@@ -1,9 +1,8 @@
 import React from 'react';
-import { fetchJSON } from '../utils/FetchUtils';
+import { states } from '../dataFetcher/FetchStates';
 
 
-
-class FetchStates extends React.Component {
+class States extends React.Component {
 
     constructor(props) {
         super(props);
@@ -17,19 +16,9 @@ class FetchStates extends React.Component {
     }
 
     async getStates() {
-        let data = await fetchJSON("http://localhost:9200/states/_search", "GET");
-        let statesData = [];
-
-        console.log(data);
-
-        data.hits.hits.forEach(element => {
-            let state = element._source;
-            statesData.push(state);
-        });
-
         // save to state
         this.setState({
-            stateData: statesData
+            stateData: await states()
         });
     }
 
@@ -49,6 +38,7 @@ class FetchStates extends React.Component {
         return (
             <div>
                 <h1>Hello, {this.props.name}</h1>
+
                 {
                     this.parseStates()
                 }
@@ -57,4 +47,4 @@ class FetchStates extends React.Component {
     }
 }
 
-export default FetchStates;
+export default States;
