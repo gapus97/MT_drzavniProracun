@@ -1,6 +1,8 @@
 import React from 'react';
 import Maps from '../components/Maps';
 import { states } from '../dataFetcher/FetchStates';
+import States from '../components/States';
+import BarChart from '../components/charts/BarChart';
 
 
 class Main extends React.Component {
@@ -26,8 +28,10 @@ class Main extends React.Component {
     render() {
 
         return (
-            <div>
+            <div id="Main">
                 <Maps position={[45.9167, 14.2297]} zoom={150} data={this.state.stateData} />
+                <States name={"miha"} />
+                <BarChart />
             </div>
         );
         
