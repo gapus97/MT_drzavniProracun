@@ -27,3 +27,7 @@ http://www.transparency.si/projekti/drzavni-projekti/
 # States data
 
 https://www.e-prostor.gov.si/
+
+# State budget by federal state
+
+https://www.gov.si/teme/financiranje-obcin/
