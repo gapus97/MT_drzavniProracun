@@ -1,13 +1,8 @@
 import React from 'react';
 //import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
-
-const style = {
-    map: {
-      height: '500px',
-      width: '100%'
-    }
-}
+import { customOptions, customPopup, customPopupDialog } from '../utils/LeafletUtils';
+import { stateOutcomeMoney } from '../dataFetcher/FetchStates';
 
 class Maps extends React.Component {
 
@@ -15,7 +10,7 @@ class Maps extends React.Component {
         // populate data to leaflet
         this.map = L.map("map", {
             center: this.props.position,
-            zoom: 9,
+            zoom: 8,
             layers: [
                 L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
                 attribution:
@@ -34,25 +29,34 @@ class Maps extends React.Component {
         }
     }
 
-    onMarkerClick(e) {
+    async onMarkerClick(e) {
+        let stateName = e.target.options.title;
+        // API CALL
+        let statesOutcome = await stateOutcomeMoney(stateName);
+        let firstObjMoney = statesOutcome[0].value;
         let popup = e.target.getPopup();
+
+        // set popup content to CUSTOM content with specific data
+        popup.setContent(customPopupDialog(stateName, firstObjMoney));
         let content = popup.getContent();
-        console.log(content);
+        // print content of a popup to console
+        console.log("Content: " + content);
     }
 
     updateMarkers(markersData) {
         this.layer.clearLayers();
         const markerImage = {
             iconUrl: require('leaflet/dist/images/marker-icon.png'),
-            iconSize:     [30, 30], // size of the icon
+            iconSize:     [25, 25], // size of the icon
             shadowSize:   [50, 64], // size of the shadow
             //popupAnchor:  [-3, -76]// point from which the popup should open relative to the iconAnchor
         };
+
         markersData.forEach(marker => {
             let leafletMarker = L.marker([marker.lat, marker.lon], {title: marker.name, icon: L.icon(markerImage)});
 
             // TODO: there should be data of companies etc...
-            leafletMarker.bindPopup("This is popup for: " + marker.name);
+            leafletMarker.bindPopup(customPopupDialog(marker.name, 15), customOptions);
             leafletMarker.on('click', this.onMarkerClick);
             // add marker to layer
             leafletMarker.addTo(this.layer);
@@ -61,7 +65,7 @@ class Maps extends React.Component {
 
     render() {
         return (
-            <div id="map" style={style.map} />
+            <div id="map" />
         );
     }
 }

@@ -3,10 +3,6 @@ import React from 'react';
 
 class Header extends React.Component {
 
-    componentDidMount() {
-        
-    }
-
     render() {
         return (
             <header className="App-header">

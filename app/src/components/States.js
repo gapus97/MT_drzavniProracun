@@ -7,7 +7,7 @@ class States extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            stateData: []
+            stateData: [],
         };
     }
 
@@ -17,8 +17,9 @@ class States extends React.Component {
 
     async getStates() {
         // save to state
+        let statesAndCoordinates = await states();
         this.setState({
-            stateData: await states()
+            stateData: statesAndCoordinates
         });
     }
 

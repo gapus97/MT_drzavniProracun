@@ -10,26 +10,46 @@ class Main extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            stateData: []
+            stateData: [],
+            capitalCityCoordinates: []
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.getStates();
     }
 
     async getStates() {
+
+        let stateData = await states();
+        let capitalCity = [];
+
+        stateData.forEach(element => {
+            if(element.name === "Ljubljana") {
+                console.log(element);
+                capitalCity.push(element.lat, element.lon);
+            }
+        });
+
+        console.log(capitalCity);
         // save to state
         this.setState({
-            stateData: await states()
+            stateData: stateData,
+            capitalCityCoordinates: capitalCity
         });
+
+
     }
 
     render() {
-
+        console.log("capitalCityCoordinates: ", this.state.capitalCityCoordinates);
         return (
             <div id="Main">
-                <Maps position={[45.9167, 14.2297]} zoom={150} data={this.state.stateData} />
+                {
+                    this.state.capitalCityCoordinates.length !== 0 ?
+                    <Maps position={this.state.capitalCityCoordinates} zoom={150} data={this.state.stateData} /> :
+                    <p>Loading data....Please wait</p>
+                }
                 <States name={"miha"} />
                 <BarChart />
             </div>
