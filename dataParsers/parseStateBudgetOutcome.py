@@ -1,13 +1,13 @@
 # Reading an excel file using Python 
 import xlrd
 from elasticsearch import Elasticsearch
-from elasticsearch import helpers
-import json
+from dataParsers.State import State
 
 es = Elasticsearch(
     ['localhost'],
     port=9200
 )
+
 
 file = 'FK-2018-vsi-KONCNI-po_EK_na_K2.xls'
 
@@ -25,7 +25,8 @@ main_categories = []
 for i in range(3, sheet.ncols):
     main = sheet.cell_value(2,i).replace("\n","")
     # remove number
-    main = main[2:]
+    if "SKUPAJ" not in main:
+        main = main[2:]
     main_categories.append(main)
 
 # read sub categories (3rd row)
@@ -55,42 +56,38 @@ row_id = 0
 # read rows for states
 for row in range(5,sheet.nrows):
     state_id = sheet.cell_value(row, 1)
-    state_name = sheet.cell_value(row, 2)
+    state_name = sheet.cell_value(row, 2).replace("OBČINA","").replace("MESTNA","").replace(" ", "")
 
+    stateClass = State(state_id, state_name)
+    #print(stateClass)
+    previous_main = ""
+    previous_sub = ""
+    previous_sub_sub = ""
     for col in range(3, sheet.ncols):
         search_index = col - 3
         main_cat = main_categories[search_index]
         sub_cat = sub_categories[search_index]
         sub_sub_cat = sub_sub_categories[search_index]
-        state = {
-            "id": state_id,
-            "state_name": state_name.replace("OBČINA","").replace("MESTNA","").replace(" ",""),
-            "main": main_cat,
-            "sub_cat": sub_cat,
-            "sub_sub_cat": sub_sub_cat,
-            "value": sheet.cell_value(row,col)
-        }
+        value = sheet.cell_value(row,col)
 
-        '''states.append({
-            "_index": "states_outcome", #change this for parsing other sheets
-            '_op_type': 'index',
-            "_type": "_doc",
-            "_id": row_id,
-            "_source": state,
-        })'''
-        states.append(state)
+        #print("Main:{} Sub:{} Sub-sub:{} value:{}".format(main_cat, sub_cat, sub_sub_cat, value))
+        if sub_cat == '' and sub_sub_cat == '' and previous_main != main_cat:
+            stateClass.addMainCategorie(main_cat, value)
+            stateClass.updateSumValue(value)
+
+        if sub_cat != '' and previous_sub != sub_cat and sub_sub_cat == '':
+            stateClass.addSubCategories(sub_cat, value)
+
+        if sub_sub_cat != '' and previous_sub_sub != sub_sub_cat:
+            stateClass.addSubSubCategories(sub_sub_cat, value)
+
+
         row_id += 1
+        previous_main = main_cat
+        previous_sub = sub_cat
+        previous_sub_sub = sub_sub_cat
 
-        # bulk insert
-        #if len(states) >= save_size:
-            #helpers.bulk(es, states)
-            #del states[0:len(states)]
+    es.index(index='states_outcome2', doc_type='doc', id=state_id, body=stateClass.toJSON())
 
 
-
-#if len(states) > 0:
-  #helpers.bulk(es, states)
-
-with open('state_budget_outcome.json', 'w', encoding="utf-8") as outfile:
-    json.dump(states, outfile)
 # copy this http://localhost:9200/states_outcome/_search?pretty=true&q=*:*&size=50 to browser to get 50 records
