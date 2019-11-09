@@ -1,4 +1,5 @@
 import React from 'react';
+import StatesChart from '../components/charts/StatesChart';
 
 
 class About extends React.Component {
@@ -18,6 +19,7 @@ class About extends React.Component {
         return (
             <div>
                 <p>About this project</p>
+                <StatesChart />
             </div>
         );
         

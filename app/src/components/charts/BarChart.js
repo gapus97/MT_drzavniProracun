@@ -5,7 +5,7 @@ class BarChart extends React.Component {
 
     componentDidMount() {
         const data = [ 2, 4, 2, 6, 8 ]
-        this.drawBarChart(data)
+        this.drawBarChart(data);
     }
 
     drawBarChart(data)  {
