@@ -1,7 +1,7 @@
 # Reading an excel file using Python
 import xlrd
 from elasticsearch import Elasticsearch
-from elasticsearch import helpers
+from dataParsers.State import State
 
 es = Elasticsearch(
     ['localhost'],
@@ -54,40 +54,76 @@ row_id = 0
 # read rows for states
 for row in range(5,sheet.nrows):
     state_id = sheet.cell_value(row, 1)
-    state_name = sheet.cell_value(row, 2)
+    state_name = sheet.cell_value(row, 2).replace("OBČINA","").replace("MESTNA","").replace(" ", "")
+
+    stateClass = State(state_id, state_name)
+    previous_main = ""
+    previous_sub = ""
+    previous_sub_sub = ""
 
     for col in range(3, sheet.ncols):
         search_index = col - 3
         main_cat = main_categories[search_index]
         sub_cat = sub_categories[search_index]
         sub_sub_cat = sub_sub_categories[search_index]
-        state = {
-            "id": state_id,
-            "state_name": state_name,
-            "main": main_cat,
-            "sub_cat": sub_cat,
-            "sub_sub": sub_sub_cat,
-            "value": sheet.cell_value(row,col)
-        }
+        value = sheet.cell_value(row,col)
 
-        states.append({
-            "_index": "current_transfers", #change this for parsing other sheets
-            '_op_type': 'index',
-            "_type": "_doc",
-            "_id": row_id,
-            "_source": state,
-        })
+
+        # MAIN categories parse
+        if previous_main != main_cat and sub_cat == '' and sub_sub_cat == '':
+            stateClass.updateSumValue(value)
+            main_obj = {
+                'name': main_cat,
+                "sub_cat": [
+                ],
+                "value": value
+            }
+            stateClass.addMainCategories(main_obj)
+
+        # PARSE sub categories, add thath sub categorie to sub array of main categorie
+        elif previous_main == main_cat and sub_cat != '' and previous_sub != sub_cat and sub_sub_cat == '':
+            for main in stateClass.mainCategories:
+                if main['name'] == main_cat:
+                    index = stateClass.mainCategories.index(main)
+                    sub_cat_arr = main["sub_cat"]
+                    sub_cat_arr.append({
+                        "name": sub_cat,
+                        "sub_sub_cat": [
+
+                        ],
+                        "value": value
+                    })
+                    # update index
+                    main["sub_cat"] = sub_cat_arr
+                    stateClass.mainCategories[index] = main
+                    break
+
+
+        # parse sub-sub categories
+        if previous_sub == sub_cat and sub_cat != '' and sub_sub_cat != '' and previous_sub_sub != sub_sub_cat:
+            for main in stateClass.mainCategories:
+                if main["name"] == main_cat:
+                    # get sub-cat array
+                    m = main['sub_cat']
+                    main_index = stateClass.mainCategories.index(main)
+                    for sub in m:
+                        if sub["name"] == sub_cat:
+                            # append sub-sub categorie into sub-categorie: [ sub-sub: [...apend here]]
+                            sub_sub_arr = sub["sub_sub_cat"]
+                            sub_sub_arr.append({
+                                "name": sub_sub_cat,
+                                "value": value
+                            })
+                            sub["sub_sub_cat"] = sub_sub_arr
+                            break
+
         row_id += 1
+        previous_main = main_cat
+        previous_sub = sub_cat
+        previous_sub_sub = sub_sub_cat
 
-        # bulk insert
-        if len(states) >= save_size:
-            helpers.bulk(es, states)
-            del states[0:len(states)]
-
-
-
-if len(states) > 0:
-    helpers.bulk(es, states)
+    #states.append(stateClass)
+    es.index(index='current_transfers', doc_type='doc', id=state_id, body=stateClass.toJSON())
 
 
 # copy this git to browser to get 50 records

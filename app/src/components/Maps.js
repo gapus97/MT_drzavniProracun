@@ -33,7 +33,7 @@ class Maps extends React.Component {
         let stateName = e.target.options.title;
         // API CALL
         let statesOutcome = await stateOutcomeMoney(stateName);
-        let firstObjMoney = statesOutcome[0].value;
+        let firstObjMoney = statesOutcome;
         let popup = e.target.getPopup();
 
         // set popup content to CUSTOM content with specific data
