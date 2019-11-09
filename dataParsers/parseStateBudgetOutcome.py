@@ -2,6 +2,7 @@
 import xlrd
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
+import json
 
 es = Elasticsearch(
     ['localhost'],
@@ -63,31 +64,33 @@ for row in range(5,sheet.nrows):
         sub_sub_cat = sub_sub_categories[search_index]
         state = {
             "id": state_id,
-            "state_name": state_name,
+            "state_name": state_name.replace("OBČINA","").replace("MESTNA","").replace(" ",""),
             "main": main_cat,
             "sub_cat": sub_cat,
-            "sub_sub": sub_sub_cat,
+            "sub_sub_cat": sub_sub_cat,
             "value": sheet.cell_value(row,col)
         }
 
-        states.append({
+        '''states.append({
             "_index": "states_outcome", #change this for parsing other sheets
             '_op_type': 'index',
             "_type": "_doc",
             "_id": row_id,
             "_source": state,
-        })
+        })'''
+        states.append(state)
         row_id += 1
 
         # bulk insert
-        if len(states) >= save_size:
-            helpers.bulk(es, states)
-            del states[0:len(states)]
+        #if len(states) >= save_size:
+            #helpers.bulk(es, states)
+            #del states[0:len(states)]
 
 
 
-if len(states) > 0:
-  helpers.bulk(es, states)
+#if len(states) > 0:
+  #helpers.bulk(es, states)
 
-
+with open('state_budget_outcome.json', 'w', encoding="utf-8") as outfile:
+    json.dump(states, outfile)
 # copy this http://localhost:9200/states_outcome/_search?pretty=true&q=*:*&size=50 to browser to get 50 records
