@@ -3,6 +3,7 @@ import Maps from '../components/Maps';
 import { states } from '../dataFetcher/FetchStates';
 import States from '../components/States';
 import BarChart from '../components/charts/BarChart';
+import StatesChart from '../components/charts/StatesChart';
 
 
 class Main extends React.Component {
@@ -52,6 +53,7 @@ class Main extends React.Component {
                 }
                 <States name={"miha"} />
                 <BarChart />
+                <StatesChart></StatesChart>
             </div>
         );
         
