@@ -71,7 +71,7 @@ html {
 
 
 /* MAIN Graph */
-#statesChart {
+/*#statesChart {
   background: #fff;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -125,4 +125,4 @@ rect.parent {
 
 .children:hover rect.child {
   fill: #bbb;
-}
+}*/

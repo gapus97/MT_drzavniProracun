@@ -6,22 +6,9 @@ class StatesChart extends React.Component {
 
     constructor(props) {
         super(props);
-
-        
-
-        
-        /*var resp = d3.json("./state_budget_outcome.json", function(err, res) {
-            if (!err) {
-                // to this for only one state!!!!
-                var dataJson = d3.nest().key(function(d) { return d.main; }).key(function(d) { return d.sub_cat; }).key(function(d) { return d.sub_sub_cat; }).entries(res);
-                
-            }
-        });
-
-        resp.then((res) => {
-            console.log(res);
-            //this.main({title: "World Population"}, {key: "World", values: res});
-        })*/
+        this.state = {
+          stateBudgetData: []
+        }
     }
 
     async componentDidMount() {

@@ -56,7 +56,7 @@ row_id = 0
 # read rows for states
 for row in range(5,sheet.nrows):
     state_id = sheet.cell_value(row, 1)
-    state_name = sheet.cell_value(row, 2).replace("OBČINA","").replace("MESTNA","").replace(" ", "")
+    state_name = sheet.cell_value(row, 2).replace("OBČINA","").replace("MESTNA","")
 
     stateClass = State(state_id, state_name)
     previous_main = ""
@@ -125,7 +125,7 @@ for row in range(5,sheet.nrows):
         previous_sub_sub = sub_sub_cat
 
     #states.append(stateClass)
-    es.index(index='states_outcome2', doc_type='doc', id=state_id, body=stateClass.toJSON())
+    es.index(index='states_outcome', doc_type='doc', id=state_id, body=stateClass.toJSON())
 
 
 # copy this http://localhost:9200/states_outcome/_search?pretty=true&q=*:*&size=50 to browser to get 50 records

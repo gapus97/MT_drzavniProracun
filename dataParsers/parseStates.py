@@ -8,7 +8,7 @@ es = Elasticsearch(
 )
 
 # data used from https://egp.gu.gov.si/egp/ -> register prostorkih enot; koordinatni sistem 96
-file = "OB.dbf"
+file = "../OB.dbf"
 
 # https://www.mkx.si/geoconv/
 myProj = Proj("+proj=longlat +datum=WGS84 +to +proj=tmerc +lon_0=15E +ellps=GRS80 +x_0=500000 +y_0=-5000000 +k=0.9999 -f %.8f")
