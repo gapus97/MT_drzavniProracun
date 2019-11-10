@@ -1,5 +1,5 @@
 import React from 'react';
-
+import ZoomedTreeMap from './charts/ZoomedTreeMap';
 
 class ShowStateBudget extends React.Component {
 
@@ -29,7 +29,7 @@ class ShowStateBudget extends React.Component {
         console.log("State budget data: ", this.state.data);
         return (
             <div id="showStateBudget">
-               <p>this is graph</p>
+               <ZoomedTreeMap data={this.state.data} />
             </div>
         );
         
