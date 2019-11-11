@@ -3,6 +3,7 @@ import Maps from '../components/Maps';
 import { states } from '../dataFetcher/FetchStates';
 import States from '../components/States';
 import BarChart from '../components/charts/BarChart';
+import LoadingPage from '../components/LoadingPage';
 
 
 class Main extends React.Component {
@@ -26,12 +27,10 @@ class Main extends React.Component {
 
         stateData.forEach(element => {
             if(element.name === "Ljubljana") {
-                console.log(element);
                 capitalCity.push(element.lat, element.lon);
             }
         });
 
-        console.log(capitalCity);
         // save to state
         this.setState({
             stateData: stateData,
@@ -42,13 +41,12 @@ class Main extends React.Component {
     }
 
     render() {
-        console.log("capitalCityCoordinates: ", this.state.capitalCityCoordinates);
         return (
             <div id="Main">
                 {
                     this.state.capitalCityCoordinates.length !== 0 ?
                     <Maps position={this.state.capitalCityCoordinates} zoom={150} data={this.state.stateData} /> :
-                    <p>Loading data....Please wait</p>
+                    <LoadingPage />
                 }
                 <States name={"miha"} />
                 <BarChart />

@@ -1,7 +1,8 @@
 # Reading an excel file using Python 
 import xlrd
 from elasticsearch import Elasticsearch
-from dataParsers.State import State
+#from dataParsers.State import State
+from State import State
 
 es = Elasticsearch(
     ['localhost'],
@@ -70,10 +71,13 @@ for row in range(5,sheet.nrows):
         sub_sub_cat = sub_sub_categories[search_index]
         value = sheet.cell_value(row,col)
 
+        if main_cat == 'SKUPAJ VSE DEJAVNOSTI(OD 01 DO 10)':
+            continue
+
 
         # MAIN categories parse
         if previous_main != main_cat and sub_cat == '' and sub_sub_cat == '':
-            stateClass.updateSumValue(value)
+            stateClass.updateValue(value)
             main_obj = {
                 'name': main_cat,
                 "children": [
@@ -87,7 +91,6 @@ for row in range(5,sheet.nrows):
             for main in stateClass.children:
                 if main['name'] == main_cat:
                     index = stateClass.children.index(main)
-                    print(main);
                     sub_cat_arr = main["children"]
                     sub_cat_arr.append({
                         "name": sub_cat,
@@ -97,7 +100,7 @@ for row in range(5,sheet.nrows):
                         "value": value
                     })
                     # update index
-                    main["sub_cat"] = sub_cat_arr
+                    main["children"] = sub_cat_arr
                     stateClass.children[index] = main
                     break
 

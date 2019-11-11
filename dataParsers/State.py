@@ -8,7 +8,7 @@ class State:
         self.id = id
         self.name = name
         self.children = []
-        self.sumValue = None
+        self.value = None
 
     def addMainCategorie(self, name, value):
         self.children.append({name: value})
@@ -16,8 +16,8 @@ class State:
     def addMainCategories(self, mainCat):
         self.children.append(mainCat)
 
-    def updateSumValue(self, value):
-        self.sumValue = value
+    def updateValue(self, value):
+        self.value = value
 
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__,

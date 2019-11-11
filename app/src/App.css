@@ -70,7 +70,7 @@ html {
 }
 
 #zoomedTreeMap {
-  max-width: 100%;
+  width: 100%;
   overflow:auto;
 }
 
@@ -105,7 +105,7 @@ rect.parent,
   stroke-width: 1px;
 }
 .children:hover rect.parent {
-  opacity: 0;
+  /*opacity: 0;*/
 }
 .legend {
   margin-bottom:8px !important;
@@ -128,17 +128,37 @@ rect.parent,
     font-size: 14px;
     padding: 7px;
     cursor: pointer;
-    overflow:none;
+    overflow: auto;
 }
 .textdiv .title {
-    font-size: 102%;
+    font-size: 13px;
     font-weight: bold;
     margin-top: 8px;
     font-size:11px !important;
 }
 .textdiv p{
-    line-height: 13px;
+    /*line-height: 13px;
     margin:0 0 4px !important;
     padding:0px;
-    font-size:10px !important;
+    font-size:10px !important;*/
+    font-size: x-small;
+    padding: 5px;
+    font-family: "Open Sans", Helvetica, Arial, sans-serif; 
+}
+
+/* zoomed treemap tooltip */
+.tooltip {
+  background: #eee;
+  box-shadow: 0 0 5px #999999;
+  color: #333;
+  font-size: 14px;
+  line-height: 15px;
+  left: 130px;
+  width: 250px;
+  border-style: solid;
+  border-color: #76787A;
+  border-width: 2px;
+  border-radius: 7px;
+  position: absolute;
+  z-index: 1000;
 }

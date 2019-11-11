@@ -9,20 +9,15 @@ class StateBudget extends React.Component {
         this.state = {
             stateData: [],
         };
-
-        console.log("Props budget: " , this.props);
-        console.log("City: ", this.props.location.state.city);
     }
 
     async componentDidMount() {
         // call API
         let data = await stateOutcomeToMoney(this.props.location.state.city);
 
-        console.log("Data: ", data);
         this.setState({
             stateData: data
         });
-        this.render();
     }
 
 

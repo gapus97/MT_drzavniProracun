@@ -12,13 +12,18 @@ class ZoomedTreeMap extends React.Component {
         };
     }
 
+    componentDidUpdate({data}) {
+        if(this.props.data !== data) {
+            this.constructGraph();
+        }
+    }
 
-   async constructGraph() {
+
+    constructGraph() {
         // replace this with real API-data
         var d = this.props.data;
         var el_id = 'zoomedTreeMap';
-        var obj = document.getElementById(el_id);
-        var divWidth = 1200;
+        var divWidth = 1920;
         var margin = {top: 30, right: 0, bottom: 20, left: 0},
             width = divWidth -25,
             height = 600 - margin.top - margin.bottom,
@@ -33,7 +38,21 @@ class ZoomedTreeMap extends React.Component {
         var y = d3.scaleLinear()
             .domain([0, height])
             .range([0, height]);
+
+        var color = d3.scaleOrdinal()
+        .range(d3.schemeCategory10
+        .map(function(c) { c = d3.rgb(c); c.opacity = 0.8; return c; }));
+
+        
+        var tip=d3.select('#'+el_id).append('div')
+        .attr('class', 'tooltip')
+        .style('position','absolute')
+        .style('padding','5px 10px')
+        .style('background','white')
+        .style('opacity',0);
+
         var treemap = d3.treemap()
+                .tile(d3.treemapResquarify.ratio(height / width * 0.5 * (1 + Math.sqrt(5))))
                 .size([width, height])
                 .paddingInner(0)
                 .round(false);
@@ -58,6 +77,7 @@ class ZoomedTreeMap extends React.Component {
                 .attr("dy", ".75em");
        
         var root = d3.hierarchy(d);
+        
         treemap(root
             .sum(function (d) {
                 return d.value;
@@ -74,7 +94,7 @@ class ZoomedTreeMap extends React.Component {
                 .datum(d.parent)
                 .on("click", transition)
                 .select("text")
-                .text(name(d));
+                .text(`Občina ${name(d)}; Skupaj proračun: ${d3.format(",")(d.value)}`)
             // grandparent color
             grandparent
                 .datum(d.parent)
@@ -99,7 +119,8 @@ class ZoomedTreeMap extends React.Component {
                 .data(function (d) {
                     return d.children || [d];
                 })
-                .enter().append("rect")
+                .enter()
+                .append("rect")
                 .attr("class", "child")
                 .call(rect);
             // add title to parents
@@ -114,6 +135,8 @@ class ZoomedTreeMap extends React.Component {
             g.append("foreignObject")
                 .call(rect)
                 .attr("class", "foreignobj")
+                .on('mousemove', function(d){return toolTip(d)})
+                .on('mouseout', function(d){return toolTipOff(d)})
                 .append("xhtml:div")
                 .attr("dy", ".75em")
                 .html(function (d) {
@@ -162,6 +185,36 @@ class ZoomedTreeMap extends React.Component {
                     transitioning = false;
                 });
             }
+
+            function toolTip(d) {
+                var xPosition = d3.event.pageX + 5;
+                var yPosition = d3.event.pageY + 5;
+
+
+                if (xPosition>width/2) {
+                  xPosition=xPosition-tip.style("width").replace("px", "")-5;
+                }
+                if (yPosition>height){
+                  yPosition=yPosition-tip.style("height").replace("px", "")-10;
+                }
+                if(d.data.name) {
+                  tip.style('opacity',.9)
+                  .html("<b>"+d.data.name+ "</b> </br> Skupaj: "+formatNumber(d.value.toFixed(2)) + "€")
+                  .style("left", xPosition + "px")
+                  .style("top", yPosition + "px");
+                }
+                else {
+                  tip.style('opacity',.9)
+                  .html("<b>€"+formatNumber(d.data.value.toFixed(2))+"</b>"+d.data.name)
+                  .style("left", xPosition + "px")
+                  .style("top", yPosition + "px");
+                }
+            }
+            
+            function toolTipOff(d) {
+                tip.style('opacity',0);
+            };
+            
             return g;
         }
         function text(text) {
@@ -188,6 +241,9 @@ class ZoomedTreeMap extends React.Component {
                 })
                 .attr("fill", function (d) {
                     return '#bbbbbb';
+                })
+                .style("background", function(d) {
+                    return d.parent ? color(d.data.name) : null;
                 });
         }
         function foreign(foreign) { /* added */
@@ -230,11 +286,6 @@ class ZoomedTreeMap extends React.Component {
 
 
     render() {   
-        console.log("Props data: ", this.props.data);
-        if(this.props.data != 0 && this.props.data !== undefined) {
-            this.constructGraph();
-        }
-        //this.constructGraph();
         return (
             <div id="zoomedTreeMap">
             </div>

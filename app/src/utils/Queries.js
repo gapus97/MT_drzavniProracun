@@ -1,15 +1,11 @@
 
-/**
- * Get only outcome MAIN categories
- * @param {*} cityName 
- */
-function queryCityBasicOutcome(cityName) {
-    
-    return `${queries.statesOutcome}?q=state_name:*${cityName} sub_cat.keyword:""`
-}
 
+/**
+ * Query state outcome
+ * @param {String} cityName 
+ */
 function queryStateOutcome(cityName){ 
-    return `${queries.statesOutcome}?q=state_name=${cityName}`
+    return `${queries.statesOutcome}?q=name:${cityName}`
 }
 
 
@@ -20,4 +16,4 @@ let queries = {
 };
 
 
-export { queries, queryCityBasicOutcome, queryStateOutcome};
+export { queries, queryStateOutcome};
