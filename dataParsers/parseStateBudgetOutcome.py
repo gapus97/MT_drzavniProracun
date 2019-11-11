@@ -76,7 +76,7 @@ for row in range(5,sheet.nrows):
             stateClass.updateSumValue(value)
             main_obj = {
                 'name': main_cat,
-                "sub_cat": [
+                "children": [
                 ],
                 "value": value
             }
@@ -84,39 +84,40 @@ for row in range(5,sheet.nrows):
 
         # PARSE sub categories, add thath sub categorie to sub array of main categorie
         elif previous_main == main_cat and sub_cat != '' and previous_sub != sub_cat and sub_sub_cat == '':
-            for main in stateClass.mainCategories:
+            for main in stateClass.children:
                 if main['name'] == main_cat:
-                    index = stateClass.mainCategories.index(main)
-                    sub_cat_arr = main["sub_cat"]
+                    index = stateClass.children.index(main)
+                    print(main);
+                    sub_cat_arr = main["children"]
                     sub_cat_arr.append({
                         "name": sub_cat,
-                        "sub_sub_cat": [
+                        "children": [
 
                         ],
                         "value": value
                     })
                     # update index
                     main["sub_cat"] = sub_cat_arr
-                    stateClass.mainCategories[index] = main
+                    stateClass.children[index] = main
                     break
 
 
         # parse sub-sub categories
         if previous_sub == sub_cat and sub_cat != '' and sub_sub_cat != '' and previous_sub_sub != sub_sub_cat:
-            for main in stateClass.mainCategories:
+            for main in stateClass.children:
                 if main["name"] == main_cat:
                     # get sub-cat array
-                    m = main['sub_cat']
-                    main_index = stateClass.mainCategories.index(main)
+                    m = main['children']
+                    main_index = stateClass.children.index(main)
                     for sub in m:
                         if sub["name"] == sub_cat:
                             # append sub-sub categorie into sub-categorie: [ sub-sub: [...apend here]]
-                            sub_sub_arr = sub["sub_sub_cat"]
+                            sub_sub_arr = sub["children"]
                             sub_sub_arr.append({
                                 "name": sub_sub_cat,
                                 "value": value
                             })
-                            sub["sub_sub_cat"] = sub_sub_arr
+                            sub["children"] = sub_sub_arr
                             break
 
         row_id += 1
@@ -136,7 +137,7 @@ for row in range(5,sheet.nrows):
 
 '''
 Structure:
-"mainCategories": [
+"children": [
       {
         "name": "JAVNA UPRAVA",
         "sub_cat": [

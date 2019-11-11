@@ -1,7 +1,6 @@
 import React from 'react';
 import ShowStateBudget from '../components/ShowStateBudget';
-import { stateOutcomeMoney } from '../dataFetcher/FetchStates';
-
+import { stateOutcomeToMoney } from '../dataFetcher/FetchStates';
 
 class StateBudget extends React.Component {
 
@@ -17,12 +16,13 @@ class StateBudget extends React.Component {
 
     async componentDidMount() {
         // call API
-        let data = await stateOutcomeMoney(this.props.location.state.city);
+        let data = await stateOutcomeToMoney(this.props.location.state.city);
 
         console.log("Data: ", data);
         this.setState({
             stateData: data
         });
+        this.render();
     }
 
 

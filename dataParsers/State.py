@@ -7,14 +7,14 @@ class State:
     def __init__(self, id, name):
         self.id = id
         self.name = name
-        self.mainCategories = []
+        self.children = []
         self.sumValue = None
 
     def addMainCategorie(self, name, value):
-        self.mainCategories.append({name: value})
+        self.children.append({name: value})
 
     def addMainCategories(self, mainCat):
-        self.mainCategories.append(mainCat)
+        self.children.append(mainCat)
 
     def updateSumValue(self, value):
         self.sumValue = value
@@ -24,6 +24,6 @@ class State:
                           sort_keys=True, indent=4)
 
     def print(self):
-        print("Main: {}".format(self.mainCategories))
+        print("children: {}".format(self.children))
     def __str__(self):
-        print("{} {} \n {}".format(self.name, self.mainCategories, self.sumValue))
+        print("{} {} \n {}".format(self.name, self.children, self.sumValue))

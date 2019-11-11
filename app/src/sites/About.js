@@ -1,5 +1,5 @@
 import React from 'react';
-import StatesChart from '../components/charts/StatesChart';
+import StatesChart from '../components/charts/ZoomedTreeMap';
 
 
 class About extends React.Component {

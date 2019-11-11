@@ -17,7 +17,7 @@ async function states() {
     return statesData;
 };
 
-async function stateOutcomeMoney(stateName) {
+async function stateOutcomeToMoney(stateName) {
     let data = await fetchJSON(`${apiUrl}${queryStateOutcome(stateName)}`, "GET");
     let state;
 
@@ -29,4 +29,4 @@ async function stateOutcomeMoney(stateName) {
 }
 
 
-export  { states, stateOutcomeMoney};
+export  { states, stateOutcomeToMoney};
