@@ -11,7 +11,7 @@ class Footer extends React.Component {
         return (
             <footer className="footer">
                 <div>
-                    <p>This app uses data from <a href="https://www.e-prostor.gov.si/">e-prostor gov </a></p>
+                    <p>Ta stran uporablja podatke od: <a href="https://www.e-prostor.gov.si/">e-prostor gov </a></p>
                 </div>
             </footer>
         );

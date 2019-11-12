@@ -21,15 +21,31 @@ class ZoomedTreeMap extends React.Component {
 
     constructGraph() {
         // replace this with real API-data
-        var d = this.props.data;
         var el_id = 'zoomedTreeMap';
         var divWidth = 1920;
+        var NL = d3.formatLocale ({
+            "decimal": ".",
+            "thousands": ",",
+            "grouping": [3],
+            "currency": ["", "€"],
+            "dateTime": "%a %b %e %X %Y",
+            "date": "%m/%d/%Y",
+            "time": "%H:%M:%S",
+            "periods": ["AM", "PM"],
+            "days": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            "shortDays": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+            "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+            "shortMonths": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+          });
+
         var margin = {top: 30, right: 0, bottom: 20, left: 0},
             width = divWidth -25,
             height = 600 - margin.top - margin.bottom,
             formatNumber = d3.format(","),
             transitioning;
 
+            
+        console.log("Format: ", formatNumber);
 
         // sets x and y scale to determine size of visible boxes
         var x = d3.scaleLinear()
@@ -76,7 +92,9 @@ class ZoomedTreeMap extends React.Component {
                 .attr("y", 6 - margin.top)
                 .attr("dy", ".75em");
        
-        var root = d3.hierarchy(d);
+        var root = d3.hierarchy(this.props.data);
+
+        console.log("Root; ", root);
         
         treemap(root
             .sum(function (d) {
@@ -94,7 +112,7 @@ class ZoomedTreeMap extends React.Component {
                 .datum(d.parent)
                 .on("click", transition)
                 .select("text")
-                .text(`Občina ${name(d)}; Skupaj proračun: ${d3.format(",")(d.value)}`)
+                .text(`Občina ${name(d)}; Skupaj proračun: ${d3.format(",")(d.data.value)}`)
             // grandparent color
             grandparent
                 .datum(d.parent)
@@ -142,7 +160,7 @@ class ZoomedTreeMap extends React.Component {
                 .html(function (d) {
                     return '' +
                         '<p class="title"> ' + d.data.name + '</p>' +
-                        '<p>' + formatNumber(d.value) + '</p>'
+                        '<p>' + formatNumber(d.data.value) + '</p>'
                     ;
                 })
                 .attr("class", "textdiv"); //textdiv class allows us to style the text easily with CSS
@@ -199,7 +217,7 @@ class ZoomedTreeMap extends React.Component {
                 }
                 if(d.data.name) {
                   tip.style('opacity',.9)
-                  .html("<b>"+d.data.name+ "</b> </br> Skupaj: "+formatNumber(d.value.toFixed(2)) + "€")
+                  .html("<b>"+d.data.name+ "</b> </br> Skupaj: "+formatNumber(d.data.value.toFixed(2)) + "€")
                   .style("left", xPosition + "px")
                   .style("top", yPosition + "px");
                 }

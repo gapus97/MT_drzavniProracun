@@ -2,7 +2,8 @@
 import xlrd
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
-from dataParsers.State import State
+#from dataParsers.State import State
+from State import State
 
 
 es = Elasticsearch(
@@ -56,7 +57,7 @@ row_id = 0
 # read rows for states
 for row in range(5,sheet.nrows):
     state_id = sheet.cell_value(row, 1)
-    state_name = sheet.cell_value(row, 2).replace("OBČINA","").replace("MESTNA","").replace(" ", "")
+    state_name = sheet.cell_value(row, 2).replace("OBČINA","").replace("MESTNA","")
 
     stateClass = State(state_id, state_name)
     previous_main = ""
@@ -71,9 +72,12 @@ for row in range(5,sheet.nrows):
         value = sheet.cell_value(row,col)
 
 
+        if main_cat == 'SKUPAJ VSE DEJAVNOSTI(OD 01 DO 10)':
+            stateClass.updateValue(value)
+            continue
+
         # MAIN categories parse
         if previous_main != main_cat and sub_cat == '' and sub_sub_cat == '':
-            stateClass.updateSumValue(value)
             main_obj = {
                 'name': main_cat,
                 "children": [

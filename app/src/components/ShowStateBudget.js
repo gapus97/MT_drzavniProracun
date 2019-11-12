@@ -29,6 +29,7 @@ class ShowStateBudget extends React.Component {
         console.log("State budget data: ", this.state.data);
         return (
             <div id="showStateBudget">
+                <p>Izbrana kategorija: </p>
                <ZoomedTreeMap data={this.props.data} />
             </div>
         );

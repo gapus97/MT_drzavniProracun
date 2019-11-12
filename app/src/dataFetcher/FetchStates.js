@@ -1,5 +1,5 @@
 import { fetchJSON, apiUrl } from '../utils/FetchUtils';
-import { queries,queryStateOutcome } from '../utils/Queries';
+import { queries,queryStateOutcome, queryMap } from '../utils/Queries';
 
 async function states() {
     let data = await fetchJSON(`${apiUrl}${queries.states}`, "GET", {});
@@ -28,5 +28,17 @@ async function stateOutcomeToMoney(stateName) {
     return state;
 }
 
+async function fetchData(stateName, queryKey) {
+    
+    let data = await fetchJSON(`${apiUrl}${queryMap(stateName, queryKey)}`, "GET");
+    let responseData;
 
-export  { states, stateOutcomeToMoney};
+    if (data !== undefined && data.hits !== null && data.hits.hits !== null) {
+        responseData = data.hits.hits[0]._source;
+    }
+
+    return responseData;
+}
+
+
+export  { states, stateOutcomeToMoney, fetchData };
