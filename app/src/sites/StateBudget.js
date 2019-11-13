@@ -39,11 +39,6 @@ class StateBudget extends React.Component {
         });
     }
 
-    onToggle = (value) => {
-        console.log("Value: ", value);
-    }
-
-
     render() {
         //console.log("capitalCityCoordinates: ", this.state.capitalCityCoordinates);
         let dropdownItems = [];
@@ -66,11 +61,6 @@ class StateBudget extends React.Component {
                 <ShowStateBudget data={this.state.stateData} />
             </div>
         );
-
-        /*
-         <DropdownButton id="dropdown-basic-button" title="Dropdown button">
-                    { dropdownItems }
-                </DropdownButton> */
     }
 }
 

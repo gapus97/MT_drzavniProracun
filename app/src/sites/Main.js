@@ -1,8 +1,6 @@
 import React from 'react';
 import Maps from '../components/Maps';
 import { states } from '../dataFetcher/FetchStates';
-import States from '../components/States';
-import BarChart from '../components/charts/BarChart';
 import LoadingPage from '../components/LoadingPage';
 
 
@@ -48,8 +46,6 @@ class Main extends React.Component {
                     <Maps position={this.state.capitalCityCoordinates} zoom={150} data={this.state.stateData} /> :
                     <LoadingPage />
                 }
-                <States name={"miha"} />
-                <BarChart />
             </div>
         );
         

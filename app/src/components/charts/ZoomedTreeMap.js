@@ -23,29 +23,12 @@ class ZoomedTreeMap extends React.Component {
         // replace this with real API-data
         var el_id = 'zoomedTreeMap';
         var divWidth = 1920;
-        var NL = d3.formatLocale ({
-            "decimal": ".",
-            "thousands": ",",
-            "grouping": [3],
-            "currency": ["", "€"],
-            "dateTime": "%a %b %e %X %Y",
-            "date": "%m/%d/%Y",
-            "time": "%H:%M:%S",
-            "periods": ["AM", "PM"],
-            "days": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-            "shortDays": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-            "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-            "shortMonths": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-          });
 
         var margin = {top: 30, right: 0, bottom: 20, left: 0},
             width = divWidth -25,
-            height = 600 - margin.top - margin.bottom,
+            height = 800 - margin.top - margin.bottom,
             formatNumber = d3.format(","),
             transitioning;
-
-            
-        console.log("Format: ", formatNumber);
 
         // sets x and y scale to determine size of visible boxes
         var x = d3.scaleLinear()
@@ -54,6 +37,16 @@ class ZoomedTreeMap extends React.Component {
         var y = d3.scaleLinear()
             .domain([0, height])
             .range([0, height]);
+
+        var dataScale = d3.scaleLinear()
+            .domain([d3.min(this.props.data, function(d){return d.size}),
+                 d3.max(this.props.data, function(d){return d.size})]);
+
+        console.log("Data scale; ", dataScale);
+                 
+
+                 dataScale.range([0,100]); //here you can choose a hard coded amount, 
+                 //or quartiles of your data to fit your needs
 
         var color = d3.scaleOrdinal()
         .range(d3.schemeCategory10
@@ -68,7 +61,7 @@ class ZoomedTreeMap extends React.Component {
         .style('opacity',0);
 
         var treemap = d3.treemap()
-                .tile(d3.treemapResquarify.ratio(height / width * 0.5 * (1 + Math.sqrt(5))))
+                .tile(d3.treemapResquarify.ratio(height/ width * 0.5 * (1 + Math.sqrt(5))))
                 .size([width, height])
                 .paddingInner(0)
                 .round(false);
@@ -93,8 +86,6 @@ class ZoomedTreeMap extends React.Component {
                 .attr("dy", ".75em");
        
         var root = d3.hierarchy(this.props.data);
-
-        console.log("Root; ", root);
         
         treemap(root
             .sum(function (d) {
@@ -125,8 +116,8 @@ class ZoomedTreeMap extends React.Component {
                 .attr("class", "depth");
             var g = g1.selectAll("g")
                 .data(d.children)
-                .enter().
-                append("g");
+                .enter()
+                .append("g");
             // add class and click handler to all g's with children
             g.filter(function (d) {
                 return d.children;
@@ -239,9 +230,9 @@ class ZoomedTreeMap extends React.Component {
             text.attr("x", function (d) {
                 return x(d.x) + 6;
             })
-                .attr("y", function (d) {
+            .attr("y", function (d) {
                     return y(d.y) + 6;
-                });
+            });
         }
         function rect(rect) {
             rect
@@ -304,6 +295,7 @@ class ZoomedTreeMap extends React.Component {
 
 
     render() {   
+        console.log("Test");
         return (
             <div id="zoomedTreeMap">
             </div>
