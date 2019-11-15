@@ -38,15 +38,6 @@ class ZoomedTreeMap extends React.Component {
             .domain([0, height])
             .range([0, height]);
 
-        var dataScale = d3.scaleLinear()
-            .domain([d3.min(this.props.data, function(d){return d.size}),
-                 d3.max(this.props.data, function(d){return d.size})]);
-
-        console.log("Data scale; ", dataScale);
-                 
-
-                 dataScale.range([0,100]); //here you can choose a hard coded amount, 
-                 //or quartiles of your data to fit your needs
 
         var color = d3.scaleOrdinal()
         .range(d3.schemeCategory10

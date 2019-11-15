@@ -25,7 +25,8 @@ main_categories = []
 for i in range(3, sheet.ncols):
     main = sheet.cell_value(2,i).replace("\n","")
     # remove number
-    main = main[2:]
+    if "SKUPAJ" not in main:
+        main = main[2:]
     main_categories.append(main)
 
 # read sub categories (3rd row)
@@ -67,6 +68,9 @@ for row in range(5,sheet.nrows):
         sub_cat = sub_categories[search_index]
         sub_sub_cat = sub_sub_categories[search_index]
         value = sheet.cell_value(row,col)
+
+        if value == 0.0:
+            continue
 
 
         if main_cat == 'SKUPAJ VSE DEJAVNOSTI(OD 01 DO 10)':
