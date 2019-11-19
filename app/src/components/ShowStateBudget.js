@@ -31,7 +31,7 @@ class ShowStateBudget extends React.Component {
         return (
             <div id="showStateBudget">
                
-               <DendoGram data={this.state.data} />
+               <ZoomedTreeMap data={this.state.data} />
             </div>
         );
         

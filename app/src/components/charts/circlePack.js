@@ -6,6 +6,8 @@ class ZoomedTreeMap extends React.Component {
 
     constructor(props) {
         super(props);
+           this.height = 975;
+           this.width=this.height;
         this.state = {
             data: []
         };
@@ -19,8 +21,6 @@ class ZoomedTreeMap extends React.Component {
 
 
     constructGraph() {
-       var height = 975;
-       var width=this.height;
        var DOM=nextId();
        var color = d3.scaleSequential([8, 0], d3.interpolateMagma);
        var format = d3.format(",d");
