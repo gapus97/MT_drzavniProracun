@@ -11,6 +11,7 @@ class CirclePack extends React.Component {
         this.state = {
             data: []
         };
+        
     }
 
     componentDidUpdate({data}) {
@@ -22,6 +23,8 @@ class CirclePack extends React.Component {
 
     constructGraph() {
        //var DOM=nextId();
+       console.log(this.props);
+       debugger;
        var color = d3.scaleSequential([8, 0], d3.interpolateMagma);
        var format = d3.format(",d");
        var pack = data => d3.pack()
@@ -31,7 +34,7 @@ class CirclePack extends React.Component {
             .sort((a, b) => b.value - a.value))
         // replace this with real API-data
         var el_id = 'circlePack';
-         const root = pack(this.props.data);
+         const root = pack(this.props.data[0][2018][0]);
 
           const svg = d3.select("#circlePack").append("svg")
               .attr("viewBox", [0, 0, this.width, this.height])

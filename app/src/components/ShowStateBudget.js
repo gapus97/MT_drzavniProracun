@@ -11,19 +11,19 @@ class ShowStateBudget extends React.Component {
             data: []
         };
     }
-     componentDidUpdate({data}) {
-            if(this.props.data !== data) {
-                this.updateData();
-            }
+    
+    componentDidUpdate({data}) {
+        if(this.props.data !== data) {
+            this.updateData(this.props.data);
         }
-     //tukile spodi mi noče nafilat data
-     updateData(updatedData) {
-        this.setState({
-            data: this.props.data[0]
-        })
-        console.log(this.state.data)
-        debugger;
     }
+
+    updateData(updatedData) {
+        this.setState({
+            data: updatedData
+        })
+    }
+
 
 
 
