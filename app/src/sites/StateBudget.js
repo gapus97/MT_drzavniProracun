@@ -19,7 +19,7 @@ class StateBudget extends React.Component {
 
     async componentDidMount() {
         // call API
-        let data = await stateOutcomeToMoney(this.props.location.state.city);
+        let data = await stateOutcomeToMoney(this.props.location.state.city,2018);
 
         this.setState({
             stateData: data

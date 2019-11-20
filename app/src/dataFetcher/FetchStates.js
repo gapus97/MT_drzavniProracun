@@ -17,8 +17,8 @@ async function states() {
     return statesData;
 };
 
-async function stateOutcomeToMoney(stateName) {
-    let data = await fetchJSON(`${apiUrl}${queryStateOutcome(stateName)}`, "GET");
+async function stateOutcomeToMoney(stateName,year) {
+    let data = await fetchJSON(`${apiUrl}${queryStateOutcome(stateName,year)}`, "GET");
     let state;
 
     if (data !== undefined && data.hits !== null && data.hits.hits !== null) {
