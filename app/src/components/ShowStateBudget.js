@@ -1,6 +1,7 @@
 import React from 'react';
-import ZoomedTreeMap from './charts/ZoomedTreeMap';
-import DendoGram from './charts/DendoGram';
+/*import ZoomedTreeMap from './charts/ZoomedTreeMap';
+import DendoGram from './charts/DendoGram';*/
+import CirclePack from './charts/CirclePack';
 
 class ShowStateBudget extends React.Component {
 
@@ -30,8 +31,8 @@ class ShowStateBudget extends React.Component {
         console.log("State budget data: ", this.state.data);
         return (
             <div id="showStateBudget">
-               
-               <ZoomedTreeMap data={this.state.data} />
+               { <CirclePack data={this.state.data} /> }
+               { /* <ZoomedTreeMap data={this.state.data} /> */ }
             </div>
         );
         

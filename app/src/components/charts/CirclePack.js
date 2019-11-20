@@ -1,8 +1,8 @@
 import React from 'react';
 import * as d3 from 'd3';
-import nextId from "react-id-generator";
+//import nextId from "react-id-generator";
 
-class ZoomedTreeMap extends React.Component {
+class CirclePack extends React.Component {
 
     constructor(props) {
         super(props);
@@ -21,20 +21,19 @@ class ZoomedTreeMap extends React.Component {
 
 
     constructGraph() {
-       var DOM=nextId();
+       //var DOM=nextId();
        var color = d3.scaleSequential([8, 0], d3.interpolateMagma);
        var format = d3.format(",d");
        var pack = data => d3.pack()
             .size([this.width / 2, this.height / 2])
             .padding(3)
-          (d3.hierarchy(this.props.data)
-            .sum(d => d.value)
+          (d3.hierarchy(data)
             .sort((a, b) => b.value - a.value))
         // replace this with real API-data
-        var el_id = 'zoomedTreeMap';
+        var el_id = 'circlePack';
          const root = pack(this.props.data);
 
-          const svg = d3.select("#zoomedTreeMap").append("svg")
+          const svg = d3.select("#circlePack").append("svg")
               .attr("viewBox", [0, 0, this.width, this.height])
               .style("font", "10px sans-serif")
               .attr("text-anchor", "middle");
@@ -64,27 +63,29 @@ class ZoomedTreeMap extends React.Component {
           const leaf = node.filter(d => !d.children);
 
           leaf.select("circle")
-              .attr("id", d => (d.leafUid = DOM+"shadow").id);
+              .attr("id", d => (d.leafUid = "shadow").id);
 
           leaf.append("clipPath")
-              .attr("id", d => (d.clipUid = DOM+"desdes").id)
+              .attr("id", d => (d.clipUid = "desdes").id)
             .append("use")
               .attr("xlink:href", d => d.leafUid.href);
 
 
 
           node.append("title")
-              .text(d => `${d.ancestors().map(d => d.data.name).reverse().join("/")}\n${format(d.value)}`);
+              .text(d => 
+                  `${d.ancestors().map(d => d.data.name).reverse().join("/\n")}\n${format(d.value)}`
+                );
 
     }
 
     render() {
         return (
-            <div id="zoomedTreeMap">
+            <div id="circlePack">
             </div>
         );
 
     }
 }
 
-export default ZoomedTreeMap;
+export default CirclePack;

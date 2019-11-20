@@ -4,28 +4,28 @@
  * Query state outcome
  * @param {String} cityName 
  */
-function queryStateOutcome(cityName){ 
-    return `${queries.statesOutcome}?q=name:${cityName}`
+function queryStateOutcome(cityName, year){ 
+    return `${queries.statesOutcome}?q=name:${cityName} AND year:${year}`
 }
 
-function queryCurrentTransfers(cityName) {
-    return `${queries.currentTransfers}?q=name:${cityName}`
+function queryCurrentTransfers(cityName, year) {
+    return `${queries.currentTransfers}?q=name:${cityName} AND year:${year}`
 }
 
-function queryOutgoingInvestments(cityName) {
-    return `${queries.outgoingInvestments}?q=name:${cityName}`
+function queryOutgoingInvestments(cityName, year) {
+    return `${queries.outgoingInvestments}?q=name:${cityName} AND year:${year}`
 }
 
-function queryInvestmentsTransfers(cityName) {
-    return `${queries.investmentTransfers}?q=name:${cityName}`
+function queryInvestmentsTransfers(cityName, year) {
+    return `${queries.investmentTransfers}?q=name:${cityName} AND year:${year}`
 }
 
-function queryLoansAndCapital(cityName) {
-    return `${queries.loansAndCapital}?q=name:${cityName}`
+function queryLoansAndCapital(cityName, year) {
+    return `${queries.loansAndCapital}?q=name:${cityName} AND year:${year}`
 }
 
-function queryDeptPayments(cityName) {
-    return `${queries.deptPayments}?q=name:${cityName}`
+function queryDeptPayments(cityName, year) {
+    return `${queries.deptPayments}?q=name:${cityName} AND year:${year}`
 }
 
 
@@ -40,20 +40,27 @@ let queries = {
     // add more etc...
 };
 
-function queryMap(cityName, queryKey) {
+
+let supportedYears = {
+    2018: '2018',
+    2017: '2017',
+    2016: '2016'
+};
+
+function queryMap(cityName, queryKey, year) {
     switch(queryKey) {
         case 'statesOutcome':
-            return queryStateOutcome(cityName);
+            return queryStateOutcome(cityName, year);
         case 'currentTransfers':
-            return queryCurrentTransfers(cityName);
+            return queryCurrentTransfers(cityName, year);
         case 'investmentTransfers':
-            return queryInvestmentsTransfers(cityName);
+            return queryInvestmentsTransfers(cityName, year);
         case 'outgoingInvestments':
-            return queryOutgoingInvestments(cityName);
+            return queryOutgoingInvestments(cityName, year);
         case 'loansAndCapital':
-            return queryLoansAndCapital(cityName);
+            return queryLoansAndCapital(cityName, year);
         case 'deptPayments':
-            return queryDeptPayments(cityName);
+            return queryDeptPayments(cityName, year);
     }
 }
 
@@ -75,5 +82,6 @@ export {
     queryOutgoingInvestments,
     queryLoansAndCapital,
     queryDeptPayments,
-    queryMap
+    queryMap,
+    supportedYears
 };

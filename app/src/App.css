@@ -20,13 +20,22 @@ html {
 
 .App-header {
   background-color: #282c34;
-  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  /*height: 70px;*/
   color: white;
+  margin: 0;
+  align-content: stretch;
+  justify-content: stretch;
+}
+
+.header-item {
+  padding-left: 10px;
+}
+
+.container .App-header {
+  width: 100%;
 }
 
 .App-link {
@@ -215,4 +224,28 @@ text {
 .shadow {
   -webkit-filter: drop-shadow( -1.5px -1.5px 1.5px #000 );
   filter: drop-shadow( -1.5px -1.5px 1.5px #000 );
+}
+
+
+/* Overall budget data */
+.overallBudget {
+  background-color:white;
+}
+
+.overallBudget-item {
+  background-color: #282c34;
+  height: 100px;
+}
+.overallBudget-item-year {
+  color: white;
+}
+
+.overallBudget-item-value {
+  color: white;
+  padding: 10px;
+}
+
+.overallBudget-ascending, .overallBudget-descending {
+  background-color:  #282c34;
+  color: white;
 }

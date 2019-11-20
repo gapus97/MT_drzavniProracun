@@ -28,9 +28,9 @@ async function stateOutcomeToMoney(stateName) {
     return state;
 }
 
-async function fetchData(stateName, queryKey) {
+async function fetchData(stateName, queryKey, year) {
     
-    let data = await fetchJSON(`${apiUrl}${queryMap(stateName, queryKey)}`, "GET");
+    let data = await fetchJSON(`${apiUrl}${queryMap(stateName, queryKey, year)}`, "GET");
     let responseData;
 
     if (data !== undefined && data.hits !== null && data.hits.hits !== null) {

@@ -29,7 +29,7 @@ class StateBudget extends React.Component {
     onDropdownItemSelect = async (dataKey) => {
         console.log("Dropdown select: " ,dataKey);
 
-        let data = await fetchData(this.props.location.state.city, dataKey);
+        let data = await fetchData(this.props.location.state.city, dataKey, 2018);
 
         console.log("Response: ", data);
 
