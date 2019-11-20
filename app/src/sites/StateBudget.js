@@ -3,7 +3,7 @@ import ShowStateBudget from '../components/ShowStateBudget';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { stateOutcomeToMoney, fetchData } from '../dataFetcher/FetchStates';
-import { budgetCategories } from '../utils/Queries';
+import { budgetCategories, supportedYears, queryMap } from '../utils/Queries';
 
 class StateBudget extends React.Component {
 
@@ -11,18 +11,34 @@ class StateBudget extends React.Component {
         super(props);
         this.state = {
             stateData: [],
-            selectedBudgetCategorie: budgetCategories.statesOutcome
+            selectedBudgetCategorie: budgetCategories.statesOutcome,
+            generalBudgetData: []
         };
-
         this.onDropdownItemSelect = this.onDropdownItemSelect.bind(this);
     }
 
     async componentDidMount() {
-        // call API
-        let data = await stateOutcomeToMoney(this.props.location.state.city,2018);
+        let generalBudgetData = [
+            {
+                2018: [],
+                2017: [],
+                2016: []
+            }
+        ];
 
+        // call API
+        for(const [key, value] of Object.entries(budgetCategories)) {
+            for(const [yearKey, value] of Object.entries(supportedYears)) {
+                
+                let categorieData = await fetchData(this.props.location.state.city, key, value);
+                generalBudgetData[0][yearKey].push(categorieData);
+            }
+        }
+
+        
+        console.log("All data: ", generalBudgetData);
         this.setState({
-            stateData: data
+            stateData: generalBudgetData
         });
     }
 
