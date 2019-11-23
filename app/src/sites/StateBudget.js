@@ -1,9 +1,8 @@
 import React from 'react';
 import ShowStateBudget from '../components/ShowStateBudget';
 import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import { stateOutcomeToMoney, fetchData } from '../dataFetcher/FetchStates';
-import { budgetCategories, supportedYears, queryMap } from '../utils/Queries';
+import { budgetCategories } from '../utils/Queries';
+import  { parseBudgetCategories, parseBudgetCategorie } from '../utils/ParsingUtils';
 
 class StateBudget extends React.Component {
 
@@ -18,25 +17,8 @@ class StateBudget extends React.Component {
     }
 
     async componentDidMount() {
-        let generalBudgetData = [
-            {
-                2018: [],
-                2017: [],
-                2016: []
-            }
-        ];
-
-        // call API
-        for(const [key, value] of Object.entries(budgetCategories)) {
-            for(const [yearKey, value] of Object.entries(supportedYears)) {
-                
-                let categorieData = await fetchData(this.props.location.state.city, key, value);
-                generalBudgetData[0][yearKey].push(categorieData);
-            }
-        }
-
-        
-        console.log("All data: ", generalBudgetData);
+        let generalBudgetData = await parseBudgetCategories(this.props.location.state.city);
+    
         this.setState({
             stateData: generalBudgetData
         });
@@ -45,24 +27,23 @@ class StateBudget extends React.Component {
     onDropdownItemSelect = async (dataKey) => {
         console.log("Dropdown select: " ,dataKey);
 
-        let data = await fetchData(this.props.location.state.city, dataKey, 2018);
+        let generalBudgetData = await parseBudgetCategorie(this.props.location.state.city, dataKey);
+    
 
-        console.log("Response: ", data);
+        console.log("Response: ", generalBudgetData);
 
         this.setState({
             selectedBudgetCategorie: budgetCategories[dataKey],
-            stateData: data
+            stateData: generalBudgetData
         });
     }
 
     render() {
-        //console.log("capitalCityCoordinates: ", this.state.capitalCityCoordinates);
         let dropdownItems = [];
         for(const [key, value] of Object.entries(budgetCategories)) {
             dropdownItems.push(<Dropdown.Item key={key} eventKey={key} onClick={() => this.onDropdownItemSelect(`${key}`)} >{value}</Dropdown.Item>)
         }
 
-        //console.log("Items: ", dropdownItems);
         return (
             <div>
                <Dropdown id="dropdown-basic-button">
@@ -74,7 +55,7 @@ class StateBudget extends React.Component {
                         { dropdownItems }
                     </Dropdown.Menu>
                 </Dropdown>
-                <ShowStateBudget data={this.state.stateData} />
+                <ShowStateBudget data={this.state.stateData} budgetCategorie={this.state.selectedBudgetCategorie} />
             </div>
         );
     }

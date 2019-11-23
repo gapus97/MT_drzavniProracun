@@ -29,7 +29,9 @@ async function stateOutcomeToMoney(stateName,year) {
 }
 
 async function fetchData(stateName, queryKey, year) {
-    
+    if (!queryKey) {
+        return;
+    }
     let data = await fetchJSON(`${apiUrl}${queryMap(stateName, queryKey, year)}`, "GET");
     let responseData;
 

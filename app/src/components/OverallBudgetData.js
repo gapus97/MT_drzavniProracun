@@ -22,7 +22,6 @@ class OverallBudgetData extends React.Component {
 
     parseData() {
         let overallBudgetData = this.props.data;
-        let parsedElements = [];
         let sumValues = [];
 
         
@@ -49,14 +48,13 @@ class OverallBudgetData extends React.Component {
     }
 
     elementSum(arrayValues) {
-        console.log("Array value: ", arrayValues);
         let sum = 0;
         for(let i = 0; i < arrayValues.length; i++) {
             let elementSum = arrayValues[i].value;
             sum += elementSum;
         }
 
-        console.log("Sum: ", sum);
+
         return sum;
     }
 
@@ -65,7 +63,6 @@ class OverallBudgetData extends React.Component {
         let value = 0;
 
         this.state.sumValues.map((key) => {
-            console.log("Key: ", key);
             if(key.value > value) {
                 value = key.value;
                 isAscending = true;

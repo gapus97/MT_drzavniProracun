@@ -4,27 +4,28 @@
  * Query state outcome
  * @param {String} cityName 
  */
-function queryStateOutcome(cityName, year){ 
+function queryStateOutcome(cityName, year = null){ 
+
     return `${queries.statesOutcome}?q=name:${cityName} AND year:${year}`
 }
 
-function queryCurrentTransfers(cityName, year) {
+function queryCurrentTransfers(cityName, year = null) {
     return `${queries.currentTransfers}?q=name:${cityName} AND year:${year}`
 }
 
-function queryOutgoingInvestments(cityName, year) {
+function queryOutgoingInvestments(cityName, year = null) {
     return `${queries.outgoingInvestments}?q=name:${cityName} AND year:${year}`
 }
 
-function queryInvestmentsTransfers(cityName, year) {
+function queryInvestmentsTransfers(cityName, year = null) {
     return `${queries.investmentTransfers}?q=name:${cityName} AND year:${year}`
 }
 
-function queryLoansAndCapital(cityName, year) {
+function queryLoansAndCapital(cityName, year = null) {
     return `${queries.loansAndCapital}?q=name:${cityName} AND year:${year}`
 }
 
-function queryDeptPayments(cityName, year) {
+function queryDeptPayments(cityName, year = null) {
     return `${queries.deptPayments}?q=name:${cityName} AND year:${year}`
 }
 

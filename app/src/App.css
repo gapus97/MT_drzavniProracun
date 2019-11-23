@@ -79,7 +79,7 @@ html {
 }
 
 #zoomedTreeMap, #zoomedDendo {
-  width: 100%;
+  width: 50%;
   overflow:auto;
 }
 
@@ -249,3 +249,11 @@ text {
   background-color:  #282c34;
   color: white;
 }
+
+
+#circlePack {
+  width: 50%;
+  max-height: 500px;
+}
+
+.bar { fill: steelblue; }
