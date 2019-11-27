@@ -1,6 +1,6 @@
 import React from 'react';
 import * as d3 from 'd3';
-import {getCategorieComparisonByYear } from '../../utils/ParsingUtils';
+import {getCategorieComparisonByYear, parseMoney } from '../../utils/ParsingUtils';
 import { supportedYears } from '../../utils/Queries';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -23,12 +23,18 @@ class CirclePack extends React.Component {
         if(this.props.data !== data) {
             console.log("Method calll");
             this.constructGraph();
+            console.log("Data arrived: ", this.props.data);
+
+            let categoricalData = getCategorieComparisonByYear(this.props.data, "VIPAVA");
+
+
+            this.comparisonGraph(categoricalData);
 
         }
     }
 
     showText(d) {
-        const value = (d.data.value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        const value = parseMoney(d.data.value);
         const name = d.data.name;
 
         let data  = getCategorieComparisonByYear(this.props.data, name);
@@ -48,6 +54,23 @@ class CirclePack extends React.Component {
             textValue: "",
             textName: ""
         }); */
+    }
+
+    showDataOnMouseMove(d) {
+        const name = d.data.name;
+        const value = parseMoney(d.data.value);
+
+
+
+        if(value && name)  {
+            let data = getCategorieComparisonByYear(this.props.data, name);
+
+            this.comparisonGraph(data);
+            this.setState({
+                textName: name,
+                textValue: value
+            });
+        }
     }
 
 
@@ -92,7 +115,7 @@ class CirclePack extends React.Component {
             .data(d => d.values)
             .join("g")
               .attr("transform", d => `translate(${d.x + 1},${d.y + 1})`)
-            .on("mouseover", (d) => {})
+            .on("mouseover", (d) => this.showDataOnMouseMove(d))
             .on("mouseout", () => this.hideText())
             .on("click", (d) => this.showText(d));
 
@@ -211,7 +234,10 @@ class CirclePack extends React.Component {
                             </div>
                         </Row>
                         <Row>
-                            <p>Kategorija: {this.state.textName} </p>
+                            <Col>
+                                <p>Kategorija: {this.state.textName} </p>
+                                <p>Vrednost 2018:  {this.state.textValue} </p>
+                            </Col>
                         </Row>
                     </Col>
                 </Row>

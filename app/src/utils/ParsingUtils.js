@@ -108,19 +108,22 @@ const isDataValid = (data) => {
 
    
     for(const [yearKey, value] of Object.entries(supportedYears)) {
-        //element[yearKey]
         let yearData = data[0][yearKey][0];
-
         yearData.value && yearData.children ? isDataValid = true : isDataValid = false;
-        
     }
     console.log("iS DATA valud: ", isDataValid);
     return isDataValid;
+}
+
+const parseMoney = (moneyData) => {
+    if(moneyData)
+        return (moneyData).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
 }
 
 export {
     parseBudgetCategories,
     parseBudgetCategorie,
     getCategorieComparisonByYear,
-    isDataValid
+    isDataValid,
+    parseMoney
 };

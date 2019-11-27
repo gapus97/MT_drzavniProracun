@@ -3,6 +3,7 @@ import ShowStateBudget from '../components/ShowStateBudget';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { budgetCategories } from '../utils/Queries';
 import  { parseBudgetCategories, parseBudgetCategorie, isDataValid } from '../utils/ParsingUtils';
+import { thisTypeAnnotation } from '@babel/types';
 
 class StateBudget extends React.Component {
 
@@ -20,7 +21,7 @@ class StateBudget extends React.Component {
     async componentDidMount() {
         let generalBudgetData = await parseBudgetCategories(this.props.location.state.city);
 
-        isDataValid(generalBudgetData) ? this.setState({isDataAvailable: true}) : this.setState({isDataAvailable: false});
+        this.checkData(generalBudgetData);
     
         this.setState({
             stateData: generalBudgetData
@@ -28,15 +29,7 @@ class StateBudget extends React.Component {
     }
 
     checkData(data) {
-        if (isDataValid(data)) {
-            this.setState({
-                isDataAvailable: true
-            });
-        } else {
-            this.setState({
-                isDataAvailable: false
-            });
-        }
+        isDataValid(data) ? this.setState({isDataAvailable: true}) : this.setState({isDataAvailable: false});
     }
     onDropdownItemSelect = async (dataKey) => {
         console.log("Dropdown select: " ,dataKey);
@@ -46,9 +39,6 @@ class StateBudget extends React.Component {
         if (generalBudgetData) {
             this.checkData(generalBudgetData);
         }
-    
-
-        console.log("Response: ", generalBudgetData);
 
         this.setState({
             selectedBudgetCategorie: budgetCategories[dataKey],
