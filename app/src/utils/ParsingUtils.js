@@ -103,8 +103,24 @@ const getCategorieComparisonByYear = (data, categorie) => {
 
 }
 
+const isDataValid = (data) => {
+    let isDataValid = false;
+
+   
+    for(const [yearKey, value] of Object.entries(supportedYears)) {
+        //element[yearKey]
+        let yearData = data[0][yearKey][0];
+
+        yearData.value && yearData.children ? isDataValid = true : isDataValid = false;
+        
+    }
+    console.log("iS DATA valud: ", isDataValid);
+    return isDataValid;
+}
+
 export {
     parseBudgetCategories,
     parseBudgetCategorie,
-    getCategorieComparisonByYear
+    getCategorieComparisonByYear,
+    isDataValid
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import ShowStateBudget from '../components/ShowStateBudget';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { budgetCategories } from '../utils/Queries';
-import  { parseBudgetCategories, parseBudgetCategorie } from '../utils/ParsingUtils';
+import  { parseBudgetCategories, parseBudgetCategorie, isDataValid } from '../utils/ParsingUtils';
 
 class StateBudget extends React.Component {
 
@@ -11,23 +11,41 @@ class StateBudget extends React.Component {
         this.state = {
             stateData: [],
             selectedBudgetCategorie: budgetCategories.statesOutcome,
-            generalBudgetData: []
+            generalBudgetData: [],
+            isDataAvailable: false
         };
         this.onDropdownItemSelect = this.onDropdownItemSelect.bind(this);
     }
 
     async componentDidMount() {
         let generalBudgetData = await parseBudgetCategories(this.props.location.state.city);
+
+        isDataValid(generalBudgetData) ? this.setState({isDataAvailable: true}) : this.setState({isDataAvailable: false});
     
         this.setState({
             stateData: generalBudgetData
         });
     }
 
+    checkData(data) {
+        if (isDataValid(data)) {
+            this.setState({
+                isDataAvailable: true
+            });
+        } else {
+            this.setState({
+                isDataAvailable: false
+            });
+        }
+    }
     onDropdownItemSelect = async (dataKey) => {
         console.log("Dropdown select: " ,dataKey);
 
         let generalBudgetData = await parseBudgetCategorie(this.props.location.state.city, dataKey);
+
+        if (generalBudgetData) {
+            this.checkData(generalBudgetData);
+        }
     
 
         console.log("Response: ", generalBudgetData);
@@ -55,7 +73,12 @@ class StateBudget extends React.Component {
                         { dropdownItems }
                     </Dropdown.Menu>
                 </Dropdown>
-                <ShowStateBudget data={this.state.stateData} budgetCategorie={this.state.selectedBudgetCategorie} />
+                {
+                    this.state.isDataAvailable ?
+                    <ShowStateBudget data={this.state.stateData} budgetCategorie={this.state.selectedBudgetCategorie} />
+                    : <p>Prosim izberite druge podatke</p>
+                }
+                
             </div>
         );
     }
