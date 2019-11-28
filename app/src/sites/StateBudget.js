@@ -32,7 +32,6 @@ class StateBudget extends React.Component {
         isDataValid(data) ? this.setState({isDataAvailable: true}) : this.setState({isDataAvailable: false});
     }
     onDropdownItemSelect = async (dataKey) => {
-        console.log("Dropdown select: " ,dataKey);
 
         let generalBudgetData = await parseBudgetCategorie(this.props.location.state.city, dataKey);
 
@@ -65,7 +64,7 @@ class StateBudget extends React.Component {
                 </Dropdown>
                 {
                     this.state.isDataAvailable ?
-                    <ShowStateBudget data={this.state.stateData} budgetCategorie={this.state.selectedBudgetCategorie} />
+                    <ShowStateBudget data={this.state.stateData} budgetCategorie={this.state.selectedBudgetCategorie} city={this.props.location.state.city}/>
                     : <p>Prosim izberite druge podatke</p>
                 }
                 

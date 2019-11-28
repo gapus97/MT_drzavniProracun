@@ -23,7 +23,6 @@ class ShowStateBudget extends React.Component {
     }
 
     updateData(updatedData) {
-        console.log("Data is also updated");
         this.setState({
             data: updatedData
         });
@@ -42,7 +41,7 @@ class ShowStateBudget extends React.Component {
         console.log("State budget data: ", this.state.data);
         return (
             <div id="showStateBudget">
-               { <CirclePack data={this.state.data} /> }
+               { <CirclePack data={this.state.data} city={this.props.city} /> }
                { /* <ZoomedTreeMap data={this.state.data} /> */ }
             </div>
         );

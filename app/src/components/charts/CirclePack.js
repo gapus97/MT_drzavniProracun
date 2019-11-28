@@ -21,13 +21,12 @@ class CirclePack extends React.Component {
 
     componentDidUpdate({data}) {
         if(this.props.data !== data) {
-            console.log("Method calll");
+            this.drawLegend();
             this.constructGraph();
-            console.log("Data arrived: ", this.props.data);
 
-            let categoricalData = getCategorieComparisonByYear(this.props.data, "VIPAVA");
+            let categoricalData = getCategorieComparisonByYear(this.props.data, this.props.city.toUpperCase());
 
-
+            console.log("Categorial data:", categoricalData);
             this.comparisonGraph(categoricalData);
 
         }
@@ -48,6 +47,8 @@ class CirclePack extends React.Component {
             comparisonData: data
         });
     }
+
+
 
     hideText() {
         /*this.setState({
@@ -82,15 +83,13 @@ class CirclePack extends React.Component {
         var width=400;
        var pack = data => d3.pack()
             .size([width - 2, height - 2])
-            .padding(3)
+            .padding(15)
           (d3.hierarchy(data)
-            .sort((a, b) => b.value - a.value))
+            .sort((a, b) => b.value - a.value));
 
             
          const root = pack(this.props.data[0][2018][0]);
          var margin = {top: 20, right: 20, bottom: 30, left: 40};
-
-         
 
           const svg = d3.select("#circlePack").append("svg")
             .attr("width", width + margin.left + margin.right)
@@ -116,12 +115,27 @@ class CirclePack extends React.Component {
             .join("g")
               .attr("transform", d => `translate(${d.x + 1},${d.y + 1})`)
             .on("mouseover", (d) => this.showDataOnMouseMove(d))
-            .on("mouseout", () => this.hideText())
-            .on("click", (d) => this.showText(d));
+            .on("mouseout", () => this.hideText());
+
+            let current_circle = undefined;
 
           node.append("circle")
               .attr("r", d => d.r)
-              .attr("fill", d => color(d.height));
+              .attr("fill", d => color(d.height))
+              .on("click", circleSelect);
+
+
+              function circleSelect(d) {
+                // cleanup previous selected circle
+                if(current_circle !== undefined){      
+                  current_circle.attr("fill", d => color(d.height));
+                }
+            
+                // select the circle
+                current_circle = d3.select(this);
+                //console.log("Current circle: ", current_circle);
+                current_circle.attr("fill","#b2e1f9");
+              }
 
           const leaf = node.filter(d => !d.children);
 
@@ -139,6 +153,21 @@ class CirclePack extends React.Component {
                   `${d.ancestors().map(d => d.data.name).reverse().join("/\n")}\n${format(d.value)}`           
                 );
 
+    }
+
+    drawLegend() {
+        //Make an SVG Container
+        var svgContainer = d3.select("#legend").append("svg")
+                                    .attr("width", 50)
+                                    .attr("height", 50);
+        //Draw the Circle
+        var circle = svgContainer.append("circle")
+                          .attr("cx", 30)
+                         .attr("cy", 30)
+                         .attr("r", 20);
+
+        // set circle color
+        circle.attr("fill","#b2e1f9");
     }
 
     comparisonGraph(data) {
@@ -223,21 +252,24 @@ class CirclePack extends React.Component {
 
                 <Row>
                     <Col md={6}>
-                        <div id="circlePack">
-                            
-                        </div>
-                    </Col>
-                    <Col md={6}>
+                        <div id="circlePack" />
                         <Row>
-                            <div id="comparisonGraph">
-
-                            </div>
-                        </Row>
-                        <Row>
+                            <Col>
+                                <p>Legenda:</p>
+                                <div>
+                                    <p>Označena kategorija</p>
+                                    <div id="legend" />
+                                </div>
+                            </Col>
                             <Col>
                                 <p>Kategorija: {this.state.textName} </p>
                                 <p>Vrednost 2018:  {this.state.textValue} </p>
                             </Col>
+                        </Row>
+                    </Col>
+                    <Col md={6}>
+                        <Row>
+                            <div id="comparisonGraph" />
                         </Row>
                     </Col>
                 </Row>

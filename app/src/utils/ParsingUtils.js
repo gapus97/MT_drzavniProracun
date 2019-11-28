@@ -50,8 +50,6 @@ const parseBudgetCategorie = async (city, categorie) => {
  * @param {*} categorie 
  */
 const getCategorieComparisonByYear = (data, categorie) => {
-    console.log("Data arrived: ", data);
-    console.log("Categorie: ", categorie);
     let categorieComparison = [
         {
             2018: [],
@@ -76,18 +74,20 @@ const getCategorieComparisonByYear = (data, categorie) => {
             for(var j = 0; j < subCategories.length; j++) {
                 let subCategorie = subCategories[j];
 
+
+
                 if(subCategorie.name.includes(categorie)) {
                     categorieComparison[0][year].push(subCategorie);
                     break;
                 }
 
                 let subSubCategories = subCategorie.children;
-                //console.log("CHildrens: ", subSubCategories.length);
+
+                
 
                 for(var k = 0; k < subSubCategories.length; k++) {
                     let subSubCategorie = subSubCategories[k];
-                    
-
+                
                     if(subSubCategorie.name.includes(categorie)) {
                         categorieComparison[0][year].push(subSubCategorie);
                         break;
