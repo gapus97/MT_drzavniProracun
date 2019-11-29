@@ -10,7 +10,6 @@ class MarkerPopup extends React.Component {
             <div id="markerPopup">
                 <p>Občina: {this.props.city} </p>
                 <div>
-                    <img src='http://joshuafrazier.info/images/maptime.gif' alt='maptime logo gif' width='100px'/>
                     <Link to={{
                         pathname: "/stateBudget",
                         state: {city: this.props.city}
