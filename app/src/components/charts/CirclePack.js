@@ -163,6 +163,7 @@ class CirclePack extends React.Component {
     }
 
     drawLegend() {
+        d3.select("#legend").select("svg").remove();
         //Make an SVG Container
         var svgContainer = d3.select("#legend").append("svg")
             .attr("width", 600)
