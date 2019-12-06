@@ -165,16 +165,31 @@ class CirclePack extends React.Component {
     drawLegend() {
         //Make an SVG Container
         var svgContainer = d3.select("#legend").append("svg")
-            .attr("width", 50)
+            .attr("width", 600)
             .attr("height", 50);
         //Draw the Circle
         var circle = svgContainer.append("circle")
-            .attr("cx", 30)
+            .attr("cx", 50)
             .attr("cy", 30)
             .attr("r", 20);
-
+        var circle2 = svgContainer.append("circle")
+            .attr("cx", 220)
+            .attr("cy", 30)
+            .attr("r", 20);
+        var circle3 = svgContainer.append("circle")
+            .attr("cx", 370)
+            .attr("cy", 30)
+            .attr("r", 20);
+        var circle4 = svgContainer.append("circle")
+            .attr("cx", 520)
+            .attr("cy", 30)
+            .attr("r", 20);    
         // set circle color
-        circle.attr("fill", "#b2e1f9");
+        circle.attr("fill", "#FE7B5F"); //glavna kategorija
+        circle2.attr("fill", "#FFC386");
+        circle3.attr("fill", "#F8FFBE");
+        circle4.attr("fill", "#b2e1f9");
+
     }
 
     comparisonGraph(data) {
@@ -258,27 +273,30 @@ class CirclePack extends React.Component {
             <Container className="circlePack-root">
 
                 <Row>
-                    <Col md={6}>
+                    <Col>
                         <div id="circlePack" />
-                        <Row>
-                            <Col>
-                                <p>Legenda:</p>
-                                <div>
-                                    <p>Označena kategorija</p>
-                                    <div id="legend" />
-                                </div>
-                            </Col>
-                            <Col>
-                                <p>Kategorija: {this.state.textName} </p>
-                                <p>Vrednost 2018:  {this.state.textValue} </p>
-                            </Col>
-                        </Row>
                     </Col>
                     <Col md={6}>
                         <Row>
                             <div id="comparisonGraph" />
                         </Row>
                     </Col>
+                </Row>
+                <Row>                
+                    <Col md="auto">
+                        <p>Legenda:</p>
+                            <div>
+                                <pre style={{display: 'inline' }}>Glavna kategorija   </pre>
+                                <pre style={{display: 'inline' }}>Pod kategorija   </pre>
+                                <pre style={{display: 'inline' }}>Koncna kategorija   </pre>
+                                <p style={{display: 'inline' }}>Izbrana kategorija</p>                               
+                                <div id="legend" />
+                                </div>
+                    </Col>
+                    <Col md="auto">
+                        <p>Kategorija: {this.state.textName} </p>
+                        <p>Vrednost 2018:  {this.state.textValue} </p>
+                    </Col>    
                 </Row>
 
             </Container>
