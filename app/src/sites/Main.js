@@ -1,6 +1,6 @@
 import React from 'react';
 import Maps from '../components/Maps';
-import { states, fetchData } from '../dataFetcher/FetchStates';
+import { states, fetchData, fetchAPIData } from '../dataFetcher/FetchStates';
 import LoadingPage from '../components/LoadingPage';
 import { budgetCategories, supportedYears } from '../utils/Queries';
 import OverallBudgetData from '../components/OverallBudgetData';
@@ -63,13 +63,8 @@ class Main extends React.Component {
 
         /* Only testing */
 
-        await fetch("api/statesOutcome/name=celje").then(res => res.json()
-        ).then(res => {
-            this.setState({
-                krneki: res
-            });
-            console.log("Res: ", res);
-        })
+        let neki = await fetchAPIData("SKUPAJ*", null, null);
+        console.log("Testing new API: ", neki);
 
 
     }

@@ -5,8 +5,8 @@
  * @param {String} cityName 
  */
 function queryStateOutcome(cityName, year = null){ 
-
-    return `${queries.statesOutcome}?q=name:${cityName} AND year:${year}`
+    return `${queries.statesOutcome}?q=name:${cityName} AND year:${year}`;
+    return `${apiEndPoints.statesOutcome}name=${cityName}`;
 }
 
 function queryCurrentTransfers(cityName, year = null) {
@@ -38,7 +38,18 @@ let queries = {
     investmentTransfers: "investment_transfers/_search",
     loansAndCapital: "loans_and_capital/_search",
     deptPayments: "debt_payment/_search"
-    // add more etc...
+};
+
+let API = 'api/';
+
+let apiEndPoints = {
+    statesOutcome: `${API}statesOutcome/`,
+    states: `${API}states`,
+    currentTransfers: `${API}currentTransfers/`,
+    outgoingInvestments: `${API}investmentOutgoings/`,
+    investmentTransfers: `${API}investmentTransfers/`,
+    loansAndCapital: `${API}loansAndCapital/`,
+    deptPayments: `${API}debtPayment/`
 };
 
 

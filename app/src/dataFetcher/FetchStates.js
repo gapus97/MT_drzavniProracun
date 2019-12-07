@@ -33,6 +33,7 @@ async function fetchData(stateName, queryKey, year) {
         return;
     }
     let data = await fetchJSON(`${apiUrl}${queryMap(stateName, queryKey, year)}`, "GET");
+    //let data = await fetchJSON(`${queryMap(stateName, queryKey, year)}`, "GET");
     let responseData;
 
     if (data !== undefined && data.hits !== null && data.hits.hits !== null) {
@@ -42,5 +43,25 @@ async function fetchData(stateName, queryKey, year) {
     return responseData;
 }
 
+async function fetchAPIData(stateName, queryKey, year) {
+    if (!queryKey) {
+        return;
+    }
+    let data = await fetchJSON(`${queryMap(stateName, queryKey, year)}`, "GET");
+    let responseData = [];
 
-export  { states, stateOutcomeToMoney, fetchData };
+    if (data !== undefined && data.hits !== null && data.hits.hits !== null) {
+        console.log(data);
+    }
+
+    return responseData;
+}
+
+
+
+export  { 
+    states, 
+    stateOutcomeToMoney, 
+    fetchData,
+    fetchAPIData
+};
