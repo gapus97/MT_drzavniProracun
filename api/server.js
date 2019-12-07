@@ -1,19 +1,29 @@
 const { Client } = require('@elastic/elasticsearch');
 const client = new Client({ node: 'http://localhost:9200' });
+const path = require('path');
 const express = require('express');
 const app = express();
-const port = 3500;
+const port = process.env.PORT || 3500;
 const cors = require('cors');
 
 app.use(cors());
 app.use(express.json());
 
+const publicPath = path.join(__dirname, 'app/build');
 
-app.get('/health', (req, res) => {
+app.use(express.static(publicPath));
+
+/*app.get('*', (req, res) => {
+    res.sendFile(path.join(publicPath, 'index.html'));
+});*/
+ 
+
+
+app.get('/api/health', (req, res) => {
     res.send('API is working!')
 });
 
-app.get("/statesOutcome/name=:name", async (req, res) => {
+app.get("/api/statesOutcome/name=:name", async (req, res) => {
     let name = req.params.name;
 
 

@@ -14,7 +14,8 @@ class Main extends React.Component {
         this.state = {
             stateData: [],
             capitalCityCoordinates: [],
-            generalBudgetData: []
+            generalBudgetData: [],
+            krneki: {}
         };
     }
 
@@ -59,6 +60,16 @@ class Main extends React.Component {
             capitalCityCoordinates: capitalCity,
             generalBudgetData: generalBudgetData
         });
+
+        /* Only testing */
+
+        await fetch("api/statesOutcome/name=celje").then(res => res.json()
+        ).then(res => {
+            this.setState({
+                krneki: res
+            });
+            console.log("Res: ", res);
+        })
 
 
     }
