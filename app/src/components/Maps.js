@@ -1,9 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
-import { customOptions, customPopupDialog } from '../utils/LeafletUtils';
-import { stateOutcomeMoney } from '../dataFetcher/FetchStates';
 import MarkerPopup from './MarkerPopup';
 
 delete L.Icon.Default.prototype._getIconUrl;

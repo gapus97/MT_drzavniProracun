@@ -4,6 +4,7 @@ import { states, fetchData, fetchAPIData } from '../dataFetcher/FetchStates';
 import LoadingPage from '../components/LoadingPage';
 import { budgetCategories, supportedYears } from '../utils/Queries';
 import OverallBudgetData from '../components/OverallBudgetData';
+import MainSearch from '../components/MainSearch';
 
 
 
@@ -69,19 +70,36 @@ class Main extends React.Component {
 
     }
 
+    searchBarCallBack = (data) => {
+        console.log("Search data: ", data);
+
+        // search for results
+
+        if (this.state.stateData) {
+            this.state.stateData.forEach(state => {
+                if(state.name.includes(data)) {
+                    console.log(state);
+                }
+            });
+        }
+    }
+
     render() {
         return (
-            <div id="Main">
-                {
-                    this.state.capitalCityCoordinates.length !== 0 ?
-                    <Maps position={this.state.capitalCityCoordinates} zoom={150} data={this.state.stateData} /> :
-                    <LoadingPage />
-                }
-                {
-                    this.state.generalBudgetData.length !== 0 ?
-                    <OverallBudgetData data={this.state.generalBudgetData} /> :
-                    <LoadingPage />
-                }
+            <div>
+                <MainSearch searchData={this.searchBarCallBack} stateData={this.state.stateData} />
+                <div id="Main">
+                    {
+                        this.state.capitalCityCoordinates.length !== 0 ?
+                        <Maps position={this.state.capitalCityCoordinates} zoom={150} data={this.state.stateData} /> :
+                        <LoadingPage />
+                    }
+                    {
+                        this.state.generalBudgetData.length !== 0 ?
+                        <OverallBudgetData data={this.state.generalBudgetData} /> :
+                        <LoadingPage />
+                    }
+                </div>
             </div>
         );
         
