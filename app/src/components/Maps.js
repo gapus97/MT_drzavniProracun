@@ -35,6 +35,14 @@ class Maps extends React.Component {
         if(this.props.data !== data) {
             this.updateMarkers(this.props.data);
         }
+
+        if(this.props.stateSelected) {
+            this.updateMapData(this.props.capityCityCoordinates);
+        }
+    }
+
+    updateMapData(coordinates) {
+        this.refs.map.setView(coordinates, 12);
     }
 
     async onMarkerClick(e) {
@@ -98,9 +106,10 @@ class Maps extends React.Component {
                     
                 </div> */
         /*<Popup>A pretty CSS3 popup.<br />Easily customizable.</Popup>*/
+
         return (
             <div id="map">
-                <Map center={this.props.position} zoom={8} style={{ height: "500px" }}>
+                <Map ref="map" center={this.props.position} zoom={8} style={{ height: "500px" }}>
                     <TileLayer
                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                         url='https://{s}.tile.osm.org/{z}/{x}/{y}.png'

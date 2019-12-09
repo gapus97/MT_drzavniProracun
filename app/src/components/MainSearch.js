@@ -33,8 +33,15 @@ class MainSearch extends React.Component {
     }
 
     onSuggestionsFetchRequested = ({ value }) => {
+        let suggestion = this.getSuggestions(value);
+        
+
+        if(suggestion.length === 1) {
+            this.props.searchData(suggestion);
+        }
+
         this.setState({
-            stateSuggestions: this.getSuggestions(value)
+            stateSuggestions: suggestion
         });
     };
 
@@ -52,6 +59,7 @@ class MainSearch extends React.Component {
     };
 
     getSuggestionValue = ( suggestion ) => {
+        this.props.searchData(suggestion);
         return suggestion.name;
     }
 
@@ -66,6 +74,7 @@ class MainSearch extends React.Component {
         };
 
         if(stateSuggestions.length === 1) {
+            console.log("Ok execute for parent");
             // pass data to root (Main.js), to map to this location
             this.props.searchData(stateSuggestions);
         }

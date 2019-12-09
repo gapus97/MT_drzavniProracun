@@ -16,7 +16,9 @@ class Main extends React.Component {
             stateData: [],
             capitalCityCoordinates: [],
             generalBudgetData: [],
-            krneki: {}
+            krneki: {}, 
+            isStateSelected: false,
+            zoom: 150
         };
     }
 
@@ -73,15 +75,16 @@ class Main extends React.Component {
     searchBarCallBack = (data) => {
         console.log("Search data: ", data);
 
-        // search for results
-
-        if (this.state.stateData) {
-            this.state.stateData.forEach(state => {
-                if(state.name.includes(data)) {
-                    console.log(state);
-                }
-            });
+        if (!data.length > 0) {
+                   
+            // search for results
+            this.setState({
+                capitalCityCoordinates: [data.lat, data.lon],
+                zoom: 200,
+                isStateSelected: true
+            });     
         }
+
     }
 
     render() {
@@ -91,7 +94,7 @@ class Main extends React.Component {
                 <div id="Main">
                     {
                         this.state.capitalCityCoordinates.length !== 0 ?
-                        <Maps position={this.state.capitalCityCoordinates} zoom={150} data={this.state.stateData} /> :
+                        <Maps position={this.state.capitalCityCoordinates} zoom={this.state.zoom} data={this.state.stateData} stateSelected={this.state.isStateSelected} /> :
                         <LoadingPage />
                     }
                     {
