@@ -2,6 +2,7 @@ import React from 'react';
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import MarkerPopup from './MarkerPopup';
+import { customPopupDialog, customOptions } from '../utils/LeafletUtils';
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -17,7 +18,7 @@ class Maps extends React.Component {
         // populate data to leaflet
         /*this.map = L.map("map", {
             center: this.props.position,
-            zoom: 8,
+            zoom: this.props.zoom,
             layers: [
                 L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
                 attribution:
@@ -31,18 +32,22 @@ class Maps extends React.Component {
     
     }
 
-    componentDidUpdate({data}) {
-        if(this.props.data !== data) {
+    componentDidUpdate(prevProps) {
+        if(this.props.data !== prevProps.data) {
             this.updateMarkers(this.props.data);
         }
 
-        if(this.props.stateSelected) {
-            this.updateMapData(this.props.capityCityCoordinates);
+        if(this.props.position !== prevProps.position) {
+            this.updateMapData(this.props.position);
         }
     }
 
     updateMapData(coordinates) {
-        this.refs.map.setView(coordinates, 12);
+
+        console.log("coordinates send", coordinates);
+        //this.refs.map.setView(coordinates, 12);
+        console.log(this.refs);
+        //this.map.setView(coordinates, this.props.zoom);
     }
 
     async onMarkerClick(e) {
@@ -107,9 +112,14 @@ class Maps extends React.Component {
                 </div> */
         /*<Popup>A pretty CSS3 popup.<br />Easily customizable.</Popup>*/
 
+        let viewPort = {
+            center: this.props.position,
+            zoom: this.props.zoom
+        };
+
         return (
             <div id="map">
-                <Map ref="map" center={this.props.position} zoom={8} style={{ height: "500px" }}>
+               <Map ref="map" preferCanvas={true} center={this.props.position} zoom={this.props.zoom} viewPort={viewPort} style={{ height: "500px" }}>
                     <TileLayer
                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                         url='https://{s}.tile.osm.org/{z}/{x}/{y}.png'

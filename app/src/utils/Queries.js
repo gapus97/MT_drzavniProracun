@@ -95,5 +95,6 @@ export {
     queryLoansAndCapital,
     queryDeptPayments,
     queryMap,
-    supportedYears
+    supportedYears,
+    apiEndPoints
 };

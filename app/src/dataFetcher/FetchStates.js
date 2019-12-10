@@ -1,5 +1,6 @@
 import { fetchJSON, apiUrl } from '../utils/FetchUtils';
-import { queries,queryStateOutcome, queryMap } from '../utils/Queries';
+import { queries,queryStateOutcome, queryMap, apiEndPoints } from '../utils/Queries';
+import { async } from 'q';
 
 async function states() {
     let data = await fetchJSON(`${apiUrl}${queries.states}`, "GET", {});
@@ -16,6 +17,12 @@ async function states() {
 
     return statesData;
 };
+
+const getStates = async() => {
+    let data = await fetchJSON(`${apiEndPoints.states}`, "GET", {});
+
+    return data;
+}
 
 async function stateOutcomeToMoney(stateName,year) {
     let data = await fetchJSON(`${apiUrl}${queryStateOutcome(stateName,year)}`, "GET");
@@ -63,5 +70,6 @@ export  {
     states, 
     stateOutcomeToMoney, 
     fetchData,
-    fetchAPIData
+    fetchAPIData,
+    getStates
 };

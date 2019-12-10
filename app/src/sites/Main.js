@@ -1,6 +1,6 @@
 import React from 'react';
 import Maps from '../components/Maps';
-import { states, fetchData, fetchAPIData } from '../dataFetcher/FetchStates';
+import { states, fetchData, fetchAPIData, getStates } from '../dataFetcher/FetchStates';
 import LoadingPage from '../components/LoadingPage';
 import { budgetCategories, supportedYears } from '../utils/Queries';
 import OverallBudgetData from '../components/OverallBudgetData';
@@ -18,7 +18,7 @@ class Main extends React.Component {
             generalBudgetData: [],
             krneki: {}, 
             isStateSelected: false,
-            zoom: 150
+            zoom: 8
         };
     }
 
@@ -28,7 +28,7 @@ class Main extends React.Component {
 
     async getStates() {
 
-        let stateData = await states();
+        let stateData = await getStates();
         let capitalCity = [];
         let generalBudgetData = [
             {
@@ -80,7 +80,7 @@ class Main extends React.Component {
             // search for results
             this.setState({
                 capitalCityCoordinates: [data.lat, data.lon],
-                zoom: 200,
+                zoom: 12,
                 isStateSelected: true
             });     
         }
@@ -90,7 +90,7 @@ class Main extends React.Component {
     render() {
         return (
             <div>
-                <MainSearch searchData={this.searchBarCallBack} stateData={this.state.stateData} />
+                <MainSearch searchData={this.searchBarCallBack} stateData={this.state.stateData} zoom={this.state.zoom}/>
                 <div id="Main">
                     {
                         this.state.capitalCityCoordinates.length !== 0 ?
