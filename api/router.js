@@ -7,8 +7,8 @@ const router = new express.Router();
 
 const categories = [
     "states_outcome",
-    'loans_and_capital',
-    'debt_payment',
+    /*'loans_and_capital',*/
+    /*'debt_payment',*/
     'investment_transfers',
     'investment_outgoings',
     'current_transfers'
@@ -25,10 +25,11 @@ const youngFamilySearch = [
 const supportedYears = [2016, 2017, 2018];
 
 const parseFamilyCategories = (data) => {
-    let exportedData = [];
+    let exportedData = {};
     
     for (let i = 0; i < youngFamilySearch.length; i++) {
         let categorie = youngFamilySearch[i];
+        exportedData[categorie] = 0;
 
         for(let ii = 0; ii < data.length; ii++) {
             for (var j = 0; j < data[ii].children.length; j++) {
@@ -38,13 +39,11 @@ const parseFamilyCategories = (data) => {
                     "value": mainCategories.value
                 };
                 if (mainCategories.name.toLowerCase().includes(categorie)) {
-                    exportedData.push(main);
+                    exportedData[categorie] += main.value;
+                    //exportedData[0].push(main);
                     
                 }
-                //console.log(mainCategories.name);
-                
-
-               
+                 
                 let subCategories = mainCategories.children;
                 for (var l = 0; l < subCategories.length; l++) {
                     let subCategorie = subCategories[l];
@@ -53,11 +52,10 @@ const parseFamilyCategories = (data) => {
                         "name": subCategorie.name,
                         "value": subCategorie.value
                     };
-                    console.log(sub);
+                    //console.log(sub);
 
                     if (subCategorie.name.includes(categorie)) {
-                        exportedData.push(sub);
-                        break;
+                        exportedData[categorie] += sub.value;
                     }
 
                     let subSubCategories = subCategorie.children;
@@ -73,8 +71,7 @@ const parseFamilyCategories = (data) => {
                         };
 
                         if (subSubCategorie.name.includes(categorie)) {
-                            exportedData.push(subSub);
-                            break;
+                            exportedData[categorie] += subSub.value;
                         }
                     }
                 }
@@ -83,6 +80,117 @@ const parseFamilyCategories = (data) => {
     }
 
     return exportedData;
+};
+
+const getNearestStates = async (lat, lon) => {
+    try {
+        let data = [];
+        let range = 0.14; // 1 => 111km ?? not sure, soo about ~ 17km
+        /* 
+            lat-range to lat || lon - range to lon && lat to lat+range || lon && lon to lon+range
+            compley as fck
+        */
+        const result = await client.search({
+            index: "states",
+            filterPath: ['hits.hits._source'],
+            body: {
+                "query": {
+                    "bool": {
+                        "must": [
+                            {
+                                "bool": {
+                                    "should": [
+                                        {
+                                            "range": {
+                                                "lat": {
+                                                    "gte": lat - range,
+                                                    "lt": lat
+                                                }
+                                            },
+                                        }, {
+                                            "range": {
+                                                "lon": {
+                                                    "gte": lon - range,
+                                                    "lt": lon
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }, {
+                                "bool": {
+                                    "should": [
+                                        {
+                                            "range": {
+                                                "lat": {
+                                                    "gte": lat,
+                                                    "lt": lat + range
+                                                }
+                                            },
+                                        }, {
+                                            "range": {
+                                                "lon": {
+                                                    "gte": lon,
+                                                    "lt": lon + range
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+
+                            }
+
+
+                        ]
+                    }
+                }
+
+            }
+        });
+
+        if(Object.keys(result.body).length !== 0) {
+            data = getData(result);
+            return data;
+        } else {
+            return data;
+        }
+    } catch(error) {  
+        return error;
+    }
+};
+
+const getKinderGardensByState = async (name) => {
+    try {
+        let data = [];
+        const result = await client.search({
+            index: "kindergartensbystate",
+            filterPath: ['hits.hits._source'],
+            body: {
+                "query": {
+                    "bool": {
+                        "should": [
+                            {
+                                "match_phrase": {
+                                    "kindergarten_state": name,
+                                }
+                            }
+                        ],
+                        "minimum_should_match": 1
+                    }
+                },
+                "size": 30
+            }
+        });
+        
+        if(Object.keys(result.body).length !== 0) {
+            data = getData(result);
+            return data;
+        } else {
+            return data;
+        }
+    } catch(error) {
+        return error;
+    }
 };
 
 
@@ -116,21 +224,17 @@ const getYoungCategoriesByState = async (name) => {
             "size": 30
         });
 
-        data = getData(result);
-
-        if (data) {
-            //return data;
-            let exportedData = parseFamilyCategories(data);
-            console.log("Exported data: ", exportedData);
+        let exportedData = [];
+        if (Object.keys(result.body).length !== 0) {
+            data = getData(result);
+            exportedData = parseFamilyCategories(data);
             return exportedData;
-            // parse different categories
         } else {
-            return null;
+            return exportedData;
         }
 
     } catch (error) {
-        console.log(error.message);
-        return null;
+        return error;
     }
 };
 
@@ -156,18 +260,18 @@ const getState = async (name) => {
             }
         });
 
-        const resultData = result.body.hits.hits;
 
-        if (resultData) {
-            state = resultData[0]._source;
 
-            return state;
+        if(Object.keys(result.body).length !== 0) {
+            const resultData = getData(result);
+
+            return resultData[0];
         } else {
-            return null;
+            return [];
         }
 
     } catch (error) {
-        return null;
+        return error;
     }
 }
 
@@ -210,17 +314,16 @@ router.get("/api/statesOutcome/name=:name", async (req, res) => {
             }
         });
 
-        let data = getData(result);
+        let data = [];
 
-        if (data) {
-            res.send(data);
-        } else {
-            res.send({ error: "can't get any data from DB" })
+        if(Object.keys(result.body).length !== 0) {
+            data = getData(result);
         }
+        res.send(data);
 
     } catch (error) {
         console.log("Error: ", error);
-        res.send({ error: error });
+        res.send({ error: "can't get any data from DB" })
     }
 
 });
@@ -522,34 +625,15 @@ router.get("/api/kindergarden/name=:name", async (req, res) => {
     const stateName = req.params.name;
 
     try {
-        const result = await client.search({
-            index: "kindergartensbystate",
-            filterPath: ['hits.hits._source'],
-            body: {
-                "query": {
-                    "bool": {
-                        "should": [
-                            {
-                                "match_phrase": {
-                                    "kindergarten_state": stateName,
-                                }
-                            }
-                        ],
-                        "minimum_should_match": 1
-                    }
-                },
-                "size": 30
-            }
-        });
+        const data = await getKinderGardensByState(stateName);
 
-        const data = getData(result);
         if (data) {
             res.send(data);
         } else {
             res.end([]);
         }
     } catch (error) {
-        res.send({ error: `Can't get any kinder garden in state ${stateName}` });
+        res.send({ error: `Can't get any kinder garden in state ${stateName}`});
     }
 
 
@@ -561,77 +645,13 @@ router.get("/api/nearestStates/name=:name", async (req, res) => {
     try {
         const state = await getState(stateName);
 
-        const range = 0.14;
 
         if (state) {
             const lat = state.lat;
             const lon = state.lon;
 
-            /* 
-                lat-range to lat || lon - range to lon && lat to lat+range || lon && lon to lon+range
-                compley as fck
-            */
-            const result = await client.search({
-                index: "states",
-                filterPath: ['hits.hits._source'],
-                body: {
-                    "query": {
-                        "bool": {
-                            "must": [
-                                {
-                                    "bool": {
-                                        "should": [
-                                            {
-                                                "range": {
-                                                    "lat": {
-                                                        "gte": lat - range,
-                                                        "lt": lat
-                                                    }
-                                                },
-                                            }, {
-                                                "range": {
-                                                    "lon": {
-                                                        "gte": lon - range,
-                                                        "lt": lon
-                                                    }
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }, {
-                                    "bool": {
-                                        "should": [
-                                            {
-                                                "range": {
-                                                    "lat": {
-                                                        "gte": lat,
-                                                        "lt": lat + range
-                                                    }
-                                                },
-                                            }, {
-                                                "range": {
-                                                    "lon": {
-                                                        "gte": lon,
-                                                        "lt": lon + range
-                                                    }
-                                                }
-                                            }
-                                        ]
-                                    }
-
-                                }
-
-
-                            ]
-                        }
-                    }
-
-                },
-
-            });
-
-
-            let data = getData(result);
+        
+            let data = await getNearestStates(lat, lon);
 
             if (data) {
                 res.send(data);
@@ -650,9 +670,31 @@ router.get("/api/youngFamilies/name=:name", async (req, res) => {
     const stateName = req.params.name;
 
     try {
-        const youngFamilyData = await getYoungCategoriesByState(stateName);
+        const youngFamilyData = [];
+        const searchState = await getState(stateName);
+        const stateYoungFamilyData = await getYoungCategoriesByState(stateName);
+        let nearestStates;
+        if(searchState) {
+            console.log(searchState);
+            nearestStates = await getNearestStates(searchState.lat, searchState.lon);
+        }
 
-        if(youngFamilyData) {
+        if(nearestStates && stateYoungFamilyData) {
+            youngFamilyData.push({
+                "name": stateName,
+                "values": stateYoungFamilyData
+            });
+            for(let i = 0; i < nearestStates.length; i++) {
+                let state = nearestStates[i].name;
+                let stateYoungData = await getYoungCategoriesByState(state);
+                let kindegardens = await getKinderGardensByState(state);
+
+                youngFamilyData.push({
+                    "name": state,
+                    "values": [stateYoungData, kindegardens]
+                });
+            }
+
             res.send(youngFamilyData);
         } else {
             res.send([]);
