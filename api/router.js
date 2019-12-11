@@ -14,8 +14,125 @@ const categories = [
     'current_transfers'
 ];
 
+const youngFamilySearch = [
+    "socialna varnost",
+    "javni red in varnost",
+    "izobraževanje",
+    "zdravstvo"
+];
+
+
 const supportedYears = [2016, 2017, 2018];
 
+const parseFamilyCategories = (data) => {
+    let exportedData = [];
+    
+    for (let i = 0; i < youngFamilySearch.length; i++) {
+        let categorie = youngFamilySearch[i];
+
+        for(let ii = 0; ii < data.length; ii++) {
+            for (var j = 0; j < data[ii].children.length; j++) {
+                let mainCategories = data[ii].children[j];
+                let main = {
+                    "name": mainCategories.name,
+                    "value": mainCategories.value
+                };
+                if (mainCategories.name.toLowerCase().includes(categorie)) {
+                    exportedData.push(main);
+                    
+                }
+                //console.log(mainCategories.name);
+                
+
+               
+                let subCategories = mainCategories.children;
+                for (var l = 0; l < subCategories.length; l++) {
+                    let subCategorie = subCategories[l];
+
+                    let sub = {
+                        "name": subCategorie.name,
+                        "value": subCategorie.value
+                    };
+                    console.log(sub);
+
+                    if (subCategorie.name.includes(categorie)) {
+                        exportedData.push(sub);
+                        break;
+                    }
+
+                    let subSubCategories = subCategorie.children;
+
+
+
+                    for (var k = 0; k < subSubCategories.length; k++) {
+                        let subSubCategorie = subSubCategories[k];
+
+                        let subSub = {
+                            "name": subSubCategorie.name,
+                            "value": subSubCategorie.value
+                        };
+
+                        if (subSubCategorie.name.includes(categorie)) {
+                            exportedData.push(subSub);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return exportedData;
+};
+
+
+const getYoungCategoriesByState = async (name) => {
+    try {
+        let data;
+
+        const result = await client.search({
+            index: categories,
+            filterPath: ['hits.hits._source'],
+            body: {
+                "query": {
+                    "bool": {
+                        "should": [
+                            {
+                                "match_phrase": {
+                                    "name": name,
+                                }
+                            }
+                        ],
+
+                            "filter": {
+                                "term": {
+                                    "year": 2018
+                                }
+                            },
+                        "minimum_should_match": 1
+                    }
+                }
+            },
+            "size": 30
+        });
+
+        data = getData(result);
+
+        if (data) {
+            //return data;
+            let exportedData = parseFamilyCategories(data);
+            console.log("Exported data: ", exportedData);
+            return exportedData;
+            // parse different categories
+        } else {
+            return null;
+        }
+
+    } catch (error) {
+        console.log(error.message);
+        return null;
+    }
+};
 
 const getState = async (name) => {
     try {
@@ -59,7 +176,7 @@ const getData = (data) => {
 
     data = data.body.hits.hits;
 
-    for(let i=0; i < data.length; i++) {
+    for (let i = 0; i < data.length; i++) {
         let instance = data[i]._source;
         exportedData.push(instance);
     }
@@ -501,16 +618,16 @@ router.get("/api/nearestStates/name=:name", async (req, res) => {
                                             }
                                         ]
                                     }
-                                   
+
                                 }
-                            
+
 
                             ]
                         }
                     }
-                
+
                 },
-                
+
             });
 
 
@@ -524,9 +641,25 @@ router.get("/api/nearestStates/name=:name", async (req, res) => {
         }
 
     } catch (error) {
-        res.send({ error: `Cant get nearest states for state name ${stateName}`});
+        res.send({ error: `Cant get nearest states for state name ${stateName}` });
     }
 
+});
+
+router.get("/api/youngFamilies/name=:name", async (req, res) => {
+    const stateName = req.params.name;
+
+    try {
+        const youngFamilyData = await getYoungCategoriesByState(stateName);
+
+        if(youngFamilyData) {
+            res.send(youngFamilyData);
+        } else {
+            res.send([]);
+        }
+    } catch(error) {
+        res.send({ error: `Cant get young families index for state name ${stateName}` });
+    }
 });
 
 module.exports = router;
