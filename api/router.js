@@ -275,6 +275,26 @@ const getState = async (name) => {
     }
 }
 
+const calculateIndex = (familyData, populationData) => {
+    let indexData = {};
+    for(var key of Object.keys(familyData)) {
+        console.log(key);
+        let result = familyData[key] / populationData;
+        indexData[key] = result;
+    }
+
+    return indexData;
+};
+
+const normalisedIndex = (indexByCategories) => {
+    let normalised = 0;
+    for(var key of Object.keys(indexByCategories)) {
+        normalised += indexByCategories[key];
+    }
+
+    return normalised / 4;
+};
+
 const getData = (data) => {
     let exportedData = [];
 
@@ -689,9 +709,13 @@ router.get("/api/youngFamilies/name=:name", async (req, res) => {
                 let stateYoungData = await getYoungCategoriesByState(state);
                 let kindegardens = await getKinderGardensByState(state);
 
+                let calculatedIndex = calculateIndex(stateYoungData, nearestStates[i].population);
+
                 youngFamilyData.push({
                     "name": state,
-                    "values": [stateYoungData, kindegardens]
+                    "values": [stateYoungData, kindegardens],
+                    "index": calculatedIndex,
+                    "normalisedIndex": normalisedIndex(calculatedIndex)
                 });
             }
 
