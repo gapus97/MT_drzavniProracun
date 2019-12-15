@@ -1,6 +1,6 @@
 'use strict';
 const { Client } = require('@elastic/elasticsearch');
-const client = new Client({ node: 'http://localhost:9200' });
+const client = new Client({ node: 'http://0.0.0.0:9200' });
 const express = require('express');
 const router = new express.Router();
 
