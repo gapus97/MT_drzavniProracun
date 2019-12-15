@@ -39,13 +39,13 @@ class Main extends React.Component {
         ];
 
         // Should be something else, but not enough time for API development!
-        for(const [key, value] of Object.entries(budgetCategories)) {
+        /*for(const [key, value] of Object.entries(budgetCategories)) {
             for(const [yearKey, value] of Object.entries(supportedYears)) {
                 
                 let categorieData = await fetchData("SKUPAJ*", key, value);
                 generalBudgetData[0][yearKey].push(categorieData);
             }
-        }
+        }*/
 
        
 

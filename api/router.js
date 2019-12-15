@@ -14,6 +14,15 @@ const categories = [
     'current_transfers'
 ];
 
+const allCategories = [
+    "states_outcome",
+    'loans_and_capital',
+    'debt_payment',
+    'investment_transfers',
+    'investment_outgoings',
+    'current_transfers'
+];
+
 const youngFamilySearch = [
     "socialna varnost",
     "javni red in varnost",
@@ -23,6 +32,59 @@ const youngFamilySearch = [
 
 
 const supportedYears = [2016, 2017, 2018];
+
+const parseAllCategories = async (stateName) => {
+    let overallBudgetData = [{
+        2018: [],
+        2017: [],
+        2016: []
+    }];
+
+    try {
+        for(let i = 0; i < allCategories.length; i++) {
+            let catName = allCategories[i];
+            const result = await client.search({
+                index: catName,
+                filterPath: ['hits.hits._source'],
+                body: {
+                    "query": {
+                        "bool": {
+                            "must": [
+                                {
+                                    "match_phrase": {
+                                        "name": stateName,
+                                    }
+                                }
+                            ],
+                            "minimum_should_match": 1
+                        }
+                    },
+                    "size": 30
+                }
+            });
+
+            if(Object.keys(result.body).length !== 0) {
+                let data = getData(result);
+                //console.log(data);
+                for(let item of data) {
+                    overallBudgetData[0][item.year].push({
+                        "categorie": catName,
+                        "data": item
+                    });
+                    console.log(overallBudgetData);
+                    
+                }
+            } else {
+                
+            }
+        }
+
+        return overallBudgetData;
+       
+    } catch(error) {
+        return error;
+    }
+}
 
 const parseFamilyCategories = (data) => {
     let exportedData = {};
@@ -305,7 +367,23 @@ const getData = (data) => {
         exportedData.push(instance);
     }
     return exportedData;
-}
+};
+
+const parseSpecificYear = (data) => {
+    let specificYear = [{
+        2018: [],
+        2017: [],
+        2016: []
+    }];
+
+    for(let i = 0; i < data.length; i++) {
+        let row = data[i];
+
+        specificYear[0][row.year].push(row);
+    }
+
+    return specificYear;
+};
 
 router.get('/api/health', (req, res) => {
     res.send('API is working!')
@@ -338,6 +416,7 @@ router.get("/api/statesOutcome/name=:name", async (req, res) => {
 
         if(Object.keys(result.body).length !== 0) {
             data = getData(result);
+            data = parseSpecificYear(data);
         }
         res.send(data);
 
@@ -372,12 +451,13 @@ router.get("/api/loansAndCapital/name=:name", async (req, res) => {
             }
         });
 
-        let data = getData(result);
-        if (data) {
-            res.send(data);
-        } else {
-            res.send({ error: "can't get any data from DB" })
+        let data = [];
+
+        if(Object.keys(result.body).length !== 0) {
+            data = getData(result);
+            data = parseSpecificYear(data);
         }
+        res.send(data);
 
     } catch (error) {
         res.send({ error: error });
@@ -408,13 +488,13 @@ router.get("/api/investmentTransfers/name=:name", async (req, res) => {
             }
         });
 
-        let data = getData(result);
+        let data = [];
 
-        if (data) {
-            res.send(data);
-        } else {
-            res.send({ error: "can't get any data from DB" })
+        if(Object.keys(result.body).length !== 0) {
+            data = getData(result);
+            data = parseSpecificYear(data);
         }
+        res.send(data);
 
     } catch (error) {
         res.send({ error: error });
@@ -446,13 +526,13 @@ router.get("/api/investmentOutgoings/name=:name", async (req, res) => {
             }
         });
 
-        let data = getData(result);
+        let data = [];
 
-        if (data) {
-            res.send(data);
-        } else {
-            res.send([]);
+        if(Object.keys(result.body).length !== 0) {
+            data = getData(result);
+            data = parseSpecificYear(data);
         }
+        res.send(data);
 
     } catch (error) {
         res.send({ error: error });
@@ -483,12 +563,13 @@ router.get("/api/debtPayment/name=:name", async (req, res) => {
             }
         });
 
-        let data = getData(result);
-        if (data) {
-            res.send(data);
-        } else {
-            res.send([]);
+        let data = [];
+
+        if(Object.keys(result.body).length !== 0) {
+            data = getData(result);
+            data = parseSpecificYear(data);
         }
+        res.send(data);
 
     } catch (error) {
         res.send({ error: error });
@@ -520,13 +601,13 @@ router.get("/api/currentTransfers/name=:name", async (req, res) => {
             }
         });
 
-        let resultData = getData(result);
+        let data = [];
 
-        if (resultData) {
-            res.send(resultData);
-        } else {
-            res.send([]);
+        if(Object.keys(result.body).length !== 0) {
+            data = getData(result);
+            data = parseSpecificYear(data);
         }
+        res.send(data);
 
     } catch (error) {
         res.send({ error: error });
@@ -562,8 +643,18 @@ router.get("/api/states", async (req, res) => {
 
 });
 
-router.get("/api/overallBudgetData", async (req, res) => {
+router.get("/api/getAllCategories/name=:name", async (req, res) => {
+    const stateName = req.params.name;
+    try {
+        const result = await parseAllCategories(stateName);
 
+        res.send(result);
+    } catch(error) {
+        res.send({error: error.message});
+    }
+});
+
+router.get("/api/overallBudgetData", async (req, res) => {
     let overallBudgetData = [{
         2018: [],
         2017: [],
@@ -572,7 +663,7 @@ router.get("/api/overallBudgetData", async (req, res) => {
 
     try {
         const result = await client.search({
-            index: categories,
+            index: allCategories,
             filterPath: ['hits.hits._source'],
             body: {
                 "query": {

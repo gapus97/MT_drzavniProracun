@@ -1,6 +1,5 @@
 import { fetchJSON, apiUrl } from '../utils/FetchUtils';
-import { queries,queryStateOutcome, queryMap, apiEndPoints } from '../utils/Queries';
-import { async } from 'q';
+import { queries,queryStateOutcome, queryMap, apiEndPoints, qMap } from '../utils/Queries';
 
 async function states() {
     let data = await fetchJSON(`${apiUrl}${queries.states}`, "GET", {});
@@ -54,14 +53,8 @@ async function fetchAPIData(stateName, queryKey, year) {
     if (!queryKey) {
         return;
     }
-    let data = await fetchJSON(`${queryMap(stateName, queryKey, year)}`, "GET");
-    let responseData = [];
-
-    if (data !== undefined && data.hits !== null && data.hits.hits !== null) {
-        console.log(data);
-    }
-
-    return responseData;
+    let data = await fetchJSON(`${qMap(stateName, queryKey, year)}`, "GET");
+    return data;
 }
 
 

@@ -18,17 +18,20 @@ class ShowStateBudget extends React.Component {
             this.updateData(this.props.data);
         }
         if(this.props.budgetCategorie !== budgetCategorie) {
+            console.log(budgetCategorie);
             this.updateBudgetCategorie(budgetCategorie);
         }
     }
 
     updateData(updatedData) {
+        console.log("Updated data: ", updatedData);
         this.setState({
             data: updatedData
         });
     }
 
     updateBudgetCategorie(budgetCategorie) {
+        console.log("data: ", budgetCategorie);
         this.setState({
             selectedBudgetCategorie: budgetCategorie
         });
@@ -41,7 +44,7 @@ class ShowStateBudget extends React.Component {
         console.log("State budget data: ", this.state.data);
         return (
             <div id="showStateBudget">
-               { <CirclePack data={this.state.data} city={this.props.city} /> }
+               { <CirclePack data={this.state.data} city={this.props.city} budgetCategorie={this.props.budgetCategorie} /> }
                { /* <ZoomedTreeMap data={this.state.data} /> */ }
             </div>
         );

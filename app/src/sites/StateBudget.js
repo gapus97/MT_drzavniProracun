@@ -1,8 +1,8 @@
 import React from 'react';
 import ShowStateBudget from '../components/ShowStateBudget';
 import Dropdown from 'react-bootstrap/Dropdown';
-import { budgetCategories } from '../utils/Queries';
-import  { parseBudgetCategories, parseBudgetCategorie, isDataValid } from '../utils/ParsingUtils';
+import { budgetCategories, categoriesMap } from '../utils/Queries';
+import  { parseBudgetCategories, parseBudgetCategorie, isDataValid, parseAllCategories,getBudgetCategorie } from '../utils/ParsingUtils';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -13,8 +13,9 @@ class StateBudget extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            allData: [],
             stateData: [],
-            selectedBudgetCategorie: budgetCategories.statesOutcome,
+            selectedBudgetCategorie: budgetCategories.states_outcome,
             generalBudgetData: [],
             isDataAvailable: false
         };
@@ -22,12 +23,15 @@ class StateBudget extends React.Component {
     }
 
     async componentDidMount() {
-        let generalBudgetData = await parseBudgetCategories(this.props.location.state.city);
+        //let generalBudgetData = await parseBudgetCategories(this.props.location.state.city);
+        let generalBudgetData = await parseAllCategories(this.props.location.state.city);
+        console.log(generalBudgetData);
 
         this.checkData(generalBudgetData);
     
         this.setState({
-            stateData: generalBudgetData
+            stateData: generalBudgetData,
+            allData: generalBudgetData
         });
     }
 
@@ -36,7 +40,15 @@ class StateBudget extends React.Component {
     }
     onDropdownItemSelect = async (dataKey) => {
 
-        let generalBudgetData = await parseBudgetCategorie(this.props.location.state.city, dataKey);
+        // DEEP CLONING! BE CAREFULL!
+        let generalBudgetData = JSON.parse(JSON.stringify(this.state.allData));
+
+
+        for(let key of Object.keys(generalBudgetData[0])) {
+            let yearData = generalBudgetData[0][key].filter(item => item.categorie === dataKey);
+            generalBudgetData[0][key] = yearData;
+        }
+       
 
         if (generalBudgetData) {
             this.checkData(generalBudgetData);

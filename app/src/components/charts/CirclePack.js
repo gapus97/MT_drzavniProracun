@@ -1,6 +1,6 @@
 import React from 'react';
 import * as d3 from 'd3';
-import { getCategorieComparisonByYear, parseMoney } from '../../utils/ParsingUtils';
+import { getCategorieComparisonByYear, parseMoney, getCategoriesComparisonByYear } from '../../utils/ParsingUtils';
 import { supportedYears } from '../../utils/Queries';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -24,7 +24,7 @@ class CirclePack extends React.Component {
             this.drawLegend();
             this.constructGraph();
 
-            let categoricalData = getCategorieComparisonByYear(this.props.data, this.props.city.toUpperCase());
+            let categoricalData = getCategoriesComparisonByYear(this.props.data, this.props.city.toUpperCase());
             this.comparisonGraph(categoricalData);
 
         }
@@ -34,7 +34,7 @@ class CirclePack extends React.Component {
         const value = parseMoney(d.data.value);
         const name = d.data.name;
 
-        let data = getCategorieComparisonByYear(this.props.data, name);
+        let data = getCategoriesComparisonByYear(this.props.data, name);
 
         this.comparisonGraph(data);
 
@@ -62,7 +62,7 @@ class CirclePack extends React.Component {
 
 
         if (value && name) {
-            let data = getCategorieComparisonByYear(this.props.data, name);
+            let data = getCategoriesComparisonByYear(this.props.data, name);
 
             this.comparisonGraph(data);
             this.setState({
@@ -85,8 +85,8 @@ class CirclePack extends React.Component {
             (d3.hierarchy(data)
                 .sort((a, b) => b.value - a.value));
 
-
-        const root = pack(this.props.data[0][2018][0]);
+        console.log("Props data: ", this.props.data);
+        const root = pack(this.props.data[0][2018][0].data);
         var margin = { top: 20, right: 20, bottom: 30, left: 40 };
 
         const svg = d3.select("#circlePack").append("svg")

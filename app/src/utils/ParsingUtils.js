@@ -1,5 +1,6 @@
 import { budgetCategories, supportedYears } from './Queries'; 
-import { fetchData } from '../dataFetcher/FetchStates';
+import { fetchData, fetchAPIData } from '../dataFetcher/FetchStates';
+import { allCategories } from '../utils/Queries';
 
 
 const parseBudgetCategories = async (city) => {
@@ -23,6 +24,12 @@ const parseBudgetCategories = async (city) => {
     return generalBudgetData;
 }
 
+const parseAllCategories = async (city) => {
+    const data = await fetchAPIData(city, "allCategories");
+
+    return data;
+}
+
 const parseBudgetCategorie = async (city, categorie) => {
     let generalBudgetData = [
         {
@@ -41,6 +48,12 @@ const parseBudgetCategorie = async (city, categorie) => {
         }
     }
     return generalBudgetData;
+}
+
+
+const getBudgetCategorie = async (city, categorie) => {
+    const data = await fetchAPIData(city, categorie);
+    return data;
 }
 
 
@@ -103,15 +116,73 @@ const getCategorieComparisonByYear = (data, categorie) => {
 
 }
 
+
+const getCategoriesComparisonByYear = (data, categorie) => {
+    let categorieComparison = [
+        {
+            2018: [],
+            2017: [],
+            2016: []
+        }
+    ];
+
+    for(const [year, arrayValue] of Object.entries(supportedYears)) {
+        const dataArray = data[0][year];
+
+        for(let ct = 0; ct < dataArray.length; ct++){
+            if (dataArray[ct].data.name.includes(categorie)) {
+                categorieComparison[0][year].push(dataArray[ct].data);
+            }
+            for(var i = 0; i < dataArray[ct].data.children.length; i++) {
+                let mainCategories = dataArray[ct].data.children[i];
+                if (mainCategories.name.includes(categorie)) {
+                    categorieComparison[0][year].push(mainCategories);
+                    break;
+                } 
+
+                let subCategories = mainCategories.children;
+                for(var j = 0; j < subCategories.length; j++) {
+                    let subCategorie = subCategories[j];
+
+
+
+                    if(subCategorie.name.includes(categorie)) {
+                        categorieComparison[0][year].push(subCategorie);
+                        break;
+                    }
+
+                    let subSubCategories = subCategorie.children;
+
+                    
+
+                    for(var k = 0; k < subSubCategories.length; k++) {
+                        let subSubCategorie = subSubCategories[k];
+                    
+                        if(subSubCategorie.name.includes(categorie)) {
+                            categorieComparison[0][year].push(subSubCategorie);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //console.log("Comparison: ", categorieComparison);
+    return categorieComparison;
+
+
+}
+
 const isDataValid = (data) => {
     let isDataValid = false;
 
    
     for(const [yearKey, value] of Object.entries(supportedYears)) {
-        let yearData = data[0][yearKey][0];
-        yearData.value && yearData.children ? isDataValid = true : isDataValid = false;
+        let yearData = data[0][yearKey];
+        console.log(yearData);
+        yearData.length > 0 ? isDataValid = true : isDataValid = false;
     }
-    console.log("iS DATA valud: ", isDataValid);
     return isDataValid;
 }
 
@@ -124,6 +195,9 @@ export {
     parseBudgetCategories,
     parseBudgetCategorie,
     getCategorieComparisonByYear,
+    getCategoriesComparisonByYear,
     isDataValid,
-    parseMoney
+    parseMoney,
+    parseAllCategories,
+    getBudgetCategorie
 };
