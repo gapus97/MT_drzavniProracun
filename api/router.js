@@ -49,7 +49,7 @@ const parseAllCategories = async (stateName) => {
                 body: {
                     "query": {
                         "bool": {
-                            "must": [
+                            "should": [
                                 {
                                     "match_phrase": {
                                         "name": stateName,
@@ -63,9 +63,10 @@ const parseAllCategories = async (stateName) => {
                 }
             });
 
+
             if(Object.keys(result.body).length !== 0) {
                 let data = getData(result);
-                //console.log(data);
+
                 for(let item of data) {
                     overallBudgetData[0][item.year].push({
                         "categorie": catName,
