@@ -5,6 +5,8 @@ const express = require('express');
 const router = new express.Router();
 
 
+
+
 const categories = [
     "states_outcome",
     /*'loans_and_capital',*/
@@ -385,6 +387,7 @@ const parseSpecificYear = (data) => {
 
     return specificYear;
 };
+
 
 router.get('/api/health', (req, res) => {
     res.send('API is working!')

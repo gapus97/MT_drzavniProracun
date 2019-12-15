@@ -4,7 +4,7 @@ const app = express();
 const port = process.env.PORT || 3500;
 const cors = require('cors');
 const router = require('./router');
-const publicPath = path.join(__dirname, 'app/build');
+const publicPath = path.join(__dirname, '../app/build');
 
 
 
