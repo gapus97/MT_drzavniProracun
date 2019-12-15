@@ -1,12 +1,8 @@
 {
-  "name": "api",
+  "name": "my-apps",
   "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
-  },
+  "main": "api/server.js",
+  "license": "MIT",
   "dependencies": {
     "@elastic/elasticsearch": "^7.5.0",
     "array.prototype.flatmap": "^1.2.2",
@@ -15,6 +11,8 @@
     "express": "^4.17.1",
     "puppeteer": "^2.0.0"
   },
-  "author": "",
-  "license": "ISC"
+  "scripts": {
+    "start": "node ./api/server.js",
+    "heroku-postbuild": "cd app && npm install && npm run build"
+  }
 }
