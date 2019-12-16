@@ -342,8 +342,9 @@ const getState = async (name) => {
 
 const calculateIndex = (familyData, populationData) => {
     let indexData = {};
+    console.log("family data: ", familyData);
     for(var key of Object.keys(familyData)) {
-        console.log(key);
+        //console.log(key);
         let result = familyData[key] / populationData;
         indexData[key] = result;
     }

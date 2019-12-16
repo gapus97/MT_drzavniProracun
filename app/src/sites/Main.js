@@ -2,7 +2,7 @@ import React from 'react';
 import Maps from '../components/Maps';
 import { states, fetchData, fetchAPIData, getStates } from '../dataFetcher/FetchStates';
 import LoadingPage from '../components/LoadingPage';
-import { budgetCategories, supportedYears } from '../utils/Queries';
+import { supportedFilters } from '../utils/Queries';
 import OverallBudgetData from '../components/OverallBudgetData';
 import MainSearch from '../components/MainSearch';
 
@@ -72,7 +72,7 @@ class Main extends React.Component {
 
     }
 
-    searchBarCallBack = (data) => {
+    searchBarCallBack = async (data) => {
         console.log("Search data: ", data);
 
         if (!data.length > 0) {
@@ -84,13 +84,27 @@ class Main extends React.Component {
                 isStateSelected: true
             });     
         }
+    }
 
+    callWhenCheckbox = async (value) => {
+        console.log("Parent data: ", value);
+
+        if(value) {
+            for(let key of Object.keys(value)) {
+                console.log(key);
+                if(key) {
+                    // api call glede na parametre, a je to young family itd...
+                    let stateData = await fetchAPIData("Kranj", key);
+                    console.log(stateData);
+                }
+            }
+        }
     }
 
     render() {
         return (
             <div>
-                <MainSearch searchData={this.searchBarCallBack} stateData={this.state.stateData} zoom={this.state.zoom}/>
+                <MainSearch searchData={this.searchBarCallBack} stateData={this.state.stateData} zoom={this.state.zoom} checkboxValue={this.callWhenCheckbox} />
                 <div id="Main">
                     {
                         this.state.capitalCityCoordinates.length !== 0 ?
