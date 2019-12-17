@@ -324,3 +324,9 @@ text {
 .react-autosuggest__suggestion--highlighted {
   background-color: #ddd;
 }
+
+
+.indeks-item {
+  background-color: #282c34;
+  color: white;
+}
