@@ -342,8 +342,9 @@ const getState = async (name) => {
 
 const calculateIndex = (familyData, populationData) => {
     let indexData = {};
+    console.log("family data: ", familyData);
     for(var key of Object.keys(familyData)) {
-        console.log(key);
+        //console.log(key);
         let result = familyData[key] / populationData;
         indexData[key] = result;
     }
@@ -797,7 +798,9 @@ router.get("/api/youngFamilies/name=:name", async (req, res) => {
         if(nearestStates && stateYoungFamilyData) {
             youngFamilyData.push({
                 "name": stateName,
-                "values": stateYoungFamilyData
+                "values": stateYoungFamilyData,
+                "index": calculateIndex(stateYoungFamilyData, searchState.population),
+                "normalisedIndex": normalisedIndex(calculateIndex(stateYoungFamilyData, searchState.population))
             });
             for(let i = 0; i < nearestStates.length; i++) {
                 let state = nearestStates[i].name;
@@ -813,6 +816,9 @@ router.get("/api/youngFamilies/name=:name", async (req, res) => {
                     "normalisedIndex": normalisedIndex(calculatedIndex)
                 });
             }
+
+            /* sort array by normalised index */
+            youngFamilyData.sort((a,b) => (a.normalisedIndex > b.normalisedIndex) ? -1 : 1);
 
             res.send(youngFamilyData);
         } else {
