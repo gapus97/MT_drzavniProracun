@@ -56,6 +56,10 @@ const qAllCategories = (cityName,year = null) => {
     return `${apiEndPoints.allCategories}name=${cityName}`;
 }
 
+const qFamilyData = (cityName, year = null) => {
+    return `${apiEndPoints.familyData}name=${cityName}`;
+};
+
 
 
 let queries = {
@@ -79,7 +83,8 @@ let apiEndPoints = {
     loansAndCapital: `${API}loansAndCapital/`,
     deptPayments: `${API}debtPayment/`,
     overallData: `${API}overallBudgetData`,
-    allCategories: `${API}getAllCategories/`
+    allCategories: `${API}getAllCategories/`,
+    familyData: `${API}youngFamilies/`
 };
 
 
@@ -122,6 +127,10 @@ function qMap(cityName, queryKey, year) {
             return qDebtPayment(cityName, year);
         case 'allCategories':
             return qAllCategories(cityName, year);
+        case "youngFamily":
+            return qFamilyData(cityName, year);
+        case "oldFamily":
+            return null;
     }
 }
 
@@ -144,6 +153,18 @@ let categoriesMap = {
     deptPayments: 'debt_payment',
 };
 
+let supportedFilters = [
+    "youngFamily",
+    "oldFamily"
+];
+
+/* for generating checbox-es */
+let supportedFiltersMap = {
+    youngFamily: "Mlada družina",
+    oldFamily: "Starejši občani",
+};
+
+
 export { 
     queries, 
     budgetCategories,
@@ -157,5 +178,7 @@ export {
     supportedYears,
     apiEndPoints,
     qMap,
-    categoriesMap
+    categoriesMap,
+    supportedFilters,
+    supportedFiltersMap
 };

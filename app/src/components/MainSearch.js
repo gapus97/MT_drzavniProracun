@@ -1,5 +1,8 @@
 import React from 'react';
 import Autosuggest from 'react-autosuggest';
+import CheckboxFilter from './CheckboxFilter';
+import { supportedFilters } from '../utils/Queries';
+import Button from 'react-bootstrap/Button';
 
 class MainSearch extends React.Component {
 
@@ -7,7 +10,8 @@ class MainSearch extends React.Component {
         super(props);
         this.state = {
             value: '',
-            stateSuggestions: []
+            stateSuggestions: [],
+            checkboxesValue: {}
         };
     }
 
@@ -63,6 +67,21 @@ class MainSearch extends React.Component {
         return suggestion.name;
     }
 
+    onCheckboxChange = (name, values) => {
+        console.log("Child 1", values);
+        //https://jsbin.com/tusakexire/edit?html,js,output
+        //this.setState({ [name]: values })
+        this.setState({
+            checkboxesValue: values
+        });
+        //this.props.checkboxValue(values);
+    }
+
+    handleButtonClick = () => {
+        console.log(this.state.stateSuggestions);
+        this.props.executeSearch(this.state.checkboxesValue);
+    }
+
     render() {   
 
         const { value, stateSuggestions } = this.state;
@@ -79,17 +98,27 @@ class MainSearch extends React.Component {
             this.props.searchData(stateSuggestions);
         }
 
+
+
         return (
            
-                this.props.stateData ?  
-                <Autosuggest
-                    suggestions={stateSuggestions}
-                    onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-                    onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-                    getSuggestionValue={this.getSuggestionValue}
-                    renderSuggestion={this.renderSuggestion}
-                    inputProps={inputProps}
-                /> : ""
+                <div>
+                    {   this.props.stateData ?  
+                        <Autosuggest
+                            suggestions={stateSuggestions}
+                            onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+                            onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+                            getSuggestionValue={this.getSuggestionValue}
+                            renderSuggestion={this.renderSuggestion}
+                            inputProps={inputProps}
+                        /> : ""
+                    }
+
+                    <CheckboxFilter values={supportedFilters} onChange={(values) => this.onCheckboxChange('write', values)} />
+                    <Button variant="primary" size="lg" active onClick={this.handleButtonClick}>
+                        Potrdi vnos
+                    </Button>
+                </div>
            
  
         );
