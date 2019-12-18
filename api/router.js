@@ -1,9 +1,15 @@
 'use strict';
 const { Client } = require('@elastic/elasticsearch');
-const client = new Client({ node: 'http://localhost:9200' });
 const express = require('express');
 const router = new express.Router();
+let client = null;
 
+if (process.env.apiUrl) {
+    client = new Client({ node: process.env.apiUrl });
+} else {
+    client = new Client({ node: 'http://localhost:9200' });
+}
+console.log(process.env.apiUrl);
 
 
 
