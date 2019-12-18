@@ -59,5 +59,4 @@ for(var i=0; i<data.length;i++){
 }
 const body = dataset.flatMap(doc => [{ index: { _index: 'kindergartensbystate' } }, doc])
 const { body: bulkResponse } = await client.bulk({ refresh: true, body })
-debugger;
 }

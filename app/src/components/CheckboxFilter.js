@@ -5,29 +5,29 @@ import React from 'react';
 class CheckboxFilter extends React.Component {
     constructor(props) {
         super(props) 
-        this.state = {}
-        props.values.map((v, i) => {
-            this.state[v] = false
-        })
+        this.state = {
+            selectedOption:'youngFamily'
+        }
     }
-    
-    onChange(key, value) {
-        this.setState({ [key]: value }, (state) => {
-            console.log("CHild 2", value);
-            this.props.onChange(this.state)
-        })
+
+    handleOptionChange = (event) => {
+    this.setState({
+      selectedOption: event.target.value
+    });
+    this.props.onChange(event.target.value)
     }
   
     render() {
         return (
             <div className="list-group-item form-group">
                   {this.props.values.map((value, i) => (
-                      <div className="checkbox" key={i}>
+                      <div className="radio" key={i} style={{display: 'flex', justifyContent: 'center'}}>
                           <label>
                               <input 
-                                  onChange={(e) => this.onChange(value, e.target.checked)} 
-                                  type='checkbox' 
-                                  value={this.state[value]}
+                                  onChange={this.handleOptionChange} 
+                                  type='radio' 
+                                  value={value}
+                                  checked={this.state.selectedOption === value}      
                               />
                               {value}
                           </label>

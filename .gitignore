@@ -1,1 +1,6 @@
 node_modules
+.vscode/launch.json
+api/package-lock.json
+api/package.json
+app/package-lock.json
+app/package.json

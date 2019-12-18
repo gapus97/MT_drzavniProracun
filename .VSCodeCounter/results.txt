@@ -1,0 +1,35 @@
+Date : 2019-12-11 19:43:57
+Directory : /home/gasper/Documents/MT_drzavniProracun/dataParsers
+Total : 10 files,  753 codes, 148 comments, 197 blanks, all 1098 lines
+
+Languages
++--------------+------------+------------+------------+------------+------------+
+| language     | files      | code       | comment    | blank      | total      |
++--------------+------------+------------+------------+------------+------------+
+| Python       |          9 |        747 |        147 |        193 |      1,087 |
+| Shell Script |          1 |          6 |          1 |          4 |         11 |
++--------------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                              | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                 |         10 |        753 |        148 |        197 |      1,098 |
++-----------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------------------+--------------+------------+------------+------------+------------+
+| filename                                                                          | language     | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------+--------------+------------+------------+------------+------------+
+| /home/gasper/Documents/MT_drzavniProracun/dataParsers/State.py                    | Python       |         24 |          0 |          6 |         30 |
+| /home/gasper/Documents/MT_drzavniProracun/dataParsers/execute.sh                  | Shell Script |          6 |          1 |          4 |         11 |
+| /home/gasper/Documents/MT_drzavniProracun/dataParsers/parseBudget.py              | Python       |         20 |          3 |          6 |         29 |
+| /home/gasper/Documents/MT_drzavniProracun/dataParsers/parseCurrentTransfers.py    | Python       |        104 |         23 |         27 |        154 |
+| /home/gasper/Documents/MT_drzavniProracun/dataParsers/parseDebtPayment.py         | Python       |        104 |         23 |         28 |        155 |
+| /home/gasper/Documents/MT_drzavniProracun/dataParsers/parseInvestmentOutgoings.py | Python       |        104 |         22 |         29 |        155 |
+| /home/gasper/Documents/MT_drzavniProracun/dataParsers/parseInvestmentTransfers.py | Python       |        104 |         23 |         27 |        154 |
+| /home/gasper/Documents/MT_drzavniProracun/dataParsers/parseLoansAndCapital.py     | Python       |        105 |         23 |         26 |        154 |
+| /home/gasper/Documents/MT_drzavniProracun/dataParsers/parseStateBudgetOutcome.py  | Python       |        159 |         25 |         33 |        217 |
+| /home/gasper/Documents/MT_drzavniProracun/dataParsers/parseStates.py              | Python       |         23 |          5 |         11 |         39 |
+| Total                                                                             |              |        753 |        148 |        197 |      1,098 |
++-----------------------------------------------------------------------------------+--------------+------------+------------+------------+------------+

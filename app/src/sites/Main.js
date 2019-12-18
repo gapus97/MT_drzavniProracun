@@ -101,20 +101,19 @@ class Main extends React.Component {
 
         // if everting if good, then make api call
         if(isStateSelected && searchedState) {
-            for(let key of Object.keys(checkboxes)) {
-                console.log("Key: ", checkboxes[key]);
+            console.log("Key: ", checkboxes);
 
-                /* execute only if value of the key is true  -> is selected */
-                if(checkboxes[key]) {
-                    if(this.state.searchedState) {
-                        let stateData = await fetchAPIData(searchedState.name, key);
-                        console.log(stateData);
-                        this.setState({
-                            searchedData: stateData
-                        });
-                    }
+            /* execute only if value of the key is true  -> is selected */
+            if(checkboxes) {
+                if(this.state.searchedState) {
+                    let stateData = await fetchAPIData(searchedState.name, checkboxes);
+                    console.log(stateData);
+                    this.setState({
+                        searchedData: stateData
+                    });
                 }
-            }
+                }
+            
         }
     }
 

@@ -11,7 +11,7 @@ class MainSearch extends React.Component {
         this.state = {
             value: '',
             stateSuggestions: [],
-            checkboxesValue: {}
+            checkboxesValue: ''
         };
     }
 
