@@ -19,7 +19,8 @@ class Main extends React.Component {
             isStateSelected: false,
             zoom: 8,
             searchedState: {},
-            searchedData: []
+            searchedData: [],
+            searchedStateIndexData: {}
         };
     }
 
@@ -92,7 +93,6 @@ class Main extends React.Component {
 
 
     executeSearch = async (checkboxes) => {
-        console.log(checkboxes);
 
         const {
             isStateSelected,
@@ -106,13 +106,23 @@ class Main extends React.Component {
             /* execute only if value of the key is true  -> is selected */
             if(checkboxes) {
                 if(this.state.searchedState) {
-                    let stateData = await fetchAPIData(searchedState.name, checkboxes);
-                    console.log(stateData);
-                    this.setState({
-                        searchedData: stateData
-                    });
+                    let statesIndexData = await fetchAPIData(searchedState.name, checkboxes);
+                    let stateIndexData = {};
+
+                    if(statesIndexData) {
+                        statesIndexData.forEach(state => {
+                            if (state.name == searchedState.name) {
+                                stateIndexData = state;
+                            }
+                        });
+                        this.setState({
+                            searchedData: statesIndexData,
+                            searchedStateIndexData: stateIndexData
+                        });
+                    }
+                   
                 }
-                }
+            }
             
         }
     }
@@ -124,7 +134,8 @@ class Main extends React.Component {
             stateData,
             isStateSelected,
             searchedState,
-            searchedData
+            searchedData,
+            searchedStateIndexData
         } = this.state;
 
 
@@ -140,17 +151,18 @@ class Main extends React.Component {
                     executeSearch={this.executeSearch} />
                 <div id="Main">
                     {
-                        capitalCityCoordinates.length !== 0 ?
+                        /*capitalCityCoordinates.length !== 0 ?
                         <Maps 
                             position={capitalCityCoordinates} 
                             zoom={zoom} 
                             data={stateData} 
-                            stateSelected={isStateSelected} /> : <LoadingPage />
+                            stateSelected={isStateSelected} /> : <LoadingPage />*/
+                        
                     }
 
                     {
                         isStateSelected && searchedState && searchedData?
-                        <StateIndexDataShower data={searchedData} /> : ''
+                        <StateIndexDataShower data={searchedData} searchedStateIndexData={searchedStateIndexData} /> : ''
                     }
                 </div>
             </div>

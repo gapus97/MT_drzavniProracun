@@ -8,13 +8,14 @@ class CheckboxFilter extends React.Component {
         this.state = {
             selectedOption:'youngFamily'
         }
+        this.props.onChange(this.state.selectedOption);
     }
 
     handleOptionChange = (event) => {
-    this.setState({
-      selectedOption: event.target.value
-    });
-    this.props.onChange(event.target.value)
+        this.setState({
+        selectedOption: event.target.value
+        });
+        this.props.onChange(event.target.value)
     }
   
     render() {
