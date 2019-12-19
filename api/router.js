@@ -11,6 +11,10 @@ if (process.env.apiUrl) {
 }
 console.log(process.env.apiUrl);
 
+const moneyRounder = (moneyData) => { 
+    return parseFloat(Number.parseFloat(moneyData).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+};
+
 
 
 const categories = [
@@ -351,7 +355,7 @@ const calculateIndex = (familyData, populationData) => {
     console.log("family data: ", familyData);
     for(var key of Object.keys(familyData)) {
         //console.log(key);
-        let result = familyData[key] / populationData;
+        let result = moneyRounder(familyData[key] / populationData);
         indexData[key] = result;
     }
 
@@ -814,12 +818,14 @@ router.get("/api/youngFamilies/name=:name", async (req, res) => {
                 let kindegardens = await getKinderGardensByState(state);
 
                 let calculatedIndex = calculateIndex(stateYoungData, nearestStates[i].population);
+                
+                console.log(calculatedIndex);
 
                 youngFamilyData.push({
                     "name": state,
                     "values": [stateYoungData, kindegardens],
                     "index": calculatedIndex,
-                    "normalisedIndex": normalisedIndex(calculatedIndex)
+                    "normalisedIndex": moneyRounder(normalisedIndex(calculatedIndex))
                 });
             }
 
@@ -831,6 +837,7 @@ router.get("/api/youngFamilies/name=:name", async (req, res) => {
             res.send([]);
         }
     } catch(error) {
+        console.log(error.message);
         res.send({ error: `Cant get young families index for state name ${stateName}` });
     }
 });
