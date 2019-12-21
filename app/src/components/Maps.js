@@ -2,7 +2,7 @@ import React from 'react';
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import MarkerPopup from './MarkerPopup';
-import { customPopupDialog, customOptions } from '../utils/LeafletUtils';
+//import { customPopupDialog, customOptions } from '../utils/LeafletUtils';
 
 delete L.Icon.Default.prototype._getIconUrl;
 

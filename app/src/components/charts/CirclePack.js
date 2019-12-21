@@ -1,6 +1,6 @@
 import React from 'react';
 import * as d3 from 'd3';
-import { getCategorieComparisonByYear, parseMoney, getCategoriesComparisonByYear } from '../../utils/ParsingUtils';
+import { parseMoney, getCategoriesComparisonByYear } from '../../utils/ParsingUtils';
 import { supportedYears } from '../../utils/Queries';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -196,7 +196,7 @@ class CirclePack extends React.Component {
     comparisonGraph(data) {
         let graphData = [];
 
-        for (const [key, value] of Object.entries(supportedYears)) {
+        for (const key of Object.keys(supportedYears)) {
             let yearData = data[0][key];
             if (yearData[0]) {
                 console.log("Year data: ", yearData);

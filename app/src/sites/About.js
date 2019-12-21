@@ -1,5 +1,4 @@
 import React from 'react';
-import StatesChart from '../components/charts/ZoomedTreeMap';
 
 
 class About extends React.Component {
@@ -18,8 +17,7 @@ class About extends React.Component {
 
         return (
             <div>
-                <p>About this project</p>
-            
+                <p>About this project</p>   
             </div>
         );
         

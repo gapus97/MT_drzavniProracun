@@ -3,8 +3,6 @@ let basicHeader = {
     "Content-Type": "application/json"
 };
 
-let apiUrl = "http://localhost:9200/"; //basically elasticsearch DB
-
 
 function logResult(result) {
     console.log(result);
@@ -38,4 +36,4 @@ function fetchJSON(pathToResource, method) {
     .catch(logError);
 }
 
-export { fetchJSON, apiUrl };
+export { fetchJSON };

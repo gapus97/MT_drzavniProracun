@@ -1,8 +1,8 @@
 import React from 'react';
-import Maps from '../components/Maps';
+//import Maps from '../components/Maps';
 import { fetchAPIData, getStates } from '../dataFetcher/FetchStates';
-import LoadingPage from '../components/LoadingPage';
-import { supportedFilters } from '../utils/Queries';
+/*import LoadingPage from '../components/LoadingPage';
+import { supportedFilters } from '../utils/Queries';*/
 import MainSearch from '../components/MainSearch';
 import StateIndexDataShower from '../components/StateIndexDataShower';
 
@@ -39,15 +39,6 @@ class Main extends React.Component {
                 2016: []
             }
         ];
-
-        // Should be something else, but not enough time for API development!
-        /*for(const [key, value] of Object.entries(budgetCategories)) {
-            for(const [yearKey, value] of Object.entries(supportedYears)) {
-                
-                let categorieData = await fetchData("SKUPAJ*", key, value);
-                generalBudgetData[0][yearKey].push(categorieData);
-            }
-        }*/
 
         if(stateData) {
             stateData.forEach(element => {
@@ -110,9 +101,13 @@ class Main extends React.Component {
                     let stateIndexData = {};
 
                     if(statesIndexData) {
-                        statesIndexData.forEach(state => {
-                            if (state.name == searchedState.name) {
+                        statesIndexData.forEach((state, index) => {
+                            if (state.name === searchedState.name) {
                                 stateIndexData = state;
+                                stateIndexData.place = index + 1;
+                            } else {
+                                state.place = index + 1;
+                                stateIndexData[index] = state;
                             }
                         });
                         this.setState({
@@ -129,7 +124,6 @@ class Main extends React.Component {
 
     render() {
         const {
-            capitalCityCoordinates,
             zoom,
             stateData,
             isStateSelected,

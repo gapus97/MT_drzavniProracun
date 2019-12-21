@@ -9,16 +9,19 @@
     "bootstrap": "^4.4.1",
     "core-util-is": "^1.0.2",
     "d3": "^5.14.2",
+    "highcharts-react-official": "^2.2.2",
     "leaflet": "^1.6.0",
     "puppeteer": "^2.0.0",
     "react": "^16.12.0",
     "react-autosuggest": "^9.4.3",
     "react-bootstrap": "^1.0.0-beta.16",
     "react-dom": "^16.12.0",
+    "react-google-charts": "^3.0.15",
     "react-leaflet": "^2.6.0",
     "react-responsive-carousel": "^3.1.51",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.2.0"
+    "react-scripts": "3.2.0",
+    "styled-components": "^4.4.1"
   },
   "scripts": {
     "start": "react-scripts start",

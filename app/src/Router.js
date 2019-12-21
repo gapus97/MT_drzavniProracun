@@ -2,14 +2,13 @@ import React from 'react';
 import {
     BrowserRouter as Router,
     Switch,
-    Route,
-    Link
+    Route
 } from "react-router-dom";
 
 import Main from './sites/Main';
 import About from './sites/About';
 import Header from './components/Header';
-import Footer from './components/Footer';
+//import Footer from './components/Footer';
 import StateBudget from './sites/StateBudget';
 
 class Routes extends React.Component {
@@ -33,7 +32,7 @@ class Routes extends React.Component {
                         <Route path="/stateBudget" component={StateBudget} />                           
                     </Switch>
                     
-                    <Footer />
+                    { /*<Footer /> */ }
                 </div>
             </Router>
         );

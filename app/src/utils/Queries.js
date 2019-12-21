@@ -1,33 +1,4 @@
 
-
-/**
- * Query state outcome
- * @param {String} cityName 
- */
-function queryStateOutcome(cityName, year = null){ 
-    return `${queries.statesOutcome}?q=name:${cityName} AND year:${year}`;
-}
-
-function queryCurrentTransfers(cityName, year = null) {
-    return `${queries.currentTransfers}?q=name:${cityName} AND year:${year}`
-}
-
-function queryOutgoingInvestments(cityName, year = null) {
-    return `${queries.outgoingInvestments}?q=name:${cityName} AND year:${year}`
-}
-
-function queryInvestmentsTransfers(cityName, year = null) {
-    return `${queries.investmentTransfers}?q=name:${cityName} AND year:${year}`
-}
-
-function queryLoansAndCapital(cityName, year = null) {
-    return `${queries.loansAndCapital}?q=name:${cityName} AND year:${year}`
-}
-
-function queryDeptPayments(cityName, year = null) {
-    return `${queries.deptPayments}?q=name:${cityName} AND year:${year}`
-}
-
 const qStateOutcome = (cityName,year = null) => {
     return `${apiEndPoints.statesOutcome}name=${cityName}`;
 }
@@ -94,23 +65,6 @@ let supportedYears = {
     2016: '2016'
 };
 
-function queryMap(cityName, queryKey, year) {
-    switch(queryKey) {
-        case 'statesOutcome':
-            return queryStateOutcome(cityName, year);
-        case 'currentTransfers':
-            return queryCurrentTransfers(cityName, year);
-        case 'investmentTransfers':
-            return queryInvestmentsTransfers(cityName, year);
-        case 'outgoingInvestments':
-            return queryOutgoingInvestments(cityName, year);
-        case 'loansAndCapital':
-            return queryLoansAndCapital(cityName, year);
-        case 'deptPayments':
-            return queryDeptPayments(cityName, year);
-    }
-}
-
 function qMap(cityName, queryKey, year) {
     switch(queryKey) {
         case 'statesOutcome':
@@ -130,6 +84,8 @@ function qMap(cityName, queryKey, year) {
         case "youngFamily":
             return qFamilyData(cityName, year);
         case "oldFamily":
+            return null;
+        default:
             return null;
     }
 }
@@ -168,13 +124,6 @@ let supportedFiltersMap = {
 export { 
     queries, 
     budgetCategories,
-    queryStateOutcome, 
-    queryCurrentTransfers,
-    queryInvestmentsTransfers,
-    queryOutgoingInvestments,
-    queryLoansAndCapital,
-    queryDeptPayments,
-    queryMap,
     supportedYears,
     apiEndPoints,
     qMap,

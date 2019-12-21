@@ -1,8 +1,8 @@
 import React from 'react';
 import ShowStateBudget from '../components/ShowStateBudget';
 import Dropdown from 'react-bootstrap/Dropdown';
-import { budgetCategories, categoriesMap } from '../utils/Queries';
-import  { parseBudgetCategories, parseBudgetCategorie, isDataValid, parseAllCategories,getBudgetCategorie } from '../utils/ParsingUtils';
+import { budgetCategories } from '../utils/Queries';
+import  { isDataValid, parseAllCategories } from '../utils/ParsingUtils';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
