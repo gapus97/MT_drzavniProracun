@@ -114,7 +114,8 @@ const parseFamilyCategories = (data) => {
                     "value": mainCategories.value
                 };
                 if (mainCategories.name.toLowerCase().includes(categorie)) {
-                    exportedData[categorie] += main.value;
+                    let convertedNumber  = parseFloat(main.value.toFixed(2));
+                    exportedData[categorie] += convertedNumber;
                     //exportedData[0].push(main);
                     
                 }
@@ -130,7 +131,8 @@ const parseFamilyCategories = (data) => {
                     //console.log(sub);
 
                     if (subCategorie.name.includes(categorie)) {
-                        exportedData[categorie] += sub.value;
+                        let convertedNumber  = parseFloat(main.value.toFixed(2));
+                        exportedData[categorie] += convertedNumber;
                     }
 
                     let subSubCategories = subCategorie.children;
@@ -146,7 +148,8 @@ const parseFamilyCategories = (data) => {
                         };
 
                         if (subSubCategorie.name.includes(categorie)) {
-                            exportedData[categorie] += subSub.value;
+                            let convertedNumber  = parseFloat(main.value.toFixed(2));
+                            exportedData[categorie] += convertedNumber;
                         }
                     }
                 }
@@ -303,7 +306,10 @@ const getYoungCategoriesByState = async (name) => {
         if (Object.keys(result.body).length !== 0) {
             data = getData(result);
             exportedData = parseFamilyCategories(data);
-            return exportedData;
+            let sortedList = {};
+            Object.keys(exportedData).sort((a,b) => exportedData[b]-exportedData[a]).forEach((key) => {
+                sortedList[key] = exportedData[key]; });
+            return sortedList;
         } else {
             return exportedData;
         }
@@ -799,6 +805,7 @@ router.get("/api/youngFamilies/name=:name", async (req, res) => {
         const youngFamilyData = [];
         const searchState = await getState(stateName);
         const stateYoungFamilyData = await getYoungCategoriesByState(stateName);
+        const stateKindergardnes = await getKinderGardensByState(stateName);
         let nearestStates;
         if(searchState) {
             console.log(searchState);
@@ -808,7 +815,7 @@ router.get("/api/youngFamilies/name=:name", async (req, res) => {
         if(nearestStates && stateYoungFamilyData) {
             youngFamilyData.push({
                 "name": stateName,
-                "values": stateYoungFamilyData,
+                "values": [stateYoungFamilyData, stateKindergardnes],
                 "index": calculateIndex(stateYoungFamilyData, searchState.population),
                 "normalisedIndex": normalisedIndex(calculateIndex(stateYoungFamilyData, searchState.population))
             });
