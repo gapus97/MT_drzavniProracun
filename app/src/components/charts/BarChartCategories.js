@@ -52,14 +52,21 @@ class BarChartCategories extends React.Component {
        // set the dimensions and margins of the graph
         var margin = {top: 20, right: 0, bottom: 50, left: 100},
         width = 350 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom;
+        height = 250 - margin.top - margin.bottom;
 
         let maxValue = d3.max(data, d => d.value);
         let minValue = d3.min(data, d => d.value);
 
         let barChartToolTip = this.state.barChartToolTip;
         
-
+        var rangeOfTicks=[];
+        var exp=10000;
+        for(var i=1; i<5;i++){
+            rangeOfTicks.push(d3.max(data,d=>d.value)/exp);
+            exp=exp/Math.pow(10,1);
+        }
+        rangeOfTicks.push(d3.max(data,d=>d.value));
+        
         // append the svg object to the body of the page
         var svg = d3.select(`#${this.state.barChartName}`)
         .append("svg")
@@ -70,13 +77,15 @@ class BarChartCategories extends React.Component {
             "translate(" + margin.left + "," + margin.top + ")");
 
 
-        // Add X axis
-        var x = d3.scaleLinear()
-        .domain([0, d3.max(data, d => d.value)])
+        var x = d3.scalePow()
+        .exponent(0.3)
+        .domain([0,d3.max(data, d => d.value)])
         .range([ 0, width]);
+        
+        //https://medium.com/@ghenshaw.work/customizing-axes-in-d3-js-99d58863738b
         svg.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x))
+        .call(d3.axisBottom(x).ticks(6).tickValues(rangeOfTicks))
         .selectAll("text")
         .attr("transform", "translate(-10,0)rotate(-45)")
         .style("text-anchor", "end")
@@ -87,7 +96,7 @@ class BarChartCategories extends React.Component {
         var y = d3.scaleBand()
         .range([ 0, height ])
         .domain(data.map(function(d) { return d.name; }))
-        .padding(.1);
+        .padding(0.1);
         svg.append("g")
         .call(d3.axisLeft(y))
         .selectAll("text")
