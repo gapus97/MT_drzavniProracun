@@ -355,6 +355,10 @@ text {
   display: none;
 }
 
+.hidden {
+  display: none;
+}
+
 #tooltip p {
   margin: 0;
   font-family: Futura;

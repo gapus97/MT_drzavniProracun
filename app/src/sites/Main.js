@@ -107,7 +107,7 @@ class Main extends React.Component {
                                 stateIndexData.place = index + 1;
                             } else {
                                 state.place = index + 1;
-                                stateIndexData[index] = state;
+                                //stateIndexData[index] = index + 1;
                             }
                         });
                         this.setState({

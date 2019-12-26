@@ -87,13 +87,12 @@ class MainSearch extends React.Component {
         const { value, stateSuggestions } = this.state;
         // Autosuggest will pass through all these props to the input.
         const inputProps = {
-            placeholder: 'Vpiši občino',
+            placeholder: '',
             onChange: this.onChange,
             value: value
         };
 
         if(stateSuggestions.length === 1) {
-            console.log("Ok execute for parent");
             // pass data to root (Main.js), to map to this location
             this.props.searchData(stateSuggestions);
         }
@@ -103,6 +102,7 @@ class MainSearch extends React.Component {
         return (
            
                 <div>
+                    <p> Vpišite ime občine v katero bi se radi preselili </p>
                     {   this.props.stateData ?  
                         <Autosuggest
                             suggestions={stateSuggestions}

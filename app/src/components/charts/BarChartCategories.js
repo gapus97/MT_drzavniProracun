@@ -34,9 +34,11 @@ class BarChartCategories extends React.Component {
         this.constructGraph(this.props.data);
     }
 
-    componentDidUpdate({data}) {
-        if (this.props.data !== data)  {
-            this.constructGraph(data);
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.data !== this.props.data)  {
+            this.constructGraph(this.props.data);
+        } 
+        if(prevProps.indeks !== this.props.indeks) {
             this.setState({
                 barChartName: `barChartCategories-${this.props.indeks}`,
                 barChartToolTip: `tooltip-${this.props.indeks}`
@@ -46,13 +48,14 @@ class BarChartCategories extends React.Component {
 
     constructGraph = (data) => {
 
-        //d3.select(`#${this.state.barChartName}`).select("svg").remove();
+        d3.select(`#${this.state.barChartName}`).select("svg").remove();
+        if(data.length === 0) return;
         
 
        // set the dimensions and margins of the graph
         var margin = {top: 20, right: 0, bottom: 50, left: 100},
-        width = 350 - margin.left - margin.right,
-        height = 250 - margin.top - margin.bottom;
+        width = 370 - margin.left - margin.right, //350, 250
+        height = 270 - margin.top - margin.bottom;
 
         let maxValue = d3.max(data, d => d.value);
         let minValue = d3.min(data, d => d.value);
@@ -128,7 +131,7 @@ class BarChartCategories extends React.Component {
             d3.select(`#${barChartToolTip}`)
                 .style("left", xPosition + "px")
                 .style("top", yPosition + "px")
-                .select(`#${barChartToolTip}value`)
+                .select(`#${barChartToolTip}value`)       
                 .text(parseMoney(d.value));
 
 
@@ -136,6 +139,7 @@ class BarChartCategories extends React.Component {
 
        })
        .on("mouseout", function() {
+           // hide toooltip
             d3.select(`#${barChartToolTip}`).classed("hidden", true);
        })
     }
@@ -144,8 +148,7 @@ class BarChartCategories extends React.Component {
     render() {   
         return (
             <div style={{marginLeft: 170}}>
-                <div id={this.state.barChartName}>
-                </div>
+                <div id={this.state.barChartName} />
                 <ToolTipStyle id={this.state.barChartToolTip} className="hidden">
                     <p style={{color: 'green'}}><span id={`${this.state.barChartToolTip}value`}>100</span>€</p>
                 </ToolTipStyle>

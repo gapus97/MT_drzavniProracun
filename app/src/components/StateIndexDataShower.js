@@ -8,6 +8,9 @@ import Chart from "react-google-charts";
 import { darkTheme } from '../utils/StyleUtils';
 import BarChartCategories from './charts/BarChartCategories';
 import Carousel from 'react-bootstrap/Carousel';
+import { parseMoney } from '../utils/ParsingUtils';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCoffee, faAngleRight, faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 
 class StateIndexDataShower extends React.Component {
 
@@ -17,8 +20,31 @@ class StateIndexDataShower extends React.Component {
         this.state = {
             showAdditionalInfo: false,
             additionalInfo: {},
-            searchedStateData: {}
+            searchedStateData: {},
+            comparisonStates: [],
+            comparisonState: {}
         };
+    }
+
+    componentDidMount() {
+        
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.searchedStateIndexData !== this.props.searchedStateIndexData) {
+            this.setState({
+                searchedStateData: this.props.searchedStateIndexData
+            });
+        }
+        if(prevProps.data !== this.props.data) {
+            let comparisonStates = this.props.data.filter(state => state.name !== this.props.searchedStateIndexData.name);
+            if(comparisonStates.length > 0) {
+                this.setState({
+                    comparisonStates: comparisonStates,
+                    comparisonState: comparisonStates[0]
+                });
+            }
+        }
     }
 
 
@@ -64,6 +90,47 @@ class StateIndexDataShower extends React.Component {
         return categories;
     }
 
+    onCarouselItemSelect = (eventKey, direction, event) => {
+        console.log("Key: ", eventKey);
+        console.log("Direction: ", direction);
+        console.log("Event", event);
+        this.setState({
+            comparisonState: this.state.comparisonStates[eventKey]
+        });
+    }
+
+    getComparisonTable = () => {
+        const {
+            comparisonState,
+            searchedStateData
+        } = this.state;
+        if (Object.keys(comparisonState).length > 0 && Object.keys(searchedStateData).length > 0) {
+            let comparisonValues = comparisonState.values[0];
+            let searchedStateValues = searchedStateData.values[0];
+
+            if (Object.keys(comparisonValues).length === Object.keys(searchedStateValues).length) {
+                return (
+                    <div> 
+                    {
+                        Object.keys(comparisonValues).map((key, index) => {
+                            return (
+                                <div> 
+                                    <p>{key}</p>
+                                    {
+                                        searchedStateValues[key] > comparisonValues[key] ?
+                                        <FontAwesomeIcon icon={faAngleRight} size="2x" /> :
+                                        <FontAwesomeIcon icon={faAngleLeft}  size="2x" />
+                                    }
+                                </div>
+                            )
+                        })
+                    }
+                    </div>);
+            }
+        }
+
+    }
+
 
 
     render() {
@@ -76,12 +143,10 @@ class StateIndexDataShower extends React.Component {
             searchedStateIndexData
         } = this.props;
 
-        
-
-        console.log(searchedStateIndexData);
-
         const renderBarChart = (state, isOtherStates) => {
             let stateData = this.getCategoriesValue(state);
+
+            if (stateData.length === 0) return;
 
             if(isOtherStates) {
                 /* if is not main state then return carousel item */
@@ -101,30 +166,49 @@ class StateIndexDataShower extends React.Component {
                 );
             }
         };
+
+        this.getComparisonTable();
     
         /* md={6} each col is 50% width */
         return (
             <Container className="mainIndexShower" fluid={true}>
                 <Row>
                     {
-                        Object.keys(searchedStateIndexData).length > 0 ? 
+                        Object.keys(this.state.searchedStateData).length > 0 ? 
                         [ 
-                            <Col md={6} key={"firstCol"}>
+                            <Col md={5} key={"firstCol"}>
                                 {
-                                    renderBarChart(searchedStateIndexData, false)
+                                    renderBarChart(this.state.searchedStateData, false)
                                 }
                             </Col>,
-                            <Col md={6} key={"secondCol"}>
-                                { <Carousel className="mainCarousel" indicators={false} style={{backgroundColor: darkTheme.body}}>
-                                    {this.props.data.filter(state => state.name !== searchedStateIndexData.name).map((state, i) => (
-                                        renderBarChart(state, true)
-                                    ))}
+                            <Col md={2} key={"secondCol"} className="d-flex justify-content-center text-center align-items-center" >
+                                <h3> Primerjava </h3>
+                            </Col>,
+                            <Col md={5} key={"thirdCol"}>
+                                { <Carousel 
+                                    className="mainCarousel" 
+                                    wrap={false} 
+                                    indicators={false}
+                                    interval={null} 
+                                    onSelect={this.onCarouselItemSelect}
+                                    style={{backgroundColor: darkTheme.body}}>
+
+                                        {this.state.comparisonStates.map((state, i) => (
+                                            renderBarChart(state, true)
+                                        ))}
                                 </Carousel>  
                                 }
                             </Col>
                         ]: ''
                     }
                           
+                </Row>
+                <Row>
+                    <Col md={12}>
+                        {
+                            this.getComparisonTable()
+                        }
+                    </Col>
                 </Row>
 
                 {
