@@ -155,8 +155,11 @@ class Main extends React.Component {
                     }
 
                     {
-                        isStateSelected && searchedState && searchedData?
-                        <StateIndexDataShower data={searchedData} searchedStateIndexData={searchedStateIndexData} /> : ''
+                        isStateSelected && searchedState && searchedData && searchedStateIndexData?
+                        <StateIndexDataShower data={searchedData} searchedStateIndexData={searchedStateIndexData} /> : 
+                        <div style={{backgroundColor: "#FAFAFA", width: "500px", height: "200px"}}>
+                            <p>Okk</p>
+                        </div>
                     }
                 </div>
             </div>

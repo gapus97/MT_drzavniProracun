@@ -115,7 +115,7 @@ class MainSearch extends React.Component {
                     }
 
                     <CheckboxFilter values={supportedFilters} onChange={(values) => this.onCheckboxChange('write', values)} />
-                    <Button variant="primary" size="lg" active onClick={this.handleButtonClick}>
+                    <Button variant="primary" size="lg" active onClick={this.handleButtonClick} style={{marginTop: 10}}>
                         Potrdi vnos
                     </Button>
                 </div>

@@ -11,6 +11,9 @@ import Carousel from 'react-bootstrap/Carousel';
 import { parseMoney } from '../utils/ParsingUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoffee, faAngleRight, faAngleLeft } from '@fortawesome/free-solid-svg-icons';
+import Overlay from 'react-bootstrap/Overlay';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 
 class StateIndexDataShower extends React.Component {
 
@@ -105,22 +108,49 @@ class StateIndexDataShower extends React.Component {
             searchedStateData
         } = this.state;
         if (Object.keys(comparisonState).length > 0 && Object.keys(searchedStateData).length > 0) {
+            let comparisonIndex = comparisonState.index;
+            let searchedStateIndex = searchedStateData.index;
             let comparisonValues = comparisonState.values[0];
             let searchedStateValues = searchedStateData.values[0];
+            console.log(comparisonState);
 
-            if (Object.keys(comparisonValues).length === Object.keys(searchedStateValues).length) {
+            if (Object.keys(comparisonIndex).length === Object.keys(searchedStateIndex).length) {
                 return (
                     <div> 
                     {
-                        Object.keys(comparisonValues).map((key, index) => {
+                        Object.keys(comparisonIndex).map((key, index) => {
                             return (
-                                <div> 
+                                <div key={index}> 
                                     <p>{key}</p>
-                                    {
-                                        searchedStateValues[key] > comparisonValues[key] ?
-                                        <FontAwesomeIcon icon={faAngleRight} size="2x" /> :
-                                        <FontAwesomeIcon icon={faAngleLeft}  size="2x" />
-                                    }
+
+                                        <OverlayTrigger overlay={
+                                            <Tooltip style={{backgroundColor: '#FAFAFA', color: '#363537'}} id="tooltip-disabled tooltipComparison">
+                                                <div>
+                                                    <p>Postopek izračuna: vrednost = vrednostKategorije / populacija občine</p>
+                                                    <div style={{display: 'flex'}}>
+                                                        <p style={{margin: 0}}>{searchedStateIndex[key]}</p>
+                                                        <p>=</p>
+                                                        <p style={{margin: 0}}>{parseMoney(searchedStateValues[key])} / {searchedStateData.population}</p>
+                                                    </div>
+                                                    <div style={{display: 'flex'}}>
+                                                        <p style={{margin: 0}}>{comparisonIndex[key]}</p>
+                                                        <p>=</p>
+                                                        <p style={{margin: 0}}>{parseMoney(comparisonValues[key])} / {comparisonState.population}</p>
+                                                    </div>
+                                                </div>
+                                            </Tooltip>
+                                        }>
+                                            <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                                <p style={{margin: 0}}>{searchedStateIndex[key]}</p>
+                                                {
+                                                    searchedStateIndex[key] > comparisonIndex[key] ?
+                                                    <FontAwesomeIcon icon={faAngleRight} size="2x" style={{marginLeft: 5, marginRight: 5}}/> :
+                                                    <FontAwesomeIcon icon={faAngleLeft} size="2x" style={{marginLeft: 5, marginRight: 5}}/>
+                                                }
+                                                <p style={{margin: 0}}>{comparisonIndex[key]}</p>
+                                            </div>
+                                        </OverlayTrigger>
+
                                 </div>
                             )
                         })
@@ -153,6 +183,7 @@ class StateIndexDataShower extends React.Component {
                 return (
                     <Carousel.Item key={state.place}>
                         <h3>#{ state.place } { state.name }</h3>
+                        <h5> {state.population} preb.</h5>
                         <BarChartCategories data={stateData} stateName={state.name} indeks={state.place} />
                     </Carousel.Item>
                 );
@@ -161,6 +192,7 @@ class StateIndexDataShower extends React.Component {
                 return (
                     <div key={state.place}>
                         <h3>#{ state.place } { state.name }</h3>
+                        <h5> {state.population} preb.</h5>
                         <BarChartCategories data={stateData} stateName={state.name} indeks={state.place} />
                     </div>
                 );
@@ -182,7 +214,7 @@ class StateIndexDataShower extends React.Component {
                                 }
                             </Col>,
                             <Col md={2} key={"secondCol"} className="d-flex justify-content-center text-center align-items-center" >
-                                <h3> Primerjava </h3>
+                                <h3> Primerjava glede na število prebivalcev </h3>
                             </Col>,
                             <Col md={5} key={"thirdCol"}>
                                 { <Carousel 

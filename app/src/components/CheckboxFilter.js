@@ -21,7 +21,7 @@ class CheckboxFilter extends React.Component {
   
     render() {
         return (
-            <div className="list-group-item form-group" style={{backgroundColor: darkTheme.body}}>
+            <div className="list-group-item form-group" style={{backgroundColor: darkTheme.body, display: 'none'}}>
                   {this.props.values.map((value, i) => (
                       <div className="radio" key={i} style={{display: 'flex', justifyContent: 'center'}}>
                           <label>
