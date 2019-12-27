@@ -815,6 +815,7 @@ router.get("/api/youngFamilies/name=:name", async (req, res) => {
         if(nearestStates && stateYoungFamilyData) {
             youngFamilyData.push({
                 "name": stateName,
+                "population": searchState.population,
                 "values": [stateYoungFamilyData, stateKindergardnes],
                 "index": calculateIndex(stateYoungFamilyData, searchState.population),
                 "normalisedIndex": normalisedIndex(calculateIndex(stateYoungFamilyData, searchState.population))
@@ -830,6 +831,7 @@ router.get("/api/youngFamilies/name=:name", async (req, res) => {
 
                 youngFamilyData.push({
                     "name": state,
+                    "population": nearestStates[i].population,
                     "values": [stateYoungData, kindegardens],
                     "index": calculatedIndex,
                     "normalisedIndex": moneyRounder(normalisedIndex(calculatedIndex))
