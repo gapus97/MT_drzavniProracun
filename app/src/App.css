@@ -369,3 +369,28 @@ text {
 .mainCarousel {
   background-color: #363537;
 }
+
+
+#tooltipComparison > .tooltip-inner {
+  background-color: #FAFAFA;
+  color:  #363537;
+}
+
+#tooltipComparison {
+  background-color: #FAFAFA;
+  color:  #363537;
+}
+
+.bs-tooltip-top {
+  background-color: #FAFAFA;
+  color:  #363537;
+}
+
+.tooltip-inner {
+  background-color: #FAFAFA;
+  color:  #363537;
+}
+
+.bs-tooltip-auto[x-placement^=top] .arrow::before, .bs-tooltip-top .arrow::before {
+  border-top-color: white;
+}
