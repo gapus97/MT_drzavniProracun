@@ -11,7 +11,7 @@ if (process.env.apiUrl) {
 }
 console.log(process.env.apiUrl);
 
-const moneyRounder = (moneyData) => { 
+const moneyRounder = (moneyData) => {
     return parseFloat(Number.parseFloat(moneyData).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
 };
 
@@ -53,7 +53,7 @@ const parseAllCategories = async (stateName) => {
     }];
 
     try {
-        for(let i = 0; i < allCategories.length; i++) {
+        for (let i = 0; i < allCategories.length; i++) {
             let catName = allCategories[i];
             const result = await client.search({
                 index: catName,
@@ -76,85 +76,105 @@ const parseAllCategories = async (stateName) => {
             });
 
 
-            if(Object.keys(result.body).length !== 0) {
+            if (Object.keys(result.body).length !== 0) {
                 let data = getData(result);
 
-                for(let item of data) {
+                for (let item of data) {
                     overallBudgetData[0][item.year].push({
                         "categorie": catName,
                         "data": item
                     });
                     //console.log(overallBudgetData);
-                    
+
                 }
             } else {
-                
+
             }
         }
 
         return overallBudgetData;
-       
-    } catch(error) {
+
+    } catch (error) {
         return error;
     }
 }
 
 const parseFamilyCategories = (data) => {
     let exportedData = {};
-    
+    let maxData = { "value": 0 };
+    let minData = { "value": Number.POSITIVE_INFINITY };
+
     for (let i = 0; i < youngFamilySearch.length; i++) {
         let categorie = youngFamilySearch[i];
-        exportedData[categorie] = 0;
+        exportedData[categorie] = { "value": 0, "min": minData, "max": maxData};
 
-        for(let ii = 0; ii < data.length; ii++) {
+        for (let ii = 0; ii < data.length; ii++) {
             for (var j = 0; j < data[ii].children.length; j++) {
                 let mainCategories = data[ii].children[j];
                 let main = {
                     "name": mainCategories.name,
                     "value": mainCategories.value
                 };
+
                 if (mainCategories.name.toLowerCase().includes(categorie)) {
-                    let convertedNumber  = parseFloat(main.value.toFixed(2));
-                    exportedData[categorie] += convertedNumber;
-                    //exportedData[0].push(main);
-                    
-                }
-                 
-                let subCategories = mainCategories.children;
-                for (var l = 0; l < subCategories.length; l++) {
-                    let subCategorie = subCategories[l];
+                    let convertedNumber = parseFloat(main.value.toFixed(2));
+                    exportedData[categorie].value += convertedNumber;
+                    //exportedData[0].push(main);      
 
-                    let sub = {
-                        "name": subCategorie.name,
-                        "value": subCategorie.value
-                    };
-                    //console.log(sub);
+                    let subCategories = mainCategories.children;
+                    for (var l = 0; l < subCategories.length; l++) {
+                        let subCategorie = subCategories[l];
 
-                    if (subCategorie.name.includes(categorie)) {
-                        let convertedNumber  = parseFloat(main.value.toFixed(2));
-                        exportedData[categorie] += convertedNumber;
-                    }
-
-                    let subSubCategories = subCategorie.children;
-
-
-
-                    for (var k = 0; k < subSubCategories.length; k++) {
-                        let subSubCategorie = subSubCategories[k];
-
-                        let subSub = {
-                            "name": subSubCategorie.name,
-                            "value": subSubCategorie.value
+                        let sub = {
+                            "name": subCategorie.name,
+                            "value": subCategorie.value
                         };
+                        
 
-                        if (subSubCategorie.name.includes(categorie)) {
-                            let convertedNumber  = parseFloat(main.value.toFixed(2));
-                            exportedData[categorie] += convertedNumber;
+                        // max per categorie
+                        if (sub.value > maxData.value) {
+                            maxData = sub;
+                            exportedData[categorie].max = maxData;
+                        }
+
+                        // parse min value
+                        if (sub.value < minData.value) {
+                            console.log(sub);
+                            minData = sub;
+                            exportedData[categorie].min = minData;
+                        }
+
+                        let subSubCategories = subCategorie.children;
+
+
+
+                        for (var k = 0; k < subSubCategories.length; k++) {
+                            let subSubCategorie = subSubCategories[k];
+
+                            let subSub = {
+                                "name": subSubCategorie.name,
+                                "value": subSubCategorie.value
+                            };
+
+                            // max per categorie
+                            if (subSub.value > maxData.value) {
+                                maxData = subSub;
+                                exportedData[categorie].max = maxData;
+                            }
+
+                            // parse min value
+                            if (subSub.value < minData.value) {
+                                minData = subSub;
+                                exportedData[categorie].min = minData;
+                            }
+
                         }
                     }
                 }
             }
         }
+        maxData = {"value": 0};
+        minData = {"value": Number.POSITIVE_INFINITY};
     }
 
     return exportedData;
@@ -226,13 +246,13 @@ const getNearestStates = async (lat, lon) => {
             }
         });
 
-        if(Object.keys(result.body).length !== 0) {
+        if (Object.keys(result.body).length !== 0) {
             data = getData(result);
             return data;
         } else {
             return data;
         }
-    } catch(error) {  
+    } catch (error) {
         return error;
     }
 };
@@ -259,14 +279,14 @@ const getKinderGardensByState = async (name) => {
                 "size": 30
             }
         });
-        
-        if(Object.keys(result.body).length !== 0) {
+
+        if (Object.keys(result.body).length !== 0) {
             data = getData(result);
             return data;
         } else {
             return data;
         }
-    } catch(error) {
+    } catch (error) {
         return error;
     }
 };
@@ -290,11 +310,11 @@ const getYoungCategoriesByState = async (name) => {
                             }
                         ],
 
-                            "filter": {
-                                "term": {
-                                    "year": 2018
-                                }
-                            },
+                        "filter": {
+                            "term": {
+                                "year": 2018
+                            }
+                        },
                         "minimum_should_match": 1
                     }
                 }
@@ -307,8 +327,9 @@ const getYoungCategoriesByState = async (name) => {
             data = getData(result);
             exportedData = parseFamilyCategories(data);
             let sortedList = {};
-            Object.keys(exportedData).sort((a,b) => exportedData[b]-exportedData[a]).forEach((key) => {
-                sortedList[key] = exportedData[key]; });
+            Object.keys(exportedData).sort((a, b) => exportedData[b].value - exportedData[a].value).forEach((key) => {
+                sortedList[key] = exportedData[key];
+            });
             return sortedList;
         } else {
             return exportedData;
@@ -343,7 +364,7 @@ const getState = async (name) => {
 
 
 
-        if(Object.keys(result.body).length !== 0) {
+        if (Object.keys(result.body).length !== 0) {
             const resultData = getData(result);
 
             return resultData[0];
@@ -358,10 +379,9 @@ const getState = async (name) => {
 
 const calculateIndex = (familyData, populationData) => {
     let indexData = {};
-    console.log("family data: ", familyData);
-    for(var key of Object.keys(familyData)) {
+    for (var key of Object.keys(familyData)) {
         //console.log(key);
-        let result = moneyRounder(familyData[key] / populationData);
+        let result = moneyRounder(familyData[key].value / populationData);
         indexData[key] = result;
     }
 
@@ -370,7 +390,7 @@ const calculateIndex = (familyData, populationData) => {
 
 const normalisedIndex = (indexByCategories) => {
     let normalised = 0;
-    for(var key of Object.keys(indexByCategories)) {
+    for (var key of Object.keys(indexByCategories)) {
         normalised += indexByCategories[key];
     }
 
@@ -396,7 +416,7 @@ const parseSpecificYear = (data) => {
         2016: []
     }];
 
-    for(let i = 0; i < data.length; i++) {
+    for (let i = 0; i < data.length; i++) {
         let row = data[i];
 
         specificYear[0][row.year].push(row);
@@ -435,7 +455,7 @@ router.get("/api/statesOutcome/name=:name", async (req, res) => {
 
         let data = [];
 
-        if(Object.keys(result.body).length !== 0) {
+        if (Object.keys(result.body).length !== 0) {
             data = getData(result);
             data = parseSpecificYear(data);
         }
@@ -474,7 +494,7 @@ router.get("/api/loansAndCapital/name=:name", async (req, res) => {
 
         let data = [];
 
-        if(Object.keys(result.body).length !== 0) {
+        if (Object.keys(result.body).length !== 0) {
             data = getData(result);
             data = parseSpecificYear(data);
         }
@@ -511,7 +531,7 @@ router.get("/api/investmentTransfers/name=:name", async (req, res) => {
 
         let data = [];
 
-        if(Object.keys(result.body).length !== 0) {
+        if (Object.keys(result.body).length !== 0) {
             data = getData(result);
             data = parseSpecificYear(data);
         }
@@ -549,7 +569,7 @@ router.get("/api/investmentOutgoings/name=:name", async (req, res) => {
 
         let data = [];
 
-        if(Object.keys(result.body).length !== 0) {
+        if (Object.keys(result.body).length !== 0) {
             data = getData(result);
             data = parseSpecificYear(data);
         }
@@ -586,7 +606,7 @@ router.get("/api/debtPayment/name=:name", async (req, res) => {
 
         let data = [];
 
-        if(Object.keys(result.body).length !== 0) {
+        if (Object.keys(result.body).length !== 0) {
             data = getData(result);
             data = parseSpecificYear(data);
         }
@@ -624,7 +644,7 @@ router.get("/api/currentTransfers/name=:name", async (req, res) => {
 
         let data = [];
 
-        if(Object.keys(result.body).length !== 0) {
+        if (Object.keys(result.body).length !== 0) {
             data = getData(result);
             data = parseSpecificYear(data);
         }
@@ -670,8 +690,8 @@ router.get("/api/getAllCategories/name=:name", async (req, res) => {
         const result = await parseAllCategories(stateName);
 
         res.send(result);
-    } catch(error) {
-        res.send({error: error.message});
+    } catch (error) {
+        res.send({ error: error.message });
     }
 });
 
@@ -765,7 +785,7 @@ router.get("/api/kindergarden/name=:name", async (req, res) => {
             res.end([]);
         }
     } catch (error) {
-        res.send({ error: `Can't get any kinder garden in state ${stateName}`});
+        res.send({ error: `Can't get any kinder garden in state ${stateName}` });
     }
 
 
@@ -782,7 +802,7 @@ router.get("/api/nearestStates/name=:name", async (req, res) => {
             const lat = state.lat;
             const lon = state.lon;
 
-        
+
             let data = await getNearestStates(lat, lon);
 
             if (data) {
@@ -807,12 +827,11 @@ router.get("/api/youngFamilies/name=:name", async (req, res) => {
         const stateYoungFamilyData = await getYoungCategoriesByState(stateName);
         const stateKindergardnes = await getKinderGardensByState(stateName);
         let nearestStates;
-        if(searchState) {
-            console.log(searchState);
+        if (searchState) {
             nearestStates = await getNearestStates(searchState.lat, searchState.lon);
         }
 
-        if(nearestStates && stateYoungFamilyData) {
+        if (nearestStates && stateYoungFamilyData) {
             youngFamilyData.push({
                 "name": stateName,
                 "population": searchState.population,
@@ -820,14 +839,13 @@ router.get("/api/youngFamilies/name=:name", async (req, res) => {
                 "index": calculateIndex(stateYoungFamilyData, searchState.population),
                 "normalisedIndex": normalisedIndex(calculateIndex(stateYoungFamilyData, searchState.population))
             });
-            for(let i = 0; i < nearestStates.length; i++) {
+            for (let i = 0; i < nearestStates.length; i++) {
                 let state = nearestStates[i].name;
                 let stateYoungData = await getYoungCategoriesByState(state);
                 let kindegardens = await getKinderGardensByState(state);
 
                 let calculatedIndex = calculateIndex(stateYoungData, nearestStates[i].population);
-                
-                console.log(calculatedIndex);
+
 
                 youngFamilyData.push({
                     "name": state,
@@ -839,13 +857,13 @@ router.get("/api/youngFamilies/name=:name", async (req, res) => {
             }
 
             /* sort array by normalised index */
-            youngFamilyData.sort((a,b) => (a.normalisedIndex > b.normalisedIndex) ? -1 : 1);
+            youngFamilyData.sort((a, b) => (a.normalisedIndex > b.normalisedIndex) ? -1 : 1);
 
             res.send(youngFamilyData);
         } else {
             res.send([]);
         }
-    } catch(error) {
+    } catch (error) {
         console.log(error.message);
         res.send({ error: `Cant get young families index for state name ${stateName}` });
     }
