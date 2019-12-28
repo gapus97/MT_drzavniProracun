@@ -85,7 +85,7 @@ class StateIndexDataShower extends React.Component {
             for(let key of Object.keys(stateData.values[0])) {
                 categories.push({
                     "name": key,
-                    "value": stateData.values[0][key]
+                    "value": stateData.values[0][key].value
                 });
                 
             }
@@ -130,12 +130,12 @@ class StateIndexDataShower extends React.Component {
                                                     <div style={{display: 'flex'}}>
                                                         <p style={{margin: 0}}>{searchedStateIndex[key]}</p>
                                                         <p>=</p>
-                                                        <p style={{margin: 0}}>{parseMoney(searchedStateValues[key])} / {searchedStateData.population}</p>
+                                                        <p style={{margin: 0}}>{parseMoney(searchedStateValues[key].value)} / {searchedStateData.population}</p>
                                                     </div>
                                                     <div style={{display: 'flex'}}>
                                                         <p style={{margin: 0}}>{comparisonIndex[key]}</p>
                                                         <p>=</p>
-                                                        <p style={{margin: 0}}>{parseMoney(comparisonValues[key])} / {comparisonState.population}</p>
+                                                        <p style={{margin: 0}}>{parseMoney(comparisonValues[key].value)} / {comparisonState.population}</p>
                                                     </div>
                                                 </div>
                                             </Tooltip>
@@ -161,12 +161,51 @@ class StateIndexDataShower extends React.Component {
 
     }
 
+    getStateStatistics = (data) => {
+        console.log("State statistics data: ", data);
+        let dataValues = data.values[0];
+
+        if (
+            Object.keys(dataValues).length > 0 && 
+            Object.keys(dataValues).length > 0) {
+            
+            return (
+                <div style={{marginTop: 10}}> 
+                    {
+                        Object.keys(dataValues).map((key, index) => {
+                            let min = dataValues[key].min;
+                            let max = dataValues[key].max;
+                            return (
+                                <div key={index} style={{border: "1px solid", borderColor: '#FAFAFA', marginTop: 10}}> 
+                                    <h6>{key}</h6>
+
+                                    <div>
+                                       <h6>MIN</h6>
+                                       <h6>{min.name}</h6>
+                                       <p>{parseMoney(min.value)}</p>
+                                    </div>
+
+                                    <div>
+                                       <h6>MAX</h6>
+                                       <h6>{max.name}</h6>
+                                       <p>{parseMoney(max.value)}</p>
+                                    </div>
+                                </div>
+                            )
+                        })
+                    }
+                </div>);
+        }
+    }
+
 
 
     render() {
         const {
             additionalInfo,
-            showAdditionalInfo
+            showAdditionalInfo,
+            comparisonState,
+            searchedStateData
         } = this.state;
 
         const {
@@ -235,12 +274,27 @@ class StateIndexDataShower extends React.Component {
                     }
                           
                 </Row>
-                <Row>
-                    <Col md={12}>
+                <Row style={{marginTop: 20}}>
+                {
+                    Object.keys(comparisonState).length > 0 &&
+                    Object.keys(searchedStateData).length > 0 ?
+                    [ <Col md={4} key={"firstCol"}>
+                    {
+                        this.getStateStatistics(searchedStateData)
+                    }
+                    </Col>,
+                    <Col md={4}  key={"secondCol"}>
                         {
                             this.getComparisonTable()
                         }
-                    </Col>
+                    </Col>,
+                    <Col md={4} key={"thirdCol"}>
+                        {
+                            this.getStateStatistics(comparisonState)
+                        }
+                    </Col>] : ''
+                }
+                   
                 </Row>
 
                 {
