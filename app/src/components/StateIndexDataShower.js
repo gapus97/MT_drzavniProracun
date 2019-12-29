@@ -3,14 +3,12 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-//import { Carousel } from 'react-responsive-carousel';
-import Chart from "react-google-charts";
 import { darkTheme } from '../utils/StyleUtils';
 import BarChartCategories from './charts/BarChartCategories';
 import Carousel from 'react-bootstrap/Carousel';
 import { parseMoney } from '../utils/ParsingUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCoffee, faAngleRight, faAngleLeft } from '@fortawesome/free-solid-svg-icons';
+import { faAngleRight, faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 import Overlay from 'react-bootstrap/Overlay';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
@@ -94,9 +92,6 @@ class StateIndexDataShower extends React.Component {
     }
 
     onCarouselItemSelect = (eventKey, direction, event) => {
-        console.log("Key: ", eventKey);
-        console.log("Direction: ", direction);
-        console.log("Event", event);
         this.setState({
             comparisonState: this.state.comparisonStates[eventKey]
         });

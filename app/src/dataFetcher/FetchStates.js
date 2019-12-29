@@ -15,9 +15,15 @@ async function fetchAPIData(stateName, queryKey, year) {
     return data;
 }
 
+const getOverallStateData = async() => {
+    let data = await fetchJSON(`${apiEndPoints.overallData}`, "GET", {});
+
+    return data;
+}
 
 
 export  { 
     fetchAPIData,
-    getStates
+    getStates,
+    getOverallStateData
 };

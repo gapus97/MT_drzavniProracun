@@ -1,11 +1,11 @@
 import React from 'react';
 //import Maps from '../components/Maps';
-import { fetchAPIData, getStates } from '../dataFetcher/FetchStates';
+import { fetchAPIData, getStates, getOverallStateData} from '../dataFetcher/FetchStates';
 /*import LoadingPage from '../components/LoadingPage';
 import { supportedFilters } from '../utils/Queries';*/
 import MainSearch from '../components/MainSearch';
 import StateIndexDataShower from '../components/StateIndexDataShower';
-
+import StatesOverallData from '../components/StatesOverallData';
 
 
 class Main extends React.Component {
@@ -20,15 +20,17 @@ class Main extends React.Component {
             zoom: 8,
             searchedState: {},
             searchedData: [],
-            searchedStateIndexData: {}
+            searchedStateIndexData: {},
+            overallData: {}
         };
     }
 
     async componentDidMount() {
         this.getStates();
+        this.getOverallData();
     }
 
-    async getStates() {
+    getStates = async() => {
 
         let stateData = await getStates();
         let capitalCity = [];
@@ -55,6 +57,16 @@ class Main extends React.Component {
             generalBudgetData: generalBudgetData
         });
 
+    }
+
+    getOverallData = async() => {
+        let overallData = await getOverallStateData();
+
+        if(Object.keys(overallData).length > 0) {
+            this.setState({
+                overallData: overallData
+            });
+        }
     }
 
     searchBarCallBack = async (data) => {
@@ -129,7 +141,8 @@ class Main extends React.Component {
             isStateSelected,
             searchedState,
             searchedData,
-            searchedStateIndexData
+            searchedStateIndexData,
+            overallData
         } = this.state;
 
 
@@ -157,9 +170,7 @@ class Main extends React.Component {
                     {
                         isStateSelected && searchedState && searchedData && searchedStateIndexData?
                         <StateIndexDataShower data={searchedData} searchedStateIndexData={searchedStateIndexData} /> : 
-                        <div style={{backgroundColor: "#FAFAFA", width: "500px", height: "200px"}}>
-                            <p>Okk</p>
-                        </div>
+                        <StatesOverallData data={overallData} />
                     }
                 </div>
             </div>

@@ -394,3 +394,11 @@ text {
 .bs-tooltip-auto[x-placement^=top] .arrow::before, .bs-tooltip-top .arrow::before {
   border-top-color: white;
 }
+
+#showOverallData {
+  margin-top: 20;
+}
+
+.mainSearch {
+  margin-bottom: 20;
+}

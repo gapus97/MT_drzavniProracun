@@ -101,7 +101,7 @@ class MainSearch extends React.Component {
 
         return (
            
-                <div>
+                <div className="mainSearch">
                     <p> Vpišite ime občine v katero bi se radi preselili </p>
                     {   this.props.stateData ?  
                         <Autosuggest
@@ -115,7 +115,7 @@ class MainSearch extends React.Component {
                     }
 
                     <CheckboxFilter values={supportedFilters} onChange={(values) => this.onCheckboxChange('write', values)} />
-                    <Button variant="primary" size="lg" active onClick={this.handleButtonClick} style={{marginTop: 10}}>
+                    <Button variant="primary" size="lg" active onClick={this.handleButtonClick} style={{marginTop: 10, marginBottom: 20}}>
                         Potrdi vnos
                     </Button>
                 </div>
