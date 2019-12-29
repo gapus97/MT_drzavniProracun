@@ -83,9 +83,7 @@ const parseAllCategories = async (stateName) => {
                     overallBudgetData[0][item.year].push({
                         "categorie": catName,
                         "data": item
-                    });
-                    //console.log(overallBudgetData);
-
+                    });               
                 }
             } else {
 
@@ -139,7 +137,6 @@ const parseFamilyCategories = (data) => {
 
                         // parse min value
                         if (sub.value < minData.value) {
-                            console.log(sub);
                             minData = sub;
                             exportedData[categorie].min = minData;
                         }
@@ -380,7 +377,6 @@ const getState = async (name) => {
 const calculateIndex = (familyData, populationData) => {
     let indexData = {};
     for (var key of Object.keys(familyData)) {
-        //console.log(key);
         let result = moneyRounder(familyData[key].value / populationData);
         indexData[key] = result;
     }
@@ -696,16 +692,16 @@ router.get("/api/getAllCategories/name=:name", async (req, res) => {
 });
 
 router.get("/api/overallBudgetData", async (req, res) => {
-    let overallBudgetData = [{
-        2018: [],
-        2017: [],
-        2016: []
-    }];
+    let overallBudgetData = {
+        2018: {},
+        2017: {},
+        2016: {}
+    };
 
     try {
         const result = await client.search({
             index: allCategories,
-            filterPath: ['hits.hits._source'],
+            filterPath: ['hits.hits'],
             body: {
                 "query": {
                     "bool": {
@@ -729,14 +725,19 @@ router.get("/api/overallBudgetData", async (req, res) => {
             data.forEach(row => {
                 let indeks = row._index;
                 let source = row._source;
+                let year = source.year;
+                console.log(row);
 
                 let importantData = {
                     "name": source.name,
                     "value": source.value,
-                    "year": source.year,
-                    "indeks": indeks
+                    "year": source.year
                 };
-                overallBudgetData[0][source.year].push(importantData);
+                overallBudgetData[year] = {
+                    ...overallBudgetData[year],
+                    [`${indeks}`]: importantData 
+                };
+                //overallBudgetData[0][source.year].push(importantData);
             });
             res.send(overallBudgetData);
         } else {
