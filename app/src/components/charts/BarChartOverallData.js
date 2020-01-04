@@ -1,6 +1,7 @@
 import React from 'react';
 import * as d3 from 'd3';
 import { parseMoney } from '../../utils/ParsingUtils';
+import { barChartColors } from '../../utils/StyleUtils';
 /*import styled from 'styled-components';
 
 const ToolTipStyle = styled.section`
@@ -115,13 +116,23 @@ class BarChartOverallData extends React.Component {
         .attr("height", y.bandwidth() )
         .attr("fill", function(d) {
             if (d.value === maxValue) {
-                return "green";
+                return barChartColors.maxValue;
             } else if (d.value === minValue) {
-                return "red";
+                return barChartColors.minValue;
             } else {
-                return "white";
+                return barChartColors.centerValue;
             }
         })
+        .style("stroke", function(d)  {
+            if (d.value === maxValue) {
+                return barChartColors.maxValue;
+            } else if (d.value === minValue) {
+                return barChartColors.minValue;
+            } else {
+                return barChartColors.centerValue;
+            }
+        })
+        .attr("rx", 8)
         .on("mouseover", function(d) {
             var xPosition = parseFloat(d3.select(this).attr("x")) + y.bandwidth() / 2;
             var yPosition = parseFloat(d3.select(this).attr("y")) / 2 + height / 2;
