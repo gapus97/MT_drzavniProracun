@@ -5,6 +5,14 @@ export const darkTheme = {
     text: '#FAFAFA',
     toggleBorder: '#6B8096',
     gradient: 'linear-gradient(#091236, #1E215D)',
+    sectionArea: '#313131',
+    sectionAreaChild: '#414141'
+};
+
+export const barChartColors = {
+  minValue: '#ca3e47',
+  centerValue: 'white',
+  maxValue: 'green'
 };
 
 export const GlobalStyles = createGlobalStyle`
