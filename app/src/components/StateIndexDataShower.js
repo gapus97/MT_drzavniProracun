@@ -12,6 +12,24 @@ import { faAngleRight, faAngleLeft } from '@fortawesome/free-solid-svg-icons';
 import Overlay from 'react-bootstrap/Overlay';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import styled from 'styled-components';
+
+const MinMaxSection = styled.section`
+    background-color: ${darkTheme.sectionAreaChild};
+    border: 8px solid ${darkTheme.sectionAreaChild};
+    border-radius: 8px;
+    margin-top: 10px;
+`;
+
+const IndexComparisonSection = styled.section`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: ${darkTheme.sectionAreaChild};
+    margin-top: 10px;
+    border: ${darkTheme.sectionAreaChild};
+    border-radius: 8px;
+`;
 
 class StateIndexDataShower extends React.Component {
 
@@ -115,7 +133,11 @@ class StateIndexDataShower extends React.Component {
                     {
                         Object.keys(comparisonIndex).map((key, index) => {
                             return (
-                                <div key={index}> 
+                                <div key={index} style={{
+                                    backgroundColor: darkTheme.sectionArea, 
+                                    border: `${darkTheme.sectionArea}`,
+                                    borderRadius: 8,
+                                    marginTop: 10}}> 
                                     <p>{key}</p>
 
                                         <OverlayTrigger overlay={
@@ -135,7 +157,7 @@ class StateIndexDataShower extends React.Component {
                                                 </div>
                                             </Tooltip>
                                         }>
-                                            <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                            <IndexComparisonSection>
                                                 <p style={{margin: 0}}>{searchedStateIndex[key]}</p>
                                                 {
                                                     searchedStateIndex[key] > comparisonIndex[key] ?
@@ -143,7 +165,7 @@ class StateIndexDataShower extends React.Component {
                                                     <FontAwesomeIcon icon={faAngleLeft} size="2x" style={{marginLeft: 5, marginRight: 5}}/>
                                                 }
                                                 <p style={{margin: 0}}>{comparisonIndex[key]}</p>
-                                            </div>
+                                            </IndexComparisonSection>
                                         </OverlayTrigger>
 
                                 </div>
@@ -171,20 +193,24 @@ class StateIndexDataShower extends React.Component {
                             let min = dataValues[key].min;
                             let max = dataValues[key].max;
                             return (
-                                <div key={index} style={{border: "1px solid", borderColor: '#FAFAFA', marginTop: 10}}> 
+                                <div key={index} style={{
+                                    border: `8px solid ${darkTheme.sectionArea}`, 
+                                    marginTop: 10, 
+                                    backgroundColor: darkTheme.sectionArea, 
+                                    borderRadius: 8}}> 
                                     <h6>{key}</h6>
 
-                                    <div>
+                                    <MinMaxSection>
                                        <h6>MIN</h6>
                                        <h6>{min.name}</h6>
-                                       <p>{parseMoney(min.value)}</p>
-                                    </div>
+                                       <p>{parseMoney(min.value)} €</p>
+                                    </MinMaxSection>
 
-                                    <div>
+                                    <MinMaxSection>
                                        <h6>MAX</h6>
                                        <h6>{max.name}</h6>
-                                       <p>{parseMoney(max.value)}</p>
-                                    </div>
+                                       <p>{parseMoney(max.value)} €</p>
+                                    </MinMaxSection>
                                 </div>
                             )
                         })

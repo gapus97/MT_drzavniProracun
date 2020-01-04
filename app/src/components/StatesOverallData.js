@@ -8,6 +8,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Dropdown from 'react-bootstrap/Dropdown';
 import BarChartOverallData from './charts/BarChartOverallData';
+import { darkTheme } from '../utils/StyleUtils';
 
 class StatesOverallData extends React.Component {
 
@@ -79,7 +80,7 @@ class StatesOverallData extends React.Component {
 
         return (
             <div id="showOverallData">
-                <Container style={{border: '1px solid #FAFAFA', borderRadius: 8}}>
+                <Container style={{border: '1px solid #313131', borderRadius: 8, backgroundColor: darkTheme.sectionArea}}>
                     <Row style={{marginTop: 20}}>
                         <Col md={12}>
                             <Dropdown id="dropdown-basic-button">
