@@ -55,8 +55,8 @@ class BarChartCategories extends React.Component {
 
        // set the dimensions and margins of the graph
         var margin = {top: 20, right: 0, bottom: 50, left: 100},
-        width = 370 - margin.left - margin.right, //350, 250
-        height = 270 - margin.top - margin.bottom;
+        width = 400 - margin.left - margin.right, //350, 250
+        height = 250 - margin.top - margin.bottom;
 
         let maxValue = d3.max(data, d => d.value);
         let minValue = d3.min(data, d => d.value);
@@ -75,7 +75,7 @@ class BarChartCategories extends React.Component {
         var svg = d3.select(`#${this.state.barChartName}`)
         .append("svg")
         .attr("width", "100%")
-        .attr("height", height + margin.top + margin.bottom)
+        .attr("height", height + margin.top + margin.bottom+20)
         .append("g")
         .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
@@ -93,7 +93,7 @@ class BarChartCategories extends React.Component {
         .selectAll("text")
         .attr("transform", "translate(-10,0)rotate(-45)")
         .style("text-anchor", "end")
-        .style("font-size", "8px")
+        .style("font-size", "12px")
         .style("fill", "#FAFAFA");
 
         // Y axis
@@ -105,6 +105,8 @@ class BarChartCategories extends React.Component {
         .call(d3.axisLeft(y))
         .selectAll("text")
         .attr("transform","translate(-10,0)rotate(-45)")
+        .style("text-anchor", "end")
+        .style("font-size", "12px")
         .style("fill", "#FAFAFA");
 
         //Bars

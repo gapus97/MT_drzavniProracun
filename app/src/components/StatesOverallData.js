@@ -98,7 +98,7 @@ class StatesOverallData extends React.Component {
                         <Col md={12}>
                             {
                                 Object.keys(graphData).length > 0 ?
-                                <BarChartOverallData data={graphData} categorie={selectedBudgetCategorie} /> : ''
+                                <BarChartOverallData data={graphData} categorie={selectedBudgetCategorie}/> : ''
                             }
                         </Col>
                     </Row>

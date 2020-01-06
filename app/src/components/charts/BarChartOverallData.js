@@ -2,6 +2,7 @@ import React from 'react';
 import * as d3 from 'd3';
 import { parseMoney } from '../../utils/ParsingUtils';
 import { barChartColors } from '../../utils/StyleUtils';
+import { forceCenter } from 'd3';
 /*import styled from 'styled-components';
 
 const ToolTipStyle = styled.section`
@@ -55,7 +56,7 @@ class BarChartOverallData extends React.Component {
        // set the dimensions and margins of the graph
         var margin = {top: 20, right: 0, bottom: 50, left: 120},
         width = 700 - margin.left - margin.right, //350, 250
-        height = 300 - margin.top - margin.bottom;
+        height = 250 - margin.top - margin.bottom;
 
         let maxValue = d3.max(data, d => d.value);
         let minValue = d3.min(data, d => d.value);
@@ -72,7 +73,7 @@ class BarChartOverallData extends React.Component {
         var svg = d3.select(`#overallData`)
         .append("svg")
         .attr("width", "100%")
-        .attr("height", height + margin.top + margin.bottom)
+        .attr("height", height + margin.top + margin.bottom+20)
         .append("g")
         .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
@@ -84,13 +85,14 @@ class BarChartOverallData extends React.Component {
         .range([ 0, width]);
         
         //https://medium.com/@ghenshaw.work/customizing-axes-in-d3-js-99d58863738b
+        //X axis
         svg.append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x).ticks(6).tickValues(rangeOfTicks))
         .selectAll("text")
         .attr("transform", "translate(-10,0)rotate(-45)")
         .style("text-anchor", "end")
-        .style("font-size", "8px")
+        .style("font-size", "12px")
         .style("fill", "#FAFAFA");
 
         // Y axis
@@ -101,9 +103,9 @@ class BarChartOverallData extends React.Component {
         svg.append("g")
         .call(d3.axisLeft(y))
         .selectAll("text")
-        .attr("transform","translate(-10,0)rotate(-45)")
+        .style("text-anchor", "end")
+        .style("font-size", "12px")
         .style("fill", "#FAFAFA");
-
 
         //Bars
         svg.selectAll("myRect")
@@ -159,7 +161,7 @@ class BarChartOverallData extends React.Component {
         return (
             <div>
                 <h4>Proračun občin po letih</h4>
-                <div id="overallData" />   
+                <div id="overallData" style={{marginLeft:150}} />   
                 <div id="overallToolTip" className="hidden">
                     <p></p>
                 </div>
