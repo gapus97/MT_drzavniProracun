@@ -9,7 +9,6 @@ if (process.env.apiUrl) {
 } else {
     client = new Client({ node: 'http://localhost:9200' });
 }
-console.log(process.env.apiUrl);
 
 const moneyRounder = (moneyData) => {
     return parseFloat(Number.parseFloat(moneyData).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
@@ -458,7 +457,6 @@ router.get("/api/statesOutcome/name=:name", async (req, res) => {
         res.send(data);
 
     } catch (error) {
-        console.log("Error: ", error);
         res.send({ error: "can't get any data from DB" })
     }
 
@@ -726,7 +724,6 @@ router.get("/api/overallBudgetData", async (req, res) => {
                 let indeks = row._index;
                 let source = row._source;
                 let year = source.year;
-                console.log(row);
 
                 let importantData = {
                     "name": source.name,
