@@ -8,8 +8,7 @@ import BarChartCategories from './charts/BarChartCategories';
 import Carousel from 'react-bootstrap/Carousel';
 import { parseMoney } from '../utils/ParsingUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleRight, faAngleLeft } from '@fortawesome/free-solid-svg-icons';
-import Overlay from 'react-bootstrap/Overlay';
+import { faAngleRight, faAngleLeft, faArrowCircleDown } from '@fortawesome/free-solid-svg-icons';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import styled from 'styled-components';
@@ -68,31 +67,11 @@ class StateIndexDataShower extends React.Component {
 
 
     onColumnClick = (e, state) => {
-        console.log(state);
         this.setState({
             showAdditionalInfo: true,
             additionalInfo: state
         });
     }
-
-    showInfo = () => {
-        return (
-            <Container>
-                <Row>
-                    {Object.keys(this.state.additionalInfo.values[0]).map((state, i) => {
-                        console.log(state);
-                        return <Col class={"col-md-offset-2"} style={{backgroundColor:'#282D33',margin:'0 2.5%',width:'20%', marginBottom:'20px'}}>
-                            <p style={{color:'white'}}>Kategorija: {state}</p>
-                            <p style={{color:'white'}}>Vrednost: { Number((this.state.additionalInfo.values[0][state]).toFixed(2))}</p>
-                        </Col> 
-                    })
-
-                    }
-                </Row>
-            </Container>
-        );
-    }
-
 
     getCategoriesValue = (stateData) => {
         // parse categories for graph rendering
@@ -143,7 +122,8 @@ class StateIndexDataShower extends React.Component {
                                         <OverlayTrigger overlay={
                                             <Tooltip style={{backgroundColor: '#FAFAFA', color: '#363537'}} id="tooltip-disabled tooltipComparison">
                                                 <div>
-                                                    <p>Postopek izračuna: vrednost = vrednostKategorije / populacija občine</p>
+                                                    <h5>Postopek izračuna</h5>
+                                                    <p>vrednost = vrednostKategorije / populacija občine</p>
                                                     <div style={{display: 'flex'}}>
                                                         <p style={{margin: 0}}>{searchedStateIndex[key]}</p>
                                                         <p>=</p>
@@ -179,7 +159,6 @@ class StateIndexDataShower extends React.Component {
     }
 
     getStateStatistics = (data) => {
-        console.log("State statistics data: ", data);
         let dataValues = data.values[0];
 
         if (
@@ -188,6 +167,7 @@ class StateIndexDataShower extends React.Component {
             
             return (
                 <div style={{marginTop: 10}}> 
+                    <h4>Prikaz posameznih kategorij</h4>
                     {
                         Object.keys(dataValues).map((key, index) => {
                             let min = dataValues[key].min;
@@ -223,15 +203,9 @@ class StateIndexDataShower extends React.Component {
 
     render() {
         const {
-            additionalInfo,
-            showAdditionalInfo,
             comparisonState,
             searchedStateData
         } = this.state;
-
-        const {
-            searchedStateIndexData
-        } = this.props;
 
         const renderBarChart = (state, isOtherStates) => {
             let stateData = this.getCategoriesValue(state);
@@ -273,8 +247,9 @@ class StateIndexDataShower extends React.Component {
                                     renderBarChart(this.state.searchedStateData, false)
                                 }
                             </Col>,
-                            <Col md={2} key={"secondCol"} className="d-flex justify-content-center text-center align-items-center" >
-                                <h3> Primerjava glede na število prebivalcev </h3>
+                            <Col md={2} key={"secondCol"} className="justify-content-center text-center align-items-center" >
+                                <h3 style={{marginBottom: 10}}> Primerjava glede na število prebivalcev </h3>
+                                <FontAwesomeIcon icon={faArrowCircleDown} size="8x" style={{marginLeft: 5, marginRight: 5}}/>
                             </Col>,
                             <Col md={5} key={"thirdCol"}>
                                 { <Carousel 
@@ -317,11 +292,6 @@ class StateIndexDataShower extends React.Component {
                 }
                    
                 </Row>
-
-                {
-                    additionalInfo && showAdditionalInfo ?
-                    this.showInfo() : ''
-                } 
             </Container>
         );
     }

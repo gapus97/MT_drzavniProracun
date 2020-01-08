@@ -102,7 +102,7 @@ class MainSearch extends React.Component {
         return (
            
                 <div className="mainSearch">
-                    <p> Vpišite ime občine v katero bi se radi preselili </p>
+                    <h4> Vpišite ime občine v katero bi se radi preselili </h4>
                     {   this.props.stateData ?  
                         <Autosuggest
                             suggestions={stateSuggestions}

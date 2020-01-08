@@ -145,7 +145,7 @@ class BarChartCategories extends React.Component {
                 .style("left", xPosition + "px")
                 .style("top", yPosition + "px")
                 .select(`#${barChartToolTip}value`)       
-                .text(parseMoney(d.value));
+                .text(`${parseMoney(d.value / 1000)} tisoč `);
 
 
             d3.select(`#${barChartToolTip}`).classed("hidden", false);

@@ -6,6 +6,7 @@ import { supportedFilters } from '../utils/Queries';*/
 import MainSearch from '../components/MainSearch';
 import StateIndexDataShower from '../components/StateIndexDataShower';
 import StatesOverallData from '../components/StatesOverallData';
+import AboutProjectText from '../components/AboutProjectText';
 
 
 class Main extends React.Component {
@@ -124,7 +125,8 @@ class Main extends React.Component {
                         });
                         this.setState({
                             searchedData: statesIndexData,
-                            searchedStateIndexData: stateIndexData
+                            searchedStateIndexData: stateIndexData,
+                            isClicked: true
                         });
                     }
                    
@@ -168,9 +170,9 @@ class Main extends React.Component {
                     }
 
                     {
-                        isStateSelected && searchedState && searchedData && searchedStateIndexData?
+                        isStateSelected && searchedState && searchedData && searchedStateIndexData ?
                         <StateIndexDataShower data={searchedData} searchedStateIndexData={searchedStateIndexData} /> : 
-                        <StatesOverallData data={overallData} />
+                        [<StatesOverallData data={overallData} key="overallData" />, <AboutProjectText key="projectIntroText" />]
                     }
                 </div>
             </div>

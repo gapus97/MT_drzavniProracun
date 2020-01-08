@@ -1,7 +1,4 @@
 import React from 'react';
-/*import ZoomedTreeMap from './charts/ZoomedTreeMap';
-import DendoGram from './charts/DendoGram';*/
-import CirclePack from './charts/CirclePack';
 import { budgetCategories, categoriesMap } from '../utils/Queries';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -28,7 +25,6 @@ class StatesOverallData extends React.Component {
     }
 
     updateData(updatedData) {
-        console.log("Updated data: ", updatedData);
         this.setState({
             data: updatedData,
             graphData: this.parseGraphCategories(updatedData, categoriesMap.statesOutcome)
@@ -47,12 +43,6 @@ class StatesOverallData extends React.Component {
         });
         graphData.sort((a, b) => (a.value > b.value) ? -1 : 1);
         return graphData;
-    }
-
-    componentDidMount() {
-        /*this.setState({
-            data: 
-        })*/
     }
 
     onDropdownItemSelect = (categorieKey) => {

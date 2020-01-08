@@ -2,7 +2,6 @@ import React from 'react';
 import * as d3 from 'd3';
 import { parseMoney } from '../../utils/ParsingUtils';
 import { barChartColors } from '../../utils/StyleUtils';
-import { forceCenter } from 'd3';
 /*import styled from 'styled-components';
 
 const ToolTipStyle = styled.section`
@@ -33,7 +32,6 @@ class BarChartOverallData extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props.data);
         this.constructGraph(this.props.data);
     }
 
@@ -51,7 +49,6 @@ class BarChartOverallData extends React.Component {
         d3.select(`#overallData`).select("svg").remove();
         if(data.length === 0) return;
         
-        console.log("Data arrived: ", data);
 
        // set the dimensions and margins of the graph
         var margin = {top: 20, right: 0, bottom: 50, left: 120},
@@ -143,7 +140,7 @@ class BarChartOverallData extends React.Component {
                 .style("left", xPosition + "px")
                 .style("top", yPosition + "px")
                 .select(`p`)       
-                .text(`${parseMoney(d.value)} €`);
+                .text(`${parseMoney(d.value / 1000000)} mio €`);
 
 
             d3.select(`#overallToolTip`).classed("hidden", false);
@@ -157,7 +154,7 @@ class BarChartOverallData extends React.Component {
 
 
     render() {   
-        console.log(this.state.barChartName);
+        
         return (
             <div>
                 <h4>Proračun občin po letih</h4>
@@ -168,10 +165,6 @@ class BarChartOverallData extends React.Component {
             </div>
         ); 
     }
-    /* 
-    <ToolTipStyle id={this.state.barChartToolTip} className="hidden">
-                    <p style={{color: 'green'}}><span id={`${this.state.barChartToolTip}value`}>100</span>€</p>
-                </ToolTipStyle> */
 }
 
 export default BarChartOverallData;

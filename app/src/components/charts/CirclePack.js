@@ -85,7 +85,7 @@ class CirclePack extends React.Component {
             (d3.hierarchy(data)
                 .sort((a, b) => b.value - a.value));
 
-        console.log("Props data: ", this.props.data);
+
         const root = pack(this.props.data[0][2018][0].data);
         var margin = { top: 20, right: 20, bottom: 30, left: 40 };
 
