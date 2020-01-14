@@ -2,9 +2,25 @@ import React from 'react';
 import * as d3 from 'd3';
 import { parseMoney, getCategoriesComparisonByYear } from '../../utils/ParsingUtils';
 import { supportedYears } from '../../utils/Queries';
+import { darkTheme } from '../../utils/StyleUtils';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import styled from 'styled-components';
+
+const CategorieShow = styled.section`
+    background-color: ${darkTheme.sectionArea};
+    border: 8px solid ${darkTheme.sectionArea};
+    border-radius: 8px;
+    margin-top: 10px;
+`;
+
+const CategorieItemShow = styled.section`
+    background-color: ${darkTheme.sectionAreaChild};
+    border: 8px solid ${darkTheme.sectionAreaChild};
+    border-radius: 8px;
+    margin-top: 10px;
+`;
 
 class CirclePack extends React.Component {
 
@@ -184,7 +200,7 @@ class CirclePack extends React.Component {
         var circle4 = svgContainer.append("circle")
             .attr("cx", 520)
             .attr("cy", 30)
-            .attr("r", 20);    
+            .attr("r", 20);
         // set circle color
         circle.attr("fill", "#FE7B5F"); //glavna kategorija
         circle2.attr("fill", "#FFC386");
@@ -271,33 +287,36 @@ class CirclePack extends React.Component {
 
     render() {
         return (
-            <Container className="circlePack-root">
-
+            <Container className="circlePack-root" style={{ color: darkTheme.text }}>
                 <Row>
-                    <Col>
+                    <Col md={6}>
                         <div id="circlePack" />
                     </Col>
                     <Col md={6}>
-                        <Row>
-                            <div id="comparisonGraph" />
-                        </Row>
+                        <div id="comparisonGraph" />
+                        
                     </Col>
                 </Row>
-                <Row>                
-                    <Col md="auto">
+                <Row>
+                    <Col>
+                        <CategorieShow>
+                            <CategorieItemShow>
+                                <p>Kategorija: {this.state.textName} </p>
+                            </CategorieItemShow>
+                            <CategorieItemShow>
+                                <p>Vrednost 2018:  {this.state.textValue} </p>
+                            </CategorieItemShow>
+                        </CategorieShow>
+
                         <p>Legenda:</p>
-                            <div>
-                                <pre style={{display: 'inline' }}>Glavna kategorija   </pre>
-                                <pre style={{display: 'inline' }}>Pod kategorija   </pre>
-                                <pre style={{display: 'inline' }}>Koncna kategorija   </pre>
-                                <p style={{display: 'inline' }}>Izbrana kategorija</p>                               
-                                <div id="legend" />
-                                </div>
+                        <div>
+                            <pre style={{ display: 'inline' }}>Glavna kategorija   </pre>
+                            <pre style={{ display: 'inline' }}>Pod kategorija   </pre>
+                            <pre style={{ display: 'inline' }}>Koncna kategorija   </pre>
+                            <p style={{ display: 'inline' }}>Izbrana kategorija</p>
+                            <div id="legend" />
+                        </div>
                     </Col>
-                    <Col md="auto">
-                        <p>Kategorija: {this.state.textName} </p>
-                        <p>Vrednost 2018:  {this.state.textValue} </p>
-                    </Col>    
                 </Row>
 
             </Container>

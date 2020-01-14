@@ -12,6 +12,7 @@ import { faAngleRight, faAngleLeft, faArrowCircleDown } from '@fortawesome/free-
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import styled from 'styled-components';
+import StateBudget from '../sites/StateBudget';
 
 const MinMaxSection = styled.section`
     background-color: ${darkTheme.sectionAreaChild};
@@ -40,7 +41,10 @@ class StateIndexDataShower extends React.Component {
             additionalInfo: {},
             searchedStateData: {},
             comparisonStates: [],
-            comparisonState: {}
+            comparisonState: {},
+            showStateBudget: false,
+            showModalComparison: false,
+            showModalSearchedState: false
         };
     }
 
@@ -104,7 +108,6 @@ class StateIndexDataShower extends React.Component {
             let searchedStateIndex = searchedStateData.index;
             let comparisonValues = comparisonState.values[0];
             let searchedStateValues = searchedStateData.values[0];
-            console.log(comparisonState);
 
             if (Object.keys(comparisonIndex).length === Object.keys(searchedStateIndex).length) {
                 return (
@@ -199,13 +202,30 @@ class StateIndexDataShower extends React.Component {
         }
     }
 
+    onSearchedStateClick()  {
+        console.log("Okkk searched state click");
+        this.setState({showModalSearchedState: true, showModalComparison: false, showStateBudget: true});
+    }
 
+    onComparisonStateClick() {
+        this.setState({showModalSearchedState: false, showModalComparison: true, showStateBudget: true});
+    }
+
+    hideStateModal = (toHide) => {
+        console.log("tO hIDE STATE");
+        this.setState({showStateBudget: false});
+    }
 
     render() {
         const {
             comparisonState,
-            searchedStateData
+            searchedStateData,
+            showStateBudget,
+            showModalComparison,
+            showModalSearchedState
         } = this.state;
+
+        console.log("Show state budget: ", showModalSearchedState);
 
         const renderBarChart = (state, isOtherStates) => {
             let stateData = this.getCategoriesValue(state);
@@ -215,7 +235,7 @@ class StateIndexDataShower extends React.Component {
             if(isOtherStates) {
                 /* if is not main state then return carousel item */
                 return (
-                    <Carousel.Item key={state.place}>
+                    <Carousel.Item key={state.place} onClick={() => this.onComparisonStateClick()}>
                         <h3>#{ state.place } { state.name }</h3>
                         <h5> {state.population} preb.</h5>
                         <BarChartCategories data={stateData} stateName={state.name} indeks={state.place} />
@@ -224,7 +244,7 @@ class StateIndexDataShower extends React.Component {
             } else {
 
                 return (
-                    <div key={state.place}>
+                    <div key={state.place} onClick={() => this.onSearchedStateClick()}>
                         <h3>#{ state.place } { state.name }</h3>
                         <h5> {state.population} preb.</h5>
                         <BarChartCategories data={stateData} stateName={state.name} indeks={state.place} />
@@ -292,6 +312,20 @@ class StateIndexDataShower extends React.Component {
                 }
                    
                 </Row>
+
+                { 
+                    showModalComparison || showModalSearchedState ? 
+                    showModalComparison ? 
+                    <StateBudget 
+                        city={comparisonState.name} 
+                        showState={showStateBudget} 
+                        onHideState={this.hideStateModal} /> :
+                    <StateBudget 
+                        city={searchedStateData.name} 
+                        showState={showStateBudget} 
+                        onHideState={this.hideStateModal} />
+                    : ''
+                }
             </Container>
         );
     }
