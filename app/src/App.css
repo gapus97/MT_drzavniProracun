@@ -402,3 +402,8 @@ text {
 .mainSearch {
   margin-bottom: 20;
 }
+
+.modal-90w {
+  width: 90%;
+  max-width: none!important;
+}
