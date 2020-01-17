@@ -8,7 +8,7 @@ import BarChartCategories from './charts/BarChartCategories';
 import Carousel from 'react-bootstrap/Carousel';
 import { parseMoney, transformKindergardenText } from '../utils/ParsingUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleRight, faAngleLeft, faArrowCircleDown, faArrowsAltH, faChild, faSmileBeam } from '@fortawesome/free-solid-svg-icons';
+import { faAngleRight, faAngleLeft, faArrowCircleDown, faArrowsAltH, faChild } from '@fortawesome/free-solid-svg-icons';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import styled from 'styled-components';
@@ -228,7 +228,7 @@ class StateIndexDataShower extends React.Component {
                 </div>);
         }
     }
-    
+
     onStateExplorerClick = (isSearchedState) => {
         isSearchedState ?
             this.setState({
