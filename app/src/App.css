@@ -407,3 +407,7 @@ text {
   width: 90%;
   max-width: none!important;
 }
+
+#stateIndexData {
+  cursor: pointer;
+}
