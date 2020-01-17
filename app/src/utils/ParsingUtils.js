@@ -86,6 +86,13 @@ const parseMoney = (moneyData) => {
         return (moneyData).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
 }
 
+const transformKindergardenText = (value) => {
+    if (value === 1) return `${value} vrtec`;
+    if (value === 2) return `${value} vrtca`;
+    if (value === 3 || value === 4) return `${value} vrtci`;
+    if (value > 4) return `${value} vrtcev`;
+}
+
 export {
     //parseBudgetCategories,
     //parseBudgetCategorie,
@@ -93,5 +100,6 @@ export {
     isDataValid,
     parseMoney,
     parseAllCategories,
-    getBudgetCategorie
+    getBudgetCategorie,
+    transformKindergardenText
 };

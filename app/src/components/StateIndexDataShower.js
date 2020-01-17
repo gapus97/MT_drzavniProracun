@@ -6,9 +6,9 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { darkTheme } from '../utils/StyleUtils';
 import BarChartCategories from './charts/BarChartCategories';
 import Carousel from 'react-bootstrap/Carousel';
-import { parseMoney } from '../utils/ParsingUtils';
+import { parseMoney, transformKindergardenText } from '../utils/ParsingUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleRight, faAngleLeft, faArrowCircleDown } from '@fortawesome/free-solid-svg-icons';
+import { faAngleRight, faAngleLeft, faArrowCircleDown, faArrowsAltH, faChild } from '@fortawesome/free-solid-svg-icons';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import styled from 'styled-components';
@@ -27,6 +27,27 @@ const IndexComparisonSection = styled.section`
     align-items: center;
     background-color: ${darkTheme.sectionAreaChild};
     margin-top: 10px;
+    border: ${darkTheme.sectionAreaChild};
+    border-radius: 8px;
+`;
+
+const KinderGardensSection = styled.section`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: ${darkTheme.sectionArea};
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border: ${darkTheme.sectionArea};
+    border-radius: 8px;
+`;
+
+const KinderGardenSection = styled.section`
+    justify-content: center;
+    align-items: center;
+    background-color: ${darkTheme.sectionAreaChild};
+    margin-top: 10px;
+    margin-bottom: 10px;
     border: ${darkTheme.sectionAreaChild};
     border-radius: 8px;
 `;
@@ -216,6 +237,8 @@ class StateIndexDataShower extends React.Component {
         this.setState({showStateBudget: false});
     }
 
+
+
     render() {
         const {
             comparisonState,
@@ -235,7 +258,7 @@ class StateIndexDataShower extends React.Component {
             if(isOtherStates) {
                 /* if is not main state then return carousel item */
                 return (
-                    <Carousel.Item key={state.place} onClick={() => this.onComparisonStateClick()}>
+                    <Carousel.Item id="stateIndexData" key={state.place} onClick={() => this.onComparisonStateClick()}>
                         <h3>#{ state.place } { state.name }</h3>
                         <h5> {state.population} preb.</h5>
                         <BarChartCategories data={stateData} stateName={state.name} indeks={state.place} />
@@ -244,7 +267,7 @@ class StateIndexDataShower extends React.Component {
             } else {
 
                 return (
-                    <div key={state.place} onClick={() => this.onSearchedStateClick()}>
+                    <div id="stateIndexData" key={state.place} onClick={() => this.onSearchedStateClick()}>
                         <h3>#{ state.place } { state.name }</h3>
                         <h5> {state.population} preb.</h5>
                         <BarChartCategories data={stateData} stateName={state.name} indeks={state.place} />
@@ -268,6 +291,21 @@ class StateIndexDataShower extends React.Component {
                                 }
                             </Col>,
                             <Col md={2} key={"secondCol"} className="justify-content-center text-center align-items-center" >
+                                {
+                                    Object.keys(comparisonState).length > 0 && 
+                                    Object.keys(searchedStateData).length > 0 ?
+                                    <KinderGardensSection>
+                                        <KinderGardenSection>
+                                            <FontAwesomeIcon icon={faChild} size="2x" style={{marginTop: 10}}/>
+                                            <p style={{marginLeft: 10, marginRight: 10, marginTop: 10}}>{transformKindergardenText(searchedStateData.values[1].length)}</p>
+                                        </KinderGardenSection>
+                                        <FontAwesomeIcon icon={faArrowsAltH} size="2x" style={{marginLeft: 5, marginRight:  5}} />
+                                        <KinderGardenSection>
+                                            <FontAwesomeIcon icon={faChild} size="2x"  style={{marginTop: 10}}/>
+                                            <p style={{marginLeft: 10, marginRight: 10, marginTop: 10}}>{transformKindergardenText(comparisonState.values[1].length)} </p>
+                                        </KinderGardenSection>
+                                    </KinderGardensSection> : ''
+                                }
                                 <h3 style={{marginBottom: 10}}> Primerjava glede na število prebivalcev </h3>
                                 <FontAwesomeIcon icon={faArrowCircleDown} size="8x" style={{marginLeft: 5, marginRight: 5}}/>
                             </Col>,
