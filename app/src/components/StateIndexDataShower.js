@@ -8,11 +8,12 @@ import BarChartCategories from './charts/BarChartCategories';
 import Carousel from 'react-bootstrap/Carousel';
 import { parseMoney, transformKindergardenText } from '../utils/ParsingUtils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleRight, faAngleLeft, faArrowCircleDown, faArrowsAltH, faChild } from '@fortawesome/free-solid-svg-icons';
+import { faAngleRight, faAngleLeft, faArrowCircleDown, faArrowsAltH, faChild, faSmileBeam } from '@fortawesome/free-solid-svg-icons';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
 import styled from 'styled-components';
 import StateBudget from '../sites/StateBudget';
+import ShowStateKindergardens from './ShowStateKindergardens';
 
 const MinMaxSection = styled.section`
     background-color: ${darkTheme.sectionAreaChild};
@@ -65,12 +66,15 @@ class StateIndexDataShower extends React.Component {
             comparisonState: {},
             showStateBudget: false,
             showModalComparison: false,
-            showModalSearchedState: false
+            showModalSearchedState: false,
+            showStateKindergardens: false,
+            showModalKindergardensComparison: false,
+            showModalKindergadensSearchedState: false
         };
     }
 
     componentDidMount() {
-        
+
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -79,9 +83,9 @@ class StateIndexDataShower extends React.Component {
                 searchedStateData: this.props.searchedStateIndexData
             });
         }
-        if(prevProps.data !== this.props.data) {
+        if (prevProps.data !== this.props.data) {
             let comparisonStates = this.props.data.filter(state => state.name !== this.props.searchedStateIndexData.name);
-            if(comparisonStates.length > 0) {
+            if (comparisonStates.length > 0) {
                 this.setState({
                     comparisonStates: comparisonStates,
                     comparisonState: comparisonStates[0]
@@ -102,12 +106,12 @@ class StateIndexDataShower extends React.Component {
         // parse categories for graph rendering
         let categories = [];
         if (Object.keys(stateData.values[0]).length > 0) {
-            for(let key of Object.keys(stateData.values[0])) {
+            for (let key of Object.keys(stateData.values[0])) {
                 categories.push({
                     "name": key,
                     "value": stateData.values[0][key].value
                 });
-                
+
             }
         }
         return categories;
@@ -132,50 +136,51 @@ class StateIndexDataShower extends React.Component {
 
             if (Object.keys(comparisonIndex).length === Object.keys(searchedStateIndex).length) {
                 return (
-                    <div> 
-                    {
-                        Object.keys(comparisonIndex).map((key, index) => {
-                            return (
-                                <div key={index} style={{
-                                    backgroundColor: darkTheme.sectionArea, 
-                                    border: `${darkTheme.sectionArea}`,
-                                    borderRadius: 8,
-                                    marginTop: 10}}> 
-                                    <p>{key}</p>
+                    <div>
+                        {
+                            Object.keys(comparisonIndex).map((key, index) => {
+                                return (
+                                    <div key={index} style={{
+                                        backgroundColor: darkTheme.sectionArea,
+                                        border: `${darkTheme.sectionArea}`,
+                                        borderRadius: 8,
+                                        marginTop: 10
+                                    }}>
+                                        <p>{key}</p>
 
                                         <OverlayTrigger overlay={
-                                            <Tooltip style={{backgroundColor: '#FAFAFA', color: '#363537'}} id="tooltip-disabled tooltipComparison">
+                                            <Tooltip style={{ backgroundColor: '#FAFAFA', color: '#363537' }} id="tooltip-disabled tooltipComparison">
                                                 <div>
                                                     <h5>Postopek izračuna</h5>
                                                     <p>vrednost = vrednostKategorije / populacija občine</p>
-                                                    <div style={{display: 'flex'}}>
-                                                        <p style={{margin: 0}}>{searchedStateIndex[key]}</p>
+                                                    <div style={{ display: 'flex' }}>
+                                                        <p style={{ margin: 0 }}>{searchedStateIndex[key]}</p>
                                                         <p>=</p>
-                                                        <p style={{margin: 0}}>{parseMoney(searchedStateValues[key].value)} / {searchedStateData.population}</p>
+                                                        <p style={{ margin: 0 }}>{parseMoney(searchedStateValues[key].value)} / {searchedStateData.population}</p>
                                                     </div>
-                                                    <div style={{display: 'flex'}}>
-                                                        <p style={{margin: 0}}>{comparisonIndex[key]}</p>
+                                                    <div style={{ display: 'flex' }}>
+                                                        <p style={{ margin: 0 }}>{comparisonIndex[key]}</p>
                                                         <p>=</p>
-                                                        <p style={{margin: 0}}>{parseMoney(comparisonValues[key].value)} / {comparisonState.population}</p>
+                                                        <p style={{ margin: 0 }}>{parseMoney(comparisonValues[key].value)} / {comparisonState.population}</p>
                                                     </div>
                                                 </div>
                                             </Tooltip>
                                         }>
                                             <IndexComparisonSection>
-                                                <p style={{margin: 0}}>{searchedStateIndex[key]}</p>
+                                                <p style={{ margin: 0 }}>{searchedStateIndex[key]}</p>
                                                 {
                                                     searchedStateIndex[key] > comparisonIndex[key] ?
-                                                    <FontAwesomeIcon icon={faAngleRight} size="2x" style={{marginLeft: 5, marginRight: 5}}/> :
-                                                    <FontAwesomeIcon icon={faAngleLeft} size="2x" style={{marginLeft: 5, marginRight: 5}}/>
+                                                        <FontAwesomeIcon icon={faAngleRight} size="2x" style={{ marginLeft: 5, marginRight: 5 }} /> :
+                                                        <FontAwesomeIcon icon={faAngleLeft} size="2x" style={{ marginLeft: 5, marginRight: 5 }} />
                                                 }
-                                                <p style={{margin: 0}}>{comparisonIndex[key]}</p>
+                                                <p style={{ margin: 0 }}>{comparisonIndex[key]}</p>
                                             </IndexComparisonSection>
                                         </OverlayTrigger>
 
-                                </div>
-                            )
-                        })
-                    }
+                                    </div>
+                                )
+                            })
+                        }
                     </div>);
             }
         }
@@ -186,11 +191,11 @@ class StateIndexDataShower extends React.Component {
         let dataValues = data.values[0];
 
         if (
-            Object.keys(dataValues).length > 0 && 
+            Object.keys(dataValues).length > 0 &&
             Object.keys(dataValues).length > 0) {
-            
+
             return (
-                <div style={{marginTop: 10}}> 
+                <div style={{ marginTop: 10 }}>
                     <h4>Prikaz posameznih kategorij</h4>
                     {
                         Object.keys(dataValues).map((key, index) => {
@@ -198,22 +203,23 @@ class StateIndexDataShower extends React.Component {
                             let max = dataValues[key].max;
                             return (
                                 <div key={index} style={{
-                                    border: `8px solid ${darkTheme.sectionArea}`, 
-                                    marginTop: 10, 
-                                    backgroundColor: darkTheme.sectionArea, 
-                                    borderRadius: 8}}> 
+                                    border: `8px solid ${darkTheme.sectionArea}`,
+                                    marginTop: 10,
+                                    backgroundColor: darkTheme.sectionArea,
+                                    borderRadius: 8
+                                }}>
                                     <h6>{key}</h6>
 
                                     <MinMaxSection>
-                                       <h6>MIN</h6>
-                                       <h6>{min.name}</h6>
-                                       <p>{parseMoney(min.value)} €</p>
+                                        <h6>MIN</h6>
+                                        <h6>{min.name}</h6>
+                                        <p>{parseMoney(min.value)} €</p>
                                     </MinMaxSection>
 
                                     <MinMaxSection>
-                                       <h6>MAX</h6>
-                                       <h6>{max.name}</h6>
-                                       <p>{parseMoney(max.value)} €</p>
+                                        <h6>MAX</h6>
+                                        <h6>{max.name}</h6>
+                                        <p>{parseMoney(max.value)} €</p>
                                     </MinMaxSection>
                                 </div>
                             )
@@ -222,21 +228,42 @@ class StateIndexDataShower extends React.Component {
                 </div>);
         }
     }
-
-    onSearchedStateClick()  {
-        console.log("Okkk searched state click");
-        this.setState({showModalSearchedState: true, showModalComparison: false, showStateBudget: true});
+    
+    onStateExplorerClick = (isSearchedState) => {
+        isSearchedState ?
+            this.setState({
+                showModalSearchedState: true,
+                showModalComparison: false,
+                showStateBudget: true
+            }) :
+            this.setState({
+                showModalSearchedState: false,
+                showModalComparison: true,
+                showStateBudget: true
+            })
     }
 
-    onComparisonStateClick() {
-        this.setState({showModalSearchedState: false, showModalComparison: true, showStateBudget: true});
+    hideStateModal = () => {
+        this.setState({ showStateBudget: false });
     }
 
-    hideStateModal = (toHide) => {
-        console.log("tO hIDE STATE");
-        this.setState({showStateBudget: false});
+    hideKindergenModal = () => {
+        this.setState({ showStateKindergardens: false });
     }
 
+    onKinderGardenClick = (isSearchedState) => {
+        isSearchedState ?
+            this.setState({
+                showModalKindergadensSearchedState: true,
+                showModalKindergardensComparison: false,
+                showStateKindergardens: true
+            }) :
+            this.setState({
+                showModalKindergadensSearchedState: false,
+                showModalKindergardensComparison: true,
+                showStateKindergardens: true
+            })
+    }
 
 
     render() {
@@ -245,7 +272,10 @@ class StateIndexDataShower extends React.Component {
             searchedStateData,
             showStateBudget,
             showModalComparison,
-            showModalSearchedState
+            showModalSearchedState,
+            showStateKindergardens,
+            showModalKindergardensComparison,
+            showModalKindergadensSearchedState
         } = this.state;
 
         console.log("Show state budget: ", showModalSearchedState);
@@ -255,11 +285,11 @@ class StateIndexDataShower extends React.Component {
 
             if (stateData.length === 0) return;
 
-            if(isOtherStates) {
+            if (isOtherStates) {
                 /* if is not main state then return carousel item */
                 return (
-                    <Carousel.Item id="stateIndexData" key={state.place} onClick={() => this.onComparisonStateClick()}>
-                        <h3>#{ state.place } { state.name }</h3>
+                    <Carousel.Item id="stateIndexData" key={state.place} onClick={() => this.onStateExplorerClick(false)}>
+                        <h3>#{state.place} {state.name}</h3>
                         <h5> {state.population} preb.</h5>
                         <BarChartCategories data={stateData} stateName={state.name} indeks={state.place} />
                     </Carousel.Item>
@@ -267,8 +297,8 @@ class StateIndexDataShower extends React.Component {
             } else {
 
                 return (
-                    <div id="stateIndexData" key={state.place} onClick={() => this.onSearchedStateClick()}>
-                        <h3>#{ state.place } { state.name }</h3>
+                    <div id="stateIndexData" key={state.place} onClick={() => this.onStateExplorerClick(true)}>
+                        <h3>#{state.place} {state.name}</h3>
                         <h5> {state.population} preb.</h5>
                         <BarChartCategories data={stateData} stateName={state.name} indeks={state.place} />
                     </div>
@@ -277,92 +307,108 @@ class StateIndexDataShower extends React.Component {
         };
 
         this.getComparisonTable();
-    
+
         /* md={6} each col is 50% width */
         return (
             <Container className="mainIndexShower" fluid={true}>
                 <Row>
                     {
-                        Object.keys(this.state.searchedStateData).length > 0 ? 
-                        [ 
-                            <Col md={5} key={"firstCol"}>
-                                {
-                                    renderBarChart(this.state.searchedStateData, false)
-                                }
-                            </Col>,
-                            <Col md={2} key={"secondCol"} className="justify-content-center text-center align-items-center" >
-                                {
-                                    Object.keys(comparisonState).length > 0 && 
-                                    Object.keys(searchedStateData).length > 0 ?
-                                    <KinderGardensSection>
-                                        <KinderGardenSection>
-                                            <FontAwesomeIcon icon={faChild} size="2x" style={{marginTop: 10}}/>
-                                            <p style={{marginLeft: 10, marginRight: 10, marginTop: 10}}>{transformKindergardenText(searchedStateData.values[1].length)}</p>
-                                        </KinderGardenSection>
-                                        <FontAwesomeIcon icon={faArrowsAltH} size="2x" style={{marginLeft: 5, marginRight:  5}} />
-                                        <KinderGardenSection>
-                                            <FontAwesomeIcon icon={faChild} size="2x"  style={{marginTop: 10}}/>
-                                            <p style={{marginLeft: 10, marginRight: 10, marginTop: 10}}>{transformKindergardenText(comparisonState.values[1].length)} </p>
-                                        </KinderGardenSection>
-                                    </KinderGardensSection> : ''
-                                }
-                                <h3 style={{marginBottom: 10}}> Primerjava glede na število prebivalcev </h3>
-                                <FontAwesomeIcon icon={faArrowCircleDown} size="8x" style={{marginLeft: 5, marginRight: 5}}/>
-                            </Col>,
-                            <Col md={5} key={"thirdCol"}>
-                                { <Carousel 
-                                    className="mainCarousel" 
-                                    wrap={false} 
-                                    indicators={false}
-                                    interval={null} 
-                                    onSelect={this.onCarouselItemSelect}
-                                    style={{backgroundColor: darkTheme.body}}>
+                        Object.keys(this.state.searchedStateData).length > 0 ?
+                            [
+                                <Col md={5} key={"firstCol"}>
+                                    {
+                                        renderBarChart(this.state.searchedStateData, false)
+                                    }
+                                </Col>,
+                                <Col md={2} key={"secondCol"} className="justify-content-center text-center align-items-center" >
+                                    {
+                                        Object.keys(comparisonState).length > 0 &&
+                                            Object.keys(searchedStateData).length > 0 ?
+                                            <KinderGardensSection>
+                                                <KinderGardenSection onClick={() => this.onKinderGardenClick(true)}>
+                                                    <FontAwesomeIcon icon={faChild} size="2x" style={{ marginTop: 10 }} />
+                                                    <p style={{ marginLeft: 10, marginRight: 10, marginTop: 10 }}>{transformKindergardenText(searchedStateData.values[1].length)}</p>
+                                                </KinderGardenSection>
+                                                <FontAwesomeIcon icon={faArrowsAltH} size="2x" style={{ marginLeft: 5, marginRight: 5 }} />
+                                                <KinderGardenSection onClick={() => this.onKinderGardenClick(false)}>
+                                                    <FontAwesomeIcon icon={faChild} size="2x" style={{ marginTop: 10 }} />
+                                                    <p style={{ marginLeft: 10, marginRight: 10, marginTop: 10 }}>{transformKindergardenText(comparisonState.values[1].length)} </p>
+                                                </KinderGardenSection>
+                                            </KinderGardensSection> : ''
+                                    }
+                                    <h3 style={{ marginBottom: 10 }}> Primerjava glede na število prebivalcev </h3>
+                                    <FontAwesomeIcon icon={faArrowCircleDown} size="8x" style={{ marginLeft: 5, marginRight: 5 }} />
+                                </Col>,
+                                <Col md={5} key={"thirdCol"}>
+                                    {<Carousel
+                                        className="mainCarousel"
+                                        wrap={false}
+                                        indicators={false}
+                                        interval={null}
+                                        onSelect={this.onCarouselItemSelect}
+                                        style={{ backgroundColor: darkTheme.body }}>
 
                                         {this.state.comparisonStates.map((state, i) => (
                                             renderBarChart(state, true)
                                         ))}
-                                </Carousel>  
-                                }
-                            </Col>
-                        ]: ''
+                                    </Carousel>
+                                    }
+                                </Col>
+                            ] : ''
                     }
-                          
+
                 </Row>
-                <Row style={{marginTop: 20}}>
-                {
-                    Object.keys(comparisonState).length > 0 &&
-                    Object.keys(searchedStateData).length > 0 ?
-                    [ <Col md={4} key={"firstCol"}>
+                <Row style={{ marginTop: 20 }}>
                     {
-                        this.getStateStatistics(searchedStateData)
+                        Object.keys(comparisonState).length > 0 &&
+                            Object.keys(searchedStateData).length > 0 ?
+                            [<Col md={4} key={"firstCol"}>
+                                {
+                                    this.getStateStatistics(searchedStateData)
+                                }
+                            </Col>,
+                            <Col md={4} key={"secondCol"}>
+                                {
+                                    this.getComparisonTable()
+                                }
+                            </Col>,
+                            <Col md={4} key={"thirdCol"}>
+                                {
+                                    this.getStateStatistics(comparisonState)
+                                }
+                            </Col>] : ''
                     }
-                    </Col>,
-                    <Col md={4}  key={"secondCol"}>
-                        {
-                            this.getComparisonTable()
-                        }
-                    </Col>,
-                    <Col md={4} key={"thirdCol"}>
-                        {
-                            this.getStateStatistics(comparisonState)
-                        }
-                    </Col>] : ''
-                }
-                   
+
                 </Row>
 
-                { 
-                    showModalComparison || showModalSearchedState ? 
-                    showModalComparison ? 
-                    <StateBudget 
-                        city={comparisonState.name} 
-                        showState={showStateBudget} 
-                        onHideState={this.hideStateModal} /> :
-                    <StateBudget 
-                        city={searchedStateData.name} 
-                        showState={showStateBudget} 
-                        onHideState={this.hideStateModal} />
-                    : ''
+                {
+                    showModalComparison || showModalSearchedState ?
+                        showModalComparison ?
+                            <StateBudget
+                                city={comparisonState.name}
+                                showState={showStateBudget}
+                                onHideState={this.hideStateModal} /> :
+                            <StateBudget
+                                city={searchedStateData.name}
+                                showState={showStateBudget}
+                                onHideState={this.hideStateModal} />
+                        : ''
+                }
+
+                {
+                    showModalKindergardensComparison || showModalKindergadensSearchedState ?
+                        showModalKindergardensComparison ?
+                            <ShowStateKindergardens
+                                cityName={comparisonState.name}
+                                kindergardens={comparisonState.values[1]}
+                                onKinderGardenShow={showStateKindergardens}
+                                hideKindergarden={this.hideKindergenModal} /> :
+                            <ShowStateKindergardens
+                                cityName={searchedStateData.name}
+                                kindergardens={searchedStateData.values[1]}
+                                onKinderGardenShow={showStateKindergardens}
+                                hideKindergarden={this.hideKindergenModal} />
+                        : ''
                 }
             </Container>
         );
