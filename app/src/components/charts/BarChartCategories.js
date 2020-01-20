@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import { parseMoney } from '../../utils/ParsingUtils';
 import styled from 'styled-components';
 import { barChartColors } from '../../utils/StyleUtils';
+import { /*fetchData,*/ fetchAPIData } from '../../dataFetcher/FetchStates';
 
 const ToolTipStyle = styled.section`
     position: absolute;
@@ -18,7 +19,29 @@ const ToolTipStyle = styled.section`
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
     pointer-events: none;
 `;
+const youngFamilySearch = [
+    "socialna varnost",
+    "javni red in varnost",
+    "izobraževanje",
+    "zdravstvo"
+];
 
+let calculateColors = (d,averageForCategories) => {
+    for(var i=0;i<youngFamilySearch.length;i++){
+        if (d.name === youngFamilySearch[i]){
+            console.log(JSON.stringify(averageForCategories[youngFamilySearch[i]] +"dsasdaksdakds")+d.value);
+            if (d.value>averageForCategories[youngFamilySearch[i]]-(averageForCategories[youngFamilySearch[i]]*0.1) && averageForCategories[youngFamilySearch[i]]+(averageForCategories[youngFamilySearch[i]]*0.1) > d.value){
+                return barChartColors.centerValue;
+            }
+            else if(averageForCategories[youngFamilySearch[i]]+(averageForCategories[youngFamilySearch[i]]*0.1) < d.value){
+                return barChartColors.maxValue;
+            }
+            else{
+                return barChartColors.minValue
+            }
+        }    
+    }
+}
 
 class BarChartCategories extends React.Component {
 
@@ -46,9 +69,10 @@ class BarChartCategories extends React.Component {
             });
         }
     }
-
-    constructGraph = (data) => {
-
+    constructGraph = async (data) => {
+        const dataForAverage = await fetchAPIData("Ljubljana", "youngFamily","2018");
+        const averageForCategories = dataForAverage[0].avg;
+        
         d3.select(`#${this.state.barChartName}`).select("svg").remove();
         if(data.length === 0) return;
         
@@ -119,22 +143,10 @@ class BarChartCategories extends React.Component {
         .attr("width", function(d) { return x(d.value); })
         .attr("height", y.bandwidth() )
         .attr("fill", function(d) {
-            if (d.value === maxValue) {
-                return barChartColors.maxValue;
-            } else if (d.value === minValue) {
-                return barChartColors.minValue;
-            } else {
-                return barChartColors.centerValue;
-            }
+           return calculateColors(d,averageForCategories);
         })
         .style("stroke", function(d)  {
-            if (d.value === maxValue) {
-                return barChartColors.maxValue;
-            } else if (d.value === minValue) {
-                return barChartColors.minValue;
-            } else {
-                return barChartColors.centerValue;
-            }
+            return calculateColors(d,averageForCategories);
         })
         .attr("rx", 8)
         .on("mouseover", function(d) {

@@ -44,6 +44,48 @@ const youngFamilySearch = [
 
 const supportedYears = [2016, 2017, 2018];
 
+const parseAverageForFamilySearch = async () =>{
+    try {
+        const result = await client.search({
+            index: "states",
+            filterPath: ['hits.hits._source'],
+            "from" : 0, "size" : 212,
+            body: {
+                "query": {
+                    "match_all": {}
+                },
+            }
+        });
+    let exportedData = { "socialna varnost":0,
+    "javni red in varnost":0,
+    "izobraževanje":0,
+    "zdravstvo":0};
+    const data = getData(result);
+   // console.log(JSON.stringify(data.length));
+    for (var ii = 0; ii < data.length; ii++) {
+        const categoriesForState = await getYoungCategoriesByState(data[ii]["name"]);
+        for (var i = 0; i < youngFamilySearch.length; i++) {
+            let categorie = youngFamilySearch[i];
+            let mainCategories = categoriesForState[categorie];
+            try{
+            exportedData[categorie] += mainCategories["value"]; 
+            }
+            catch{
+                exportedData[categorie] += 0;  
+            } 
+        }
+    }
+    for (var i = 0; i < youngFamilySearch.length; i++) {
+        exportedData[youngFamilySearch[i]] = exportedData[youngFamilySearch[i]]/data.length;
+    }
+    console.log(JSON.stringify(exportedData));
+    return exportedData;
+}
+ catch (error) {
+    console.log(error);
+}
+}
+
 const parseAllCategories = async (stateName) => {
     let overallBudgetData = [{
         2018: [],
@@ -820,6 +862,7 @@ router.get("/api/youngFamilies/name=:name", async (req, res) => {
     const stateName = req.params.name;
 
     try {
+        const avg = await parseAverageForFamilySearch();
         const youngFamilyData = [];
         const searchState = await getState(stateName);
         const stateYoungFamilyData = await getYoungCategoriesByState(stateName);
@@ -835,6 +878,7 @@ router.get("/api/youngFamilies/name=:name", async (req, res) => {
                 "population": searchState.population,
                 "values": [stateYoungFamilyData, stateKindergardnes],
                 "index": calculateIndex(stateYoungFamilyData, searchState.population),
+                "avg":avg,
                 "normalisedIndex": normalisedIndex(calculateIndex(stateYoungFamilyData, searchState.population))
             });
             for (let i = 0; i < nearestStates.length; i++) {
@@ -850,6 +894,7 @@ router.get("/api/youngFamilies/name=:name", async (req, res) => {
                     "population": nearestStates[i].population,
                     "values": [stateYoungData, kindegardens],
                     "index": calculatedIndex,
+                    "avg":avg,
                     "normalisedIndex": moneyRounder(normalisedIndex(calculatedIndex))
                 });
             }

@@ -91,8 +91,11 @@ class CirclePack extends React.Component {
 
     constructGraph() {
         d3.select("#circlePack").select("svg").remove();
-        var color = d3.scaleSequential([8, 0], d3.interpolateMagma);
-        var format = d3.format(",d");
+       // var color = d3.scaleSequential([8, 0], d3.interpolateMagma);
+       var color = d3.scaleOrdinal()
+        .domain(0,1,2,3)
+        .range(["#161D27","#9D3443","#D25C5A","#B2AFC4"]); 
+       var format = d3.format(",d");
         var height = 400;
         var width = 400;
         var pack = data => d3.pack()
@@ -202,11 +205,10 @@ class CirclePack extends React.Component {
             .attr("cy", 30)
             .attr("r", 20);
         // set circle color
-        circle.attr("fill", "#FE7B5F"); //glavna kategorija
-        circle2.attr("fill", "#FFC386");
-        circle3.attr("fill", "#F8FFBE");
-        circle4.attr("fill", "#b2e1f9");
-
+        circle.attr("fill", "#B2AFC4"); //glavna kategorija
+        circle2.attr("fill", "#D25C5A");
+        circle3.attr("fill", "#9D3443");
+        circle4.attr("fill", "#161D27");
     }
 
     comparisonGraph(data) {
