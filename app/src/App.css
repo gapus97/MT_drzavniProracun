@@ -257,7 +257,7 @@ text {
   max-height: 500px;
 }
 
-.bar { fill: steelblue; }
+/*.bar { fill: steelblue; }*/
 
 /* auto suggestion */
 .react-autosuggest__container {
@@ -374,11 +374,15 @@ text {
 #tooltipComparison > .tooltip-inner {
   background-color: #FAFAFA;
   color:  #363537;
+  text-align: center;
+  margin: 0 auto;
 }
 
 #tooltipComparison {
   background-color: #FAFAFA;
   color:  #363537;
+  text-align: center;
+  margin: 0 auto;
 }
 
 .bs-tooltip-top {
@@ -389,6 +393,8 @@ text {
 .tooltip-inner {
   background-color: #FAFAFA;
   color:  #363537;
+  text-align: center;
+  margin: 0 auto;
 }
 
 .bs-tooltip-auto[x-placement^=top] .arrow::before, .bs-tooltip-top .arrow::before {
@@ -410,4 +416,8 @@ text {
 
 #stateIndexData {
   cursor: pointer;
+}
+
+.modal-content, .stateBudgetModal {
+  border-radius: 8px;
 }
