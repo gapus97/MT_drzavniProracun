@@ -44,7 +44,7 @@ const youngFamilySearch = [
 
 const supportedYears = [2016, 2017, 2018];
 
-const parseAverageForFamilySearch = async () =>{
+const parseAverageForFamilySearch = async () => {
     try {
         const result = await client.search({
             index: "states",
@@ -61,24 +61,21 @@ const parseAverageForFamilySearch = async () =>{
     "izobraževanje":0,
     "zdravstvo":0};
     const data = getData(result);
-   // console.log(JSON.stringify(data.length));
+
+
+
     for (var ii = 0; ii < data.length; ii++) {
         const categoriesForState = await getYoungCategoriesByState(data[ii]["name"]);
-        for (var i = 0; i < youngFamilySearch.length; i++) {
-            let categorie = youngFamilySearch[i];
-            let mainCategories = categoriesForState[categorie];
-            try{
-            exportedData[categorie] += mainCategories["value"]; 
-            }
-            catch{
-                exportedData[categorie] += 0;  
-            } 
-        }
+        Object.keys(categoriesForState).forEach(key => {
+            exportedData[key] += categoriesForState[key].value;
+        });
+        
     }
-    for (var i = 0; i < youngFamilySearch.length; i++) {
-        exportedData[youngFamilySearch[i]] = exportedData[youngFamilySearch[i]]/data.length;
-    }
-    console.log(JSON.stringify(exportedData));
+
+    Object.keys(exportedData).forEach(key => {
+        exportedData[key] = exportedData[key] / data.length;
+    })
+
     return exportedData;
 }
  catch (error) {
