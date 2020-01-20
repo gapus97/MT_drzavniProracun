@@ -2,7 +2,7 @@ import React from 'react';
 import * as d3 from 'd3';
 import { parseMoney, getCategoriesComparisonByYear } from '../../utils/ParsingUtils';
 import { supportedYears } from '../../utils/Queries';
-import { darkTheme } from '../../utils/StyleUtils';
+import { darkTheme, barChartColors } from '../../utils/StyleUtils';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -13,6 +13,7 @@ const CategorieShow = styled.section`
     border: 8px solid ${darkTheme.sectionArea};
     border-radius: 8px;
     margin-top: 10px;
+    margin-left: 90px;
 `;
 
 const CategorieItemShow = styled.section`
@@ -21,6 +22,16 @@ const CategorieItemShow = styled.section`
     border-radius: 8px;
     margin-top: 10px;
 `;
+
+const calculateColors = (min,max, d) => {
+    if (d.value === min) {
+        return barChartColors.minValue;
+    } else if (d.value === max) {
+        return barChartColors.maxValue;
+    } else {
+        return barChartColors.centerValue;
+    }
+}
 
 class CirclePack extends React.Component {
 
@@ -37,7 +48,6 @@ class CirclePack extends React.Component {
 
     componentDidUpdate({ data }) {
         if (this.props.data !== data) {
-            this.drawLegend();
             this.constructGraph();
 
             let categoricalData = getCategoriesComparisonByYear(this.props.data, this.props.city.toUpperCase());
@@ -181,43 +191,12 @@ class CirclePack extends React.Component {
 
     }
 
-    drawLegend() {
-        d3.select("#legend").select("svg").remove();
-        //Make an SVG Container
-        var svgContainer = d3.select("#legend").append("svg")
-            .attr("width", 600)
-            .attr("height", 50);
-        //Draw the Circle
-        var circle = svgContainer.append("circle")
-            .attr("cx", 50)
-            .attr("cy", 30)
-            .attr("r", 20);
-        var circle2 = svgContainer.append("circle")
-            .attr("cx", 220)
-            .attr("cy", 30)
-            .attr("r", 20);
-        var circle3 = svgContainer.append("circle")
-            .attr("cx", 370)
-            .attr("cy", 30)
-            .attr("r", 20);
-        var circle4 = svgContainer.append("circle")
-            .attr("cx", 520)
-            .attr("cy", 30)
-            .attr("r", 20);
-        // set circle color
-        circle.attr("fill", "#B2AFC4"); //glavna kategorija
-        circle2.attr("fill", "#D25C5A");
-        circle3.attr("fill", "#9D3443");
-        circle4.attr("fill", "#161D27");
-    }
-
     comparisonGraph(data) {
         let graphData = [];
 
         for (const key of Object.keys(supportedYears)) {
             let yearData = data[0][key];
             if (yearData[0]) {
-                console.log("Year data: ", yearData);
                 graphData.push({
                     year: key,
                     value: yearData[0].value
@@ -226,7 +205,6 @@ class CirclePack extends React.Component {
 
 
         }
-        console.log("Result: ", graphData);
 
         if (!graphData) {
             return;
@@ -236,7 +214,7 @@ class CirclePack extends React.Component {
 
 
         // set the dimensions and margins of the graph
-        var margin = { top: 20, right: 20, bottom: 30, left: 40 },
+        var margin = { top: 20, right: 20, bottom: 30, left: 90 },
             width = 600 - margin.left - margin.right,
             height = 300 - margin.top - margin.bottom;
 
@@ -264,6 +242,9 @@ class CirclePack extends React.Component {
         x.domain(graphData.map(function (d) { return d.year; }));
         y.domain([0, d3.max(graphData, function (d) { return d.value; })]);
 
+        let max = d3.max(graphData, function (d) { return d.value; });
+        let min = d3.min(graphData, function (d) { return d.value; });
+
 
 
         // append the rectangles for the bar chart
@@ -274,17 +255,29 @@ class CirclePack extends React.Component {
             .attr("x", function (d) { return x(d.year); })
             .attr("width", x.bandwidth())
             .attr("y", function (d) { return y(d.value); })
-            .attr("height", function (d) { return height - y(d.value); });
+            .attr("height", function (d) { return height - y(d.value); })
+            .attr("fill", function(d) {
+                return calculateColors(min, max, d);
+             })
+             .style("stroke", function(d)  {
+                 return calculateColors(min, max, d);
+             });
 
         // add the x Axis
         svg.append("g")
             .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x));
+            .call(d3.axisBottom(x))
+            .selectAll("text")
+            .style("font-size", "15px")
+            .style("fill", "#FAFAFA");
 
         // add the y Axis
         svg.append("g")
             .attr("transform", "translate(10,0)")
-            .call(d3.axisLeft(y));
+            .call(d3.axisLeft(y))
+            .selectAll("text")
+            .style("font-size", "12px")
+            .style("fill", "#FAFAFA");
     }
 
     render() {
@@ -300,7 +293,54 @@ class CirclePack extends React.Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col>
+                    <Col md={6}>
+                        <p style={{marginLeft: "70px"}}>Legenda:</p>
+                        <div style={{marginLeft: "70px"}}>
+                            <div><Container style={{ 
+                                width: "36px", 
+                                height: "36px", 
+                                backgroundColor: "#9D3443", 
+                                borderRadius: "50%", 
+                                display: 'inline-block',
+                                marginRight: 10
+                            }}><p style={{marginLeft: 46}}>Glavna kategorija </p></Container></div>
+                            <div><Container style={{ 
+                                width: "36px", 
+                                height: "36px", 
+                                backgroundColor: "#D25C5A", 
+                                borderRadius: "50%", 
+                                display: 'inline-block',
+                                marginRight: 10
+                            }}><p style={{marginLeft: 46}}>Pod kategorija</p></Container></div>
+                            <div><Container style={{ 
+                                width: "36px", 
+                                height: "36px", 
+                                backgroundColor: "#B2AFC4", 
+                                borderRadius: "50%", 
+                                display: 'inline-block',
+                                marginRight: 10
+                            }}><p style={{marginLeft: 46}}>Koncna kategorija   </p></Container></div>
+                            <div><Container style={{ 
+                                width: "36px", 
+                                height: "36px", 
+                                backgroundColor: "#161D27", 
+                                borderRadius: "50%", 
+                                display: 'inline-block',
+                                marginRight: 10
+                            }}><p style={{marginLeft: 46}}>Celotna občina</p></Container></div>
+                            <div><Container style={{ 
+                                width: "36px", 
+                                height: "36px", 
+                                backgroundColor: "#b2e1f9", 
+                                borderRadius: "50%", 
+                                display: 'inline-block',
+                                marginRight: 10
+                            }}><p style={{marginLeft: 46}}>Izbrana kategorija</p></Container></div>
+
+
+                        </div>
+                    </Col>
+                    <Col md={6}>
                         <CategorieShow>
                             <CategorieItemShow>
                                 <p>Kategorija: {this.state.textName} </p>
@@ -310,14 +350,6 @@ class CirclePack extends React.Component {
                             </CategorieItemShow>
                         </CategorieShow>
 
-                        <p>Legenda:</p>
-                        <div>
-                            <pre style={{ display: 'inline' }}>Glavna kategorija   </pre>
-                            <pre style={{ display: 'inline' }}>Pod kategorija   </pre>
-                            <pre style={{ display: 'inline' }}>Koncna kategorija   </pre>
-                            <p style={{ display: 'inline' }}>Izbrana kategorija</p>
-                            <div id="legend" />
-                        </div>
                     </Col>
                 </Row>
 

@@ -98,20 +98,17 @@ class StateBudget extends React.Component {
                 onHide={this.onHide}
                 size="lg"
                 dialogClassName="modal-90w"
-                aria-labelledby="example-custom-modal-styling-title"
+                aria-labelledby="stateBudgetModal"
             >
-                <Modal.Header closeButton>
+                <Modal.Header closeButton style={{backgroundColor: darkTheme.body}}>
                     <Modal.Title id="stateBudgetModalTitle">
-                        Proračun občine
+                        Proračun občine {this.props.city}
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body style={{backgroundColor: darkTheme.body}}>
                     <Container>
-                        <Row>
-                            <Col>
-                                <p>{this.props.city}</p>
-                            </Col>
-                            <Col>
+                        <Row className="justify-content-md-center" style={{marginBottom: 10}}>
+                            <Col md="auto">
                                 <Dropdown id="dropdown-basic-button">
                                     <Dropdown.Toggle variant="success" id="dropdown-basic">
                                         {`${this.state.selectedBudgetCategorie}`}

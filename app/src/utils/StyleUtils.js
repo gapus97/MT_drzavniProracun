@@ -10,7 +10,7 @@ export const darkTheme = {
 };
 
 export const barChartColors = {
-  minValue: '#ca3e47',
+  minValue: "#Ca3e47",
   centerValue: 'white',
   maxValue: 'green'
 };

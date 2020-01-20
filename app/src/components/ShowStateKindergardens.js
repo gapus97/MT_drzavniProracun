@@ -56,11 +56,11 @@ class ShowStateKindergardens extends React.Component {
                 show={this.props.onKinderGardenShow}
                 onHide={this.onKindergardenHide}>
 
-                <Modal.Header closeButton>
-                    <Modal.Title style={{color: darkTheme.body}}>Vrtci za {this.props.cityName} </Modal.Title>
+                <Modal.Header closeButton style={{backgroundColor: darkTheme.body}}>
+                    <Modal.Title>Vrtci za {this.props.cityName} </Modal.Title>
                 </Modal.Header>
 
-                <Modal.Body>
+                <Modal.Body style={{backgroundColor: darkTheme.body}}>
                     {
                         this.renderKindergardens(this.props.kindergardens)
                     }

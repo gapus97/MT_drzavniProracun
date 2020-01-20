@@ -149,21 +149,24 @@ class StateIndexDataShower extends React.Component {
                                         <p>{key}</p>
 
                                         <OverlayTrigger overlay={
-                                            <Tooltip style={{ backgroundColor: '#FAFAFA', color: '#363537' }} id="tooltip-disabled tooltipComparison">
-                                                <div>
+                                            <Tooltip style={{ backgroundColor: '#FAFAFA', color: '#363537', width: '500px' }} id="tooltip-disabled tooltipComparison">
+                                                
                                                     <h5>Postopek izračuna</h5>
-                                                    <p>vrednost = vrednostKategorije / populacija občine</p>
-                                                    <div style={{ display: 'flex' }}>
-                                                        <p style={{ margin: 0 }}>{searchedStateIndex[key]}</p>
-                                                        <p>=</p>
-                                                        <p style={{ margin: 0 }}>{parseMoney(searchedStateValues[key].value)} / {searchedStateData.population}</p>
+                                                    <div style={{display: 'flex'}}>
+                                                        <p>vrednost = vrednostKategorije / populacija občine</p>
                                                     </div>
                                                     <div style={{ display: 'flex' }}>
-                                                        <p style={{ margin: 0 }}>{comparisonIndex[key]}</p>
-                                                        <p>=</p>
-                                                        <p style={{ margin: 0 }}>{parseMoney(comparisonValues[key].value)} / {comparisonState.population}</p>
+                                                        <p style={{ margin: 0 }}>
+                                                            {searchedStateIndex[key]} = {parseMoney(searchedStateValues[key].value)} / {searchedStateData.population}
+                                                        </p>
                                                     </div>
-                                                </div>
+                                                    <div style={{ display: 'flex' }}>
+                                                        <p style={{ margin: 0 }}>
+                                                            {comparisonIndex[key]} = {parseMoney(comparisonValues[key].value)} / {comparisonState.population}                                              
+                                                        </p>
+
+                                                    </div>
+                                                
                                             </Tooltip>
                                         }>
                                             <IndexComparisonSection>
@@ -275,7 +278,8 @@ class StateIndexDataShower extends React.Component {
             showModalSearchedState,
             showStateKindergardens,
             showModalKindergardensComparison,
-            showModalKindergadensSearchedState
+            showModalKindergadensSearchedState,
+            showModalCityWinner
         } = this.state;
 
         console.log("Show state budget: ", showModalSearchedState);
@@ -291,7 +295,7 @@ class StateIndexDataShower extends React.Component {
                     <Carousel.Item id="stateIndexData" key={state.place} onClick={() => this.onStateExplorerClick(false)}>
                         <h3>#{state.place} {state.name}</h3>
                         <h5> {state.population} preb.</h5>
-                        <BarChartCategories data={stateData} stateName={state.name} indeks={state.place} />
+                        <BarChartCategories data={stateData} stateName={state.name} indeks={state.place}  averageData={state.avg} />
                     </Carousel.Item>
                 );
             } else {
@@ -300,7 +304,7 @@ class StateIndexDataShower extends React.Component {
                     <div id="stateIndexData" key={state.place} onClick={() => this.onStateExplorerClick(true)}>
                         <h3>#{state.place} {state.name}</h3>
                         <h5> {state.population} preb.</h5>
-                        <BarChartCategories data={stateData} stateName={state.name} indeks={state.place} />
+                        <BarChartCategories data={stateData} stateName={state.name} indeks={state.place} averageData={state.avg} />
                     </div>
                 );
             }
